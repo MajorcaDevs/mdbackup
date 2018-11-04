@@ -9,7 +9,7 @@ Download from releases the latest `wheel` package and install it. It is recommen
 **What do yo need?**:
   - An OS different from Windows (Windows is unsupported) :(
   - Python 3.6 or higher
-  - `rsync` and `ssh` installed (on macOS is in general installed by default, on Linux distros you may install them)
+  - `rsync` and `ssh` installed (on macOS they are in general installed by default, on Linux distros you may need to install them)
 
 First select a folder where all the needed files will be stored. It is important not to move (or rename) this folder after installation.
 
@@ -76,7 +76,7 @@ This allows you to auto-complete with the elements available in the configuratio
 
  > If you are going to use the `$schema`, you should download it or reference the URL of the file from the repository directly.
 
-The configuration file must be located in `config/config.json`. It is recommended to put inside `config` folder other configuration files (as API tokens).
+The configuration file must be located in `config/config.json`. It is recommended to put inside `config` folder other configuration files (like API tokens).
 
 ### env
 This section defines environment variables that will be available when running the steps scripts. It have some predefined (shown before), but you can define whatever more you want.
