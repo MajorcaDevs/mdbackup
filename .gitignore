@@ -1,0 +1,12 @@
+*.pyc
+
+.venv/
+.vscode/
+.idea/
+build/
+dist/
+*.egg-info
+steps/
+
+config/*
+!config/config.schema.json

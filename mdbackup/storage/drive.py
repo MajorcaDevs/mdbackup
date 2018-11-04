@@ -1,0 +1,190 @@
+# Small but customizable utility to create backups and store them in
+# cloud storage providers
+# Copyright (C) 2018  Melchor Alejo Garau Madrigal
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+import logging
+from pathlib import Path
+import os
+from typing import List
+
+import magic
+from pydrive.auth import GoogleAuth
+from pydrive.drive import GoogleDrive, GoogleDriveFile
+
+
+class GDriveStorage:
+
+    def __init__(self, client_secrets: str, auth_tokens: str):
+        """
+        Creates an instance of the Google Drive storage. If ``client_secrets``
+        is not null, will be used that path to look for the secrets. If
+        ``auth_tokens.json`` is not null, will be used that path to store the
+        authentication tokens.
+
+        If the authentication tokens doesn't exist, the utility will stop and
+        it will show (in the terminal) an URL. That will allow you to log in
+        into an account through a browser.
+        """
+        client_secrets = client_secrets if client_secrets is not None else 'config/client_secrets.json'
+        auth_tokens = auth_tokens if auth_tokens is not None else 'config/auth_tokens.json'
+        self.__log = logging.getLogger(__name__)
+        self.__gauth = GoogleAuth()
+        self.__gauth.LoadClientConfigFile(client_secrets)
+        if not os.path.exists(auth_tokens):
+            self.__gauth.CommandLineAuth()
+            self.__gauth.SaveCredentialsFile(auth_tokens)
+        else:
+            self.__gauth.LoadCredentialsFile(auth_tokens)
+
+        self._drive = GoogleDrive(self.__gauth)
+        self.__id_cache = {'/': 'root'}
+
+    def _traverse(self, path: Path, parent_id: str = None, part: int = 0):
+        """
+        Traverses the path to look for a file or folder in Google Drive. If exists
+        will return the GoogleDriveFile, if not, returns None.
+        """
+        len_parts = len(path.parts)
+        if len_parts == part:
+            return self._drive.CreateFile({'id': parent_id})
+
+        folder_id = path.parts[part]
+        if folder_id == '/':
+            if len_parts > 1:
+                part += 1
+                folder_id = path.parts[part]
+            else:
+                return self._drive.CreateFile({'id': 'root'})
+
+        if parent_id is None:
+            parent_id = 'root'
+
+        sub_path = '/' + '/'.join(path.parts[1:(part+1)])
+        if sub_path in self.__id_cache:
+            return self._traverse(path, self.__id_cache[sub_path], part + 1)
+
+        file_list = self._drive.ListFile({'q': f"'{parent_id}' in parents and trashed=false"}).GetList()
+        for file1 in file_list:
+            self.__id_cache[sub_path] = file1['id']
+            if file1['title'] == folder_id:
+                return self._traverse(path, file1['id'], part + 1)
+
+    def get(self, path):
+        """
+        Gets the GoogleDriveFile instance for the path specified as argument.
+        The path must be a string or Path.
+        """
+        if isinstance(path, str):
+            path = Path(path)
+        elif isinstance(path, GoogleDriveFile):
+            return path
+        elif not isinstance(path, Path):
+            raise TypeError('Expected Path or str, received ' + str(type(path)))
+
+        return self._traverse(path)
+
+    def list_directory(self, path) -> List[GoogleDriveFile]:
+        """
+        Returns a list of of GoogleDriveFile for the folder in that path.
+        The path must exist and must be a directory.
+        """
+        if isinstance(path, Path) or isinstance(path, str):
+            drive_file = self.get(path)
+            if drive_file is None:
+                raise FileNotFoundError(str(path))
+        elif isinstance(path, GoogleDriveFile):
+            drive_file = path
+        else:
+            raise TypeError('Expected Path, str or GoogleDriveFile, received ' + str(type(path)))
+
+        if drive_file.metadata is None or drive_file.metadata == {}:
+            drive_file.FetchMetadata()
+        if drive_file.metadata['mimeType'] != 'application/vnd.google-apps.folder':
+            raise NotADirectoryError(drive_file.metadata['mimeType'])
+
+        return self._drive.ListFile({'q': f"'{drive_file.metadata['id']}' in parents and trashed=false"}).GetList()
+
+    def create_folder(self, name: str, parent: Path = None):
+        """
+        Creates a folder with name ``name`` in the root folder or in the
+        folder specified in ``parent``. Returns the GoogleDriveFile instance
+        for the folder.
+        """
+        parent_drive = self.get(parent if parent is not None else '/')
+        if parent_drive is None:
+            raise FileNotFoundError(parent)
+
+        dir1 = self._drive.CreateFile({
+            'title': name,
+            'parents': [{'id': parent_drive['id']}],
+            'mimeType': 'application/vnd.google-apps.folder',
+        })
+        self.__log.info(f'Creating folder {name} [parent "{parent.metadata["title"]}" {parent["id"]}]')
+        dir1.Upload()
+        return dir1
+
+    def upload_file(self, file_path, parent = None):
+        """
+        Uploads a file to google drive, in the root folder or in the
+        folder specified in ``parent``.
+        """
+        if parent is None:
+            parent = self.get('/')
+        elif not isinstance(parent, GoogleDriveFile):
+            parent = self.get(parent)
+        if parent is None:
+            raise FileNotFoundError(parent)
+
+        if isinstance(file_path, str):
+            file_path = Path(file_path)
+        elif not isinstance(file_path, Path):
+            raise TypeError('Expected file path to be a str or Path, received ' + str(type(file_path)))
+
+        mime_type = magic.from_file(str(file_path), mime=True)
+        if mime_type == 'inode/x-empty':
+            mime_type = 'application/octet-stream'
+        if file_path.stat().st_size == 0:
+            return
+
+        file1 = self._drive.CreateFile({
+            'title': file_path.parts[-1],
+            'mimeType': mime_type,
+            'parents': [{'id': parent['id']}],
+        })
+        self.__log.info(f'Uploading file {file_path} with attributes {file1.items()} [parent "{parent.metadata["title"]}" {parent["id"]}]')
+        file1.SetContentFile(file_path)
+        file1.Upload()
+
+    def upload(self, path, parent = None):
+        """
+        Uploads something to Google Drive.
+        """
+        if parent is None:
+            parent = self.get('/')
+        elif not isinstance(parent, GoogleDriveFile):
+            parent = self.get(parent)
+
+        if isinstance(path, str):
+            path = Path(path)
+        elif not isinstance(path, Path):
+            raise TypeError('Expected file path to be a str or Path, received ' + str(type(path)))
+
+        if path.is_dir():
+            new_parent = self.create_folder(path.parts[-1], parent)
+            for child_file in path.iterdir():
+                self.upload(child_file, new_parent)
+        elif path.is_file():
+            self.upload_file(path, parent)
