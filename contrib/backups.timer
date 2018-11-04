@@ -1,0 +1,8 @@
+[Unit]
+Description=Runs the daily backups for the server
+
+[Timer]
+OnCalendar=*-*-* 01:00:00
+
+[Install]
+WantedBy=timers.target

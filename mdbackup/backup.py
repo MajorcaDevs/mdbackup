@@ -67,22 +67,22 @@ def run_step(step: Path, cwd: Path, env: Dict[str, str] = {}):
 def generate_script(step_script: Path, custom_utils: str = None) -> Path:
     """
     Given the original step script path, and an optional custom utils script,
-    will generate a script that will run in bash, with the app's utils script
+    will generate a script that will run in sh, with the app's utils script
     and the custom utils (if defined). Returns the path to the temporary script.
     """
     logger = logging.getLogger(__name__)
     me_irl = os.path.dirname(os.path.realpath(__file__))
     with NamedTemporaryFile(delete=False) as tmp:
-        tmp.write(b'#!/bin/bash\n')
-        tmp.write(f'. {me_irl}/utils.sh\n'.encode('utf-8'))
-        if custom_utils is not None: tmp.write(f'. {custom_utils}\n'.encode('utf-8'))
+        tmp.write(b'#!/usr/bin/env sh\n')
+        tmp.write(f'source {me_irl}/utils.sh\n'.encode('utf-8'))
+        if custom_utils is not None: tmp.write(f'source {custom_utils}\n'.encode('utf-8'))
         tmp.write(b'\n')
         with open(step_script, 'r') as script_file:
             script_file_contents = script_file.read()
             logger.debug(f'''Generating temporary script {tmp.name}
-#!/bin/bash
-. {me_irl}/utils.sh
-{". " + custom_utils if custom_utils is not None else ""}
+#!/usr/bin/env sh
+source {me_irl}/utils.sh
+{"source " + custom_utils if custom_utils is not None else ""}
 
 {script_file_contents}''')
             tmp.write(script_file_contents.encode('utf-8'))

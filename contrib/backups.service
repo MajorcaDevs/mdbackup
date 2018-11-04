@@ -1,0 +1,6 @@
+[Unit]
+Description=Runs the daily backups for the server
+
+[Service]
+Type=oneshot
+ExecStart=/backups/tool/automated-script.sh

@@ -19,13 +19,13 @@
 ##                       BEGIN UTILITIES FOR UTILITES                        ##
 ###############################################################################
 
-[[ -z "$MYSQLNETWORK" ]] && export MYSQLNETWORK='host'
-[[ -z "$MYSQLIMAGE" ]] && export MYSQLIMAGE='mariadb'
-[[ -z "$MYSQLHOST" ]] && export MYSQLHOST='localhost'
-[[ ! -z "$MYSQLPASSWORD" ]] && export MYSQLPASSWORD="-p$MYSQLPASSWORD"
-[[ ! -z "$MYSQLUSER" ]] && export MYSQLUSER="-u $MYSQLUSER"
+[ -z "$MYSQLNETWORK" ] && export MYSQLNETWORK='host'
+[ -z "$MYSQLIMAGE" ] && export MYSQLIMAGE='mariadb'
+[ -z "$MYSQLHOST" ] && export MYSQLHOST='localhost'
+[ ! -z "$MYSQLPASSWORD" ] && export MYSQLPASSWORD="-p$MYSQLPASSWORD"
+[ ! -z "$MYSQLUSER" ] && export MYSQLUSER="-u $MYSQLUSER"
 function __run_mysql() {
-    if [[ ! -z "$DOCKER" ]]; then
+    if [ ! -z "$DOCKER" ]; then
         exec docker container run \
             --rm \
             -i \
@@ -37,12 +37,12 @@ function __run_mysql() {
     fi
 }
 
-[[ -z "$PGNETWORK" ]] && export PGNETWORK='host'
-[[ -z "$PGUSER" ]] && export PGUSER='postgres'
-[[ -z "$PGIMAGE" ]] && export PGIMAGE='postgres'
-[[ -z "$PGHOST" ]] && export PGHOST='localhost'
+[ -z "$PGNETWORK" ] && export PGNETWORK='host'
+[ -z "$PGUSER" ] && export PGUSER='postgres'
+[ -z "$PGIMAGE" ] && export PGIMAGE='postgres'
+[ -z "$PGHOST" ] && export PGHOST='localhost'
 function __run_psql() {
-    if [[ ! -z "$DOCKER" ]]; then
+    if [ ! -z "$DOCKER" ]; then
         exec docker container run \
             --rm \
             -i \
@@ -66,7 +66,7 @@ function __run_psql() {
 # $2 -> Name of the destination folder in the backup
 # ... extra arguments are passed to rsync
 function backup-folder() {
-    if [[ ! -d "$1" && ! -f "$1" ]]; then
+    if [ ! -d "$1" && ! -f "$1" ]; then
         echo "Source '$1' does not exist"
         return 1
     fi
@@ -118,7 +118,7 @@ function backup-remote-folder() {
 # $1 -> database to backup
 # $GPG_PASSPHRASE -> If set this value, the backup will be encrypted using gpg and this value is the passphrase of the file
 function backup-postgres-database() {
-    if [[ ! -z "$GPG_PASSPHRASE" ]]; then
+    if [ ! -z "$GPG_PASSPHRASE" ]; then
         __run_psql pg_dump -h $PGHOST "$1" | gpg --output "$1".sql.gpg --batch --passphrase "$GPG_PASSPHRASE" --symmetric - || return $?
     else
         __run_psql pg_dump -h $PGHOST "$1" | gzip > "$1".sql.gz || return $?
@@ -128,7 +128,7 @@ function backup-postgres-database() {
 # $1 -> database to backup
 # $GPG_PASSPHRASE -> If set this value, the backup will be encrypted using gpg and this value is the passphrase of the file
 function backup-mysql-database() {
-    if [[ ! -z "$GPG_PASSPHRASE" ]]; then
+    if [ ! -z "$GPG_PASSPHRASE" ]; then
         __run_mysql mysqldump -h $MYSQLHOST $MYSQLPASSWORD $MYSQLUSER "$1" | gpg --output "$1".sql.gpg --batch --passphrase "$GPG_PASSPHRASE" --symmetric - || return $?
     else
         __run_mysql mysqldump -h $MYSQLHOST $MYSQLPASSWORD $MYSQLUSER "$1" | gzip > "$1".sql.gz || return $?
