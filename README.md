@@ -147,7 +147,7 @@ You can define as many steps as you wish. The idea is to keep every step as simp
      - `mysqlpassword`: If set, this password will be used to connect to the database.
   - **Example**: `backup-mysql-database "wordpress"` Will copy the database `wordpress` into a compressed (and maybe encrypted) sql script named the same as the database.
 
-## Programming the backup task
+## Automating running of backups
 
 In this section, systemd and cron ways are going to be explained. systemd is the preferred way in case your system has it.
 
