@@ -10,6 +10,7 @@ Download from releases the latest `wheel` package and install it. It is recommen
   - An OS different from Windows (Windows is unsupported) :(
   - Python 3.6 or higher
   - `rsync` and `ssh` installed (on macOS they are in general installed by default, on Linux distros you may need to install them)
+  - `bash` must be installed, used to run the scripts
 
 First select a folder where all the needed files will be stored. It is important not to move (or rename) this folder after installation.
 

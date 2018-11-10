@@ -73,14 +73,14 @@ def generate_script(step_script: Path, custom_utils: str = None) -> Path:
     logger = logging.getLogger(__name__)
     me_irl = os.path.dirname(os.path.realpath(__file__))
     with NamedTemporaryFile(delete=False) as tmp:
-        tmp.write(b'#!/usr/bin/env sh\n')
+        tmp.write(b'#!/usr/bin/env bash\n')
         tmp.write(f'source {me_irl}/utils.sh\n'.encode('utf-8'))
         if custom_utils is not None: tmp.write(f'source {custom_utils}\n'.encode('utf-8'))
         tmp.write(b'\n')
         with open(step_script, 'r') as script_file:
             script_file_contents = script_file.read()
             logger.debug(f'''Generating temporary script {tmp.name}
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 source {me_irl}/utils.sh
 {"source " + custom_utils if custom_utils is not None else ""}
 
