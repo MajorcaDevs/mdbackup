@@ -109,6 +109,7 @@ def main():
         #Cleanup old backups
         max_backups = config.get('maxBackupsKept', 7)
         backups_list = get_backup_folders_sorted(backups_path)
+        logger.debug('List of folders available:\n{}'.format('\n'.join(backups_list)))
         for old in backups_list[0:(len(backups_list)-max_backups)]:
             logger.warn(f'Removing old backup folder {old}')
             try:

@@ -18,6 +18,7 @@
 from datetime import datetime
 import logging
 from pathlib import Path
+import re
 import os
 import subprocess
 from tempfile import NamedTemporaryFile
@@ -136,7 +137,8 @@ def get_backup_folders_sorted(backups_folder: Path) -> List[Path]:
     """
     Gets the backups folders sorted.
     """
-    folders = [folder for folder in backups_folder.iterdir() if folder.is_dir() and 'lost+found' not in folder.name]
+    regex = re.compile(r'\d{4}-\d{2}-\d{2}T\d{1,2}:\d{2}')
+    folders = [folder for folder in backups_folder.iterdir() if folder.is_dir() and regex.match(folder.name)]
     folders.sort()
     return [folder.absolute() for folder in folders]
 
