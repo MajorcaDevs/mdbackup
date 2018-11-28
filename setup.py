@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="mdbackup",
-    version="0.1.2",
+    version="0.1.3",
     author="Melchor Alejo Garau Madrigal",
     author_email="melchor9000@gmail.com",
     description="Small but customizable utility to create backups and store them in cloud storage providers",

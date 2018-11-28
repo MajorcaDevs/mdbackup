@@ -111,13 +111,13 @@ def main():
     #Cleanup old backups
     max_backups = config.get('maxBackupsKept', 7)
     backups_list = get_backup_folders_sorted(backups_path)
-    logger.debug('List of folders available:\n{}'.format('\n'.join(backups_list)))
-    for old in backups_list[0:(len(backups_list)-max_backups)]:
+    logger.debug('List of folders available:\n{}'.format('\n'.join([str(b) for b in backups_list])))
+    for old in backups_list[0:max(0, len(backups_list)-max_backups)]:
         logger.warn(f'Removing old backup folder {old}')
         try:
             shutil.rmtree(old)
         except Exception:
-            logger.exception(f'Could not remove completely {old}')
+            logger.exception(f'Could not completely remove backup {old}')
 
 
 if __name__ == '__main__':
