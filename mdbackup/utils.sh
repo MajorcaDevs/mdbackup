@@ -56,11 +56,74 @@ function __run_psql() {
     fi
 }
 
+function __gpg_passphrase() {
+    echo gpg --output - --batch --passphrase \"$GPG_PASSPHRASE\" --symmetric -
+}
+
+function __gpg_recipients() {
+    printf "%s" "gpg --output - --encrypt"
+    while read email; do
+        printf " -r \"%s\"" "$email"
+    done < <(echo $GPG_KEYS | tr ' ' '\n')
+    echo " -"
+}
+
+function __gzip() {
+    echo "gzip -$COMPRESSION_LEVEL"
+}
+
+function __xz() {
+    echo "xz -z -T 0 -$COMPRESSION_LEVEL -c -"
+}
+
 
 ###############################################################################
 ##                              BEGIN UTILITIES                              ##
 ###############################################################################
 
+
+# $1 -> Command that generates an output
+# $2 -> Filename
+# $COMPRESSION_STRATEGY -> gzip or xz will compress the output, empty to not to compress
+# $COMPRESSION_LEVEL -> Level of compression
+# $GPG_KEYS -> Encrypt the copy using keys from recipient emails
+# $GPG_PASSPHRASE -> Encrypt the copy using a passphrase
+function compress-encrypt() {
+    local final_cmd="$1"
+    local extension=""
+
+    if [ -z "$1" ]; then
+        echo "Command is empty"
+        return 1
+    fi
+
+    if [ -z "$2" ]; then
+        echo "Filename is empty"
+        return 2
+    fi
+
+    case "$COMPRESSION_STRATEGY" in
+        "gzip" )
+            final_cmd="$final_cmd | $(__gzip)"
+            extension=".gz"
+            ;;
+        "xz" )
+            final_cmd="$final_cmd | $(__xz)"
+            extension=".xz"
+            ;;
+    esac
+
+    if [ ! -z "$GPG_KEYS" ]; then
+        final_cmd="$final_cmd | $(__gpg_recipients)"
+        extension="${extension}.asc"
+    elif [ ! -z "$GPG_PASSPHRASE" ]; then
+        final_cmd="$final_cmd | $(__gpg_passphrase)"
+        extension="${extension}.asc"
+    fi
+
+    eval "$final_cmd > \"${2}${extension}\""
+    return $?
+}
 
 # $1 -> Source of the backup
 # $2 -> Name of the destination folder in the backup
@@ -116,21 +179,13 @@ function backup-remote-folder() {
 }
 
 # $1 -> database to backup
-# $GPG_PASSPHRASE -> If set this value, the backup will be encrypted using gpg and this value is the passphrase of the file
+# See compress_encrypt...
 function backup-postgres-database() {
-    if [ ! -z "$GPG_PASSPHRASE" ]; then
-        __run_psql pg_dump -h $PGHOST "$1" | gpg --output "$1".sql.gpg --batch --passphrase "$GPG_PASSPHRASE" --symmetric - || return $?
-    else
-        __run_psql pg_dump -h $PGHOST "$1" | gzip > "$1".sql.gz || return $?
-    fi
+    compress-encrypt "__run_psql pg_dump -h $PGHOST \"$1\"" "$1" || return $?
 }
 
 # $1 -> database to backup
-# $GPG_PASSPHRASE -> If set this value, the backup will be encrypted using gpg and this value is the passphrase of the file
+# See compress_encrypt...
 function backup-mysql-database() {
-    if [ ! -z "$GPG_PASSPHRASE" ]; then
-        __run_mysql mysqldump -h $MYSQLHOST $MYSQLPASSWORD $MYSQLUSER "$1" | gpg --output "$1".sql.gpg --batch --passphrase "$GPG_PASSPHRASE" --symmetric - || return $?
-    else
-        __run_mysql mysqldump -h $MYSQLHOST $MYSQLPASSWORD $MYSQLUSER "$1" | gzip > "$1".sql.gz || return $?
-    fi
+    compress-encrypt "__run_mysql mysqldump -h $MYSQLHOST $MYSQLPASSWORD $MYSQLUSER \"$1\"" "$1" || return $?
 }

@@ -62,6 +62,19 @@
           ],
           "pattern": "^(.*)$"
         },
+        "gpg_keys": {
+          "$id": "#/properties/env/properties/gpg_keys",
+          "type": "array",
+          "title": "If set, the compressed files will be cyphered and compressed using GPG with the keys of the recipient emails given",
+          "examples": [
+            [ "melchor9000@gmail.com" ]
+          ],
+          "items": {
+            "$id": "#/properties/env/properties/gpg_keys/items",
+            "type": "string",
+            "pattern": "^(.+@.+\\..+)$"
+          }
+        },
         "docker": {
           "$id": "#/properties/env/properties/docker",
           "type": "string",
@@ -179,6 +192,33 @@
         }
       },
       "required": []
+    },
+    "compression": {
+      "$id": "#/properties/compression",
+      "type": ["object", "null"],
+      "title": "Configures the compression of things",
+      "required": [
+        "strategy"
+      ],
+      "properties": {
+        "strategy": {
+          "$id": "#/properties/compression/properties/strategy",
+          "type": "string",
+          "title": "Selects the compression strategy",
+          "default": "gzip",
+          "enum": [
+            "gzip",
+            "xz"
+          ]
+        },
+        "level": {
+          "$id": "#/properties/compression/properties/level",
+          "type": "number",
+          "title": "Selects the compression level",
+          "default": 5,
+          "enum": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ]
+        }
+      }
     },
     "providers": {
       "$id": "#/properties/providers",

@@ -141,4 +141,3 @@ def get_backup_folders_sorted(backups_folder: Path) -> List[Path]:
     folders = [folder for folder in backups_folder.iterdir() if folder.is_dir() and regex.match(folder.name)]
     folders.sort()
     return [folder.absolute() for folder in folders]
-

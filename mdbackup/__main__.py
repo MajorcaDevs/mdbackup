@@ -22,51 +22,65 @@ import shutil
 import subprocess
 import sys
 
+from .archive import (
+    archive_folder,
+    get_compression_strategy,
+    gpg_passphrase_strategy,
+    gpg_key_strategy,
+    gzip_strategy,
+)
 from .backup import do_backup, get_backup_folders_sorted
+from .config import Config
 from .storage.drive import GDriveStorage
 
 def main():
-    #Check if configuration file exists
-    if not Path('config/config.json').exists():
-        print('Config file "' + str(Path('config/config.json').absolute()) + '" does not exist')
+    #Check if configuration file exists and read it
+    try:
+        config = Config(Path('config/config.json'))
+    except (FileNotFoundError, IsADirectoryError, NotADirectoryError) as e:
+        print(e.args[0])
         print('Check the paths and run again the utility')
         sys.exit(1)
-
-    #Read the configuration
-    with open('config/config.json') as config_file:
-        config = json.load(config_file)
+    except KeyError as e:
+        print('Configuration is malformed')
+        print(e.args[0])
+        sys.exit(2)
 
     logging.basicConfig(format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
-                        level=logging.getLevelName(config.get('logLevel', 'WARNING')))
+                        level=config.log_level)
     logger = logging.getLogger('mdbackups')
 
     #Do backups
-    backups_path = Path(config['backupsPath'])
-    backup = do_backup(backups_path, config.get('customUtilsScript'), **config['env'])
+    backups_path = config.backups_path
+    backup = do_backup(backups_path,
+                       config.custom_utils_script,
+                       **config.env,
+                       compression_strategy=config.compression_strategy,
+                       compression_level=config.compression_level)
     final_items = []
     items_to_remove = []
 
     #(do the following only if there are any providers defined)
-    if len(config['providers']) > 0:
+    if len(config.providers) > 0:
         #Compress directories
         for item in backup.iterdir():
             #Compress if it is a directory
             if item.is_dir():
-                filename = item.parts[-1] + '.tar'
-                directory = item.relative_to(backup)
-                logger.info(f'Compressing directory {item} into {filename}')
-                #If a GPG passphrase is defined, compress and cypher using GPG
-                if 'gpg_passphrase' in config['env']:
-                    filename += '.gpg'
-                    end_cmd = f'| gpg --output "{filename}" --batch --passphrase "{config["env"]["gpg_passphrase"]}" --symmetric -'
-                else:
-                    filename += '.gz'
-                    end_cmd = f'| gzip > "{filename}"'
+                strategies = []
 
-                #Do the compression
-                logger.debug(f'Executing command ["bash", "-c", \'tar -c "{str(directory)}" {end_cmd}\']')
-                _exec = subprocess.run(['bash', '-c', f'tar -c "{str(directory)}" {end_cmd}'],
-                                    cwd=str(backup), check=True)
+                if config.compression_strategy is not None:
+                    strategies.append(get_compression_strategy(
+                        config.compression_strategy,
+                        config.compression_level,
+                    ))
+
+                if 'gpg_key' in config.env:
+                    strategies.append(gpg_key_strategy(config.env['gpg_keys']))
+                elif 'gpg_passphrase' in config.env:
+                    strategies.append(gpg_passphrase_strategy(config.env['gpg_passphrase']))
+
+                filename = archive_folder(backup, item, strategies)
+
                 final_items.append(Path(backup, filename))
                 items_to_remove.append(Path(backup, filename))
             else:
@@ -75,7 +89,7 @@ def main():
         try:
             #Upload files to storage providers
             backup_folder_name = backup.relative_to(backups_path).parts[0]
-            for prov_config in config['providers']:
+            for prov_config in config.providers:
                 gd = None
                 #Detect provider type and instantiate it
                 if 'gdrive' == prov_config['type']:
@@ -109,7 +123,7 @@ def main():
                 item.unlink()
 
     #Cleanup old backups
-    max_backups = config.get('maxBackupsKept', 7)
+    max_backups = config.max_backups_kept
     backups_list = get_backup_folders_sorted(backups_path)
     logger.debug('List of folders available:\n{}'.format('\n'.join([str(b) for b in backups_list])))
     for old in backups_list[0:max(0, len(backups_list)-max_backups)]:

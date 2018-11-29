@@ -52,6 +52,7 @@ This allows you to auto-complete with the elements available in the configuratio
     "maxBackupsKept": 7, //If not defined, by default are 7 backups to keep
     "env": {
         "gpg_passphrase": "If set, it will cypher everything with GPG and this value will be used as passphrase",
+        "gpg_keys": "If set, the compressed files will be cyphered and compressed using GPG with the keys of the recipient emails given (is an array of strings)",
         "docker": "If set, the utilities will run in a docker container instead of using native commands",
         "pgnetwork": "[Docker] Defines which network will use to connect to the database (default host)",
         "pgimage": "[Docker] Defines which image will use to run the container (default postgres)",
@@ -63,6 +64,10 @@ This allows you to auto-complete with the elements available in the configuratio
         "mysqlhost": "127.0.0.1",
         "mysqluser": "The username to connect to the database",
         "mysqlpassword": "If defined, sets the password which will be used to connect to the database"
+    },
+    "compression": {
+      "strategy": "gzip|xz",
+      "level": 8
     },
     "providers": [
         {
@@ -104,6 +109,13 @@ backup-folder "/var/web/" web || exit $?
 You can define as many steps as you wish. The idea is to keep every step as simple as possible to simplify debugging.
 
 ### Predefined utility functions
+
+`compress-encrypt`:
+ - **Description**: Executes a command and the output it generates, will apply the compression and encription strategies, based on the configuration.
+ - **Parameters**:
+     1. Command to run that will output something
+     2. Base file name that will be created
+ - **Example**: `compress-encrypt "cat /dev/random" "random.bin"`
 
 `backup-folder`:
   - **Description**: Copies a folder to another that will be inside the backup folder, using `rsync`.
