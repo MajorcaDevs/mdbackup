@@ -68,6 +68,8 @@ class Config(object):
         """
         Creates an instance of the configuration with the given ``config.json``
         """
+        if not isinstance(path, Path):
+            path = Path(path)
         if not path.exists():
             raise FileNotFoundError(f'"{path}" must exist')
         if not path.is_file():

@@ -21,14 +21,6 @@ import subprocess
 from typing import List, Optional
 
 
-__all__ = [
-    archive_folder,
-    get_compression_strategy,
-    gpg_passphrase_strategy,
-    gpg_key_strategy,
-]
-
-
 def archive_folder(backup_path: Path, folder: Path, strategies: List = []) -> str:
     """
     Given a folder of a backup, archives it into a ``tar`` file and, optionally, compresses the file using different

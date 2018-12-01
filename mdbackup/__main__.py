@@ -36,7 +36,7 @@ from .storage.drive import GDriveStorage
 def main():
     #Check if configuration file exists and read it
     try:
-        config = Config(Path('config/config.json'))
+        config = Config('config/config.json')
     except (FileNotFoundError, IsADirectoryError, NotADirectoryError) as e:
         print(e.args[0])
         print('Check the paths and run again the utility')

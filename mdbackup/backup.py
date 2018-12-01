@@ -57,7 +57,7 @@ def run_step(step: Path, cwd: Path, env: Dict[str, str] = {}):
     full_env = dict(os.environ)
     for key, value in env.items():
         if value is not None:
-            full_env[key.upper()] = value
+            full_env[key.upper()] = str(value)
     return subprocess.run([str(step)],
                           stderr=subprocess.PIPE,
                           stdout=subprocess.PIPE,
