@@ -252,26 +252,6 @@
               "/Backups"
             ],
             "pattern": "^/(.*)$"
-          },
-          "clientSecrets": {
-            "$id": "#/properties/gdrive/properties/clientSecrets",
-            "type": "string",
-            "title": "Path where the client secrets is be located",
-            "default": "",
-            "examples": [
-              "config/client_secrets.json"
-            ],
-            "pattern": "^(.*)$"
-          },
-          "authTokens": {
-            "$id": "#/properties/gdrive/properties/authTokens",
-            "type": "string",
-            "title": "Path where the auth tokens will be stored",
-            "default": "",
-            "examples": [
-              "config/auth_tokens.json"
-            ],
-            "pattern": "^(.*)$"
           }
         }
       }

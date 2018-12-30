@@ -21,11 +21,10 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
 class ProviderConfig(object):
-    def __init__(self, provider_dict):
+    def __init__(self, provider_dict: Dict[str, str]):
         self.__type = provider_dict['type']
         self.__backups_path = provider_dict['backupsPath']
-        self.__client_secrets = provider_dict.get('clientSecrets')
-        self.__auth_tokens = provider_dict.get('authTokens')
+        self.__extra = {key: value for key, value in provider_dict.items() if key not in ('type', 'backupsPath')}
 
     @property
     def type(self) -> str:
@@ -41,19 +40,11 @@ class ProviderConfig(object):
         """
         return self.__backups_path
 
-    @property
-    def client_secrets(self) -> Optional[str]:
-        """
-        :return: If needed, a client tokens or a path to a file to them for the cloud provider.
-        """
-        return self.__client_secrets
+    def __getitem__(self, key: str):
+        return self.__extra[key]
 
-    @property
-    def auth_tokens(self) -> Optional[str]:
-        """
-        :return: If needed, a authentication tokens or a path to a file to them for the cloud provider.
-        """
-        return self.__auth_tokens
+    def get(self, key: str, default=None):
+        return self.__extra.get(key)
 
 
 class Config(object):

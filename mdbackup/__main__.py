@@ -31,7 +31,7 @@ from .archive import (
 )
 from .backup import do_backup, get_backup_folders_sorted
 from .config import Config
-from .storage.drive import GDriveStorage
+from .storage.storage import create_storage_instance
 
 def main():
     #Check if configuration file exists and read it
@@ -90,16 +90,13 @@ def main():
             #Upload files to storage providers
             backup_folder_name = backup.relative_to(backups_path).parts[0]
             for prov_config in config.providers:
-                gd = None
                 #Detect provider type and instantiate it
-                if 'gdrive' == prov_config['type']:
-                    logger.info('Preparing upload to Google Drive')
-                    gd = GDriveStorage(prov_config.get('clientSecrets'), prov_config.get('authTokens'))
+                storage = create_storage_instance(prov_config)
 
-                if gd is not None:
+                if storage is not None:
                     #Create folder for this backup
                     try:
-                        backup_cloud_folder = gd.create_folder(backup_folder_name, prov_config['backupsPath'])
+                        backup_cloud_folder = storage.create_folder(backup_folder_name, prov_config.backups_path)
                     except Exception:
                         #If we cannot create it, will continue to the next configured provider
                         logger.exception(f'Could not create folder {backup_folder_name}')
@@ -109,13 +106,13 @@ def main():
                     for item in final_items:
                         try:
                             logger.info(f'Uploading {item} to {backup_cloud_folder}')
-                            gd.upload(item, backup_cloud_folder)
+                            storage.upload(item, backup_cloud_folder)
                         except Exception:
                             #Log only in case of error (tries to upload as much as it can)
                             logger.exception(f'Could not upload file {item}')
                 else:
                     #The provider is invalid, show error
-                    logger.error(f'Unknown storage provider "{prov_config["type"]}", ignoring...')
+                    logger.error(f'Unknown storage provider "{prov_config.type}", ignoring...')
         finally:
             #Remove compressed directories
             for item in items_to_remove:

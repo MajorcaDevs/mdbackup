@@ -18,16 +18,18 @@
 import logging
 from pathlib import Path
 import os
-from typing import List
+from typing import List, Union
 
 import magic
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive, GoogleDriveFile
 
+from mdbackup.storage.storage import AbstractStorage
 
-class GDriveStorage:
 
-    def __init__(self, client_secrets: str, auth_tokens: str):
+class GDriveStorage(AbstractStorage):
+
+    def __init__(self, params):
         """
         Creates an instance of the Google Drive storage. If ``client_secrets``
         is not null, will be used that path to look for the secrets. If
@@ -38,8 +40,8 @@ class GDriveStorage:
         it will show (in the terminal) an URL. That will allow you to log in
         into an account through a browser.
         """
-        client_secrets = client_secrets if client_secrets is not None else 'config/client_secrets.json'
-        auth_tokens = auth_tokens if auth_tokens is not None else 'config/auth_tokens.json'
+        client_secrets = params.get('clientSecrets', 'config/client_secrets.json')
+        auth_tokens = params.get('authTokens', 'config/auth_tokens.json')
         self.__log = logging.getLogger(__name__)
         self.__gauth = GoogleAuth()
         self.__gauth.LoadClientConfigFile(client_secrets)
@@ -117,7 +119,7 @@ class GDriveStorage:
 
         return self._drive.ListFile({'q': f"'{drive_file.metadata['id']}' in parents and trashed=false"}).GetList()
 
-    def create_folder(self, name: str, parent: Path = None):
+    def create_folder(self, name: str, parent: Union[Path, str]=None) -> GoogleDriveFile:
         """
         Creates a folder with name ``name`` in the root folder or in the
         folder specified in ``parent``. Returns the GoogleDriveFile instance
@@ -136,7 +138,7 @@ class GDriveStorage:
         dir1.Upload()
         return dir1
 
-    def upload_file(self, file_path, parent = None):
+    def upload_file(self, file_path: Path, parent: GoogleDriveFile=None):
         """
         Uploads a file to google drive, in the root folder or in the
         folder specified in ``parent``.
