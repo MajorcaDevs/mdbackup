@@ -92,23 +92,33 @@ def get_compression_strategy(strategy_name: str, level: Optional[int]) -> Callab
         raise KeyError(f'Unknown compression strategy "{strategy_name}"')
 
 
-def gpg_passphrase_strategy(passphrase: str) -> StrategyCallable:
+def gpg_passphrase_strategy(passphrase: str, algorithm: Optional[str]) -> StrategyCallable:
     """
     Compression and encryption strategy that uses ``gpg`` (using passphrase) to compress and encrypt the ``tar`` file.
     """
     def gpg():
-        return f'gpg --compress-algo 0 --output - --batch --passphrase "{passphrase}" --symmetric -', '.asc'
+        extra_args: List[str] = []
+        if algorithm is not None:
+            extra_args.append(f'--cypher-algo {algorithm.upper()}')
+        extra_args = ' '.join(extra_args)
+        return (f'gpg --compress-algo 0 --output - --batch --passphrase "{passphrase}" --symmetric {extra_args} -',
+                '.asc')
 
     return gpg
 
 
-def gpg_key_strategy(keys: List[str]) -> StrategyCallable:
+def gpg_key_strategy(keys: List[str], algorithm: Optional[str]) -> StrategyCallable:
     """
     Compression and encryption strategy that uses ``gpg`` (using a key) to compress and encrypt the ``tar`` file.
     """
     def gpg():
-        recv = ' '.join([f'-r {email}' for email in keys])
-        return f'gpg --compress-algo 0 --output - --encrypt {recv} -', '.asc'
+        extra_args: List[str] = []
+        if algorithm is not None:
+            extra_args.append(f'--cypher-algo {algorithm.upper()}')
+        extra_args.append('--encrypt')
+        extra_args += [f'-r "{email}"' for email in keys]
+        extra_args = ' '.join(extra_args)
+        return f'gpg --compress-algo 0 --output - {extra_args} -', '.asc'
 
     return gpg
 

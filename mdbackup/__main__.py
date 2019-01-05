@@ -80,7 +80,10 @@ def main():
                     ))
 
                 if config.cypher_strategy is not None:
-                    strategies.append(get_cypher_strategy(config.cypher_strategy, **config.cypher_params))
+                    strategies.append(get_cypher_strategy(
+                        config.cypher_strategy,
+                        **config.cypher_params,
+                    ))
 
                 filename = archive_folder(backup, item, strategies)
 

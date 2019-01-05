@@ -65,12 +65,13 @@ This allows you to auto-complete with the elements available in the configuratio
     },
     "compression": {
       "strategy": "gzip|xz",
-      "level": 8
+      "level": 8 //Compression level from 0 to 9
     },
     "cypher": {
       "strategy": "gpg-keys|gpg-passphrase",
       "passphrase": "If using gpg-passphrase, this will be used as passphrase for the cypher",
-      "keys": "If using gpg-keys, this will be used as recipients option for the gpg cypher (emails)"
+      "keys": "If using gpg-keys, this will be used as recipients option for the gpg cypher (emails)",
+      "algorithm": "Defines the algorithm to use in the cypher process, depends in the strategy (currently one of `gpg --version` cyphers)"
     },
     "providers": [
         {

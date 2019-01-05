@@ -238,6 +238,16 @@
             "pattern": "^(.+@.+\\..+)$"
           }
         },
+        "algorithm": {
+          "$id": "#/properties/cypher/properties/algorithm",
+          "type": ["string", "null"],
+          "title": "Define the cypher algorithm to use in the process",
+          "examples": [
+            "CAMELLIA256",
+            "AES256",
+            "AES192"
+          ]
+        }
       }
     },
     "providers": {

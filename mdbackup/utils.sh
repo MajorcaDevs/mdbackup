@@ -56,12 +56,21 @@ function __run_psql() {
     fi
 }
 
+function __gpg_common_extra_args() {
+    local extra_args=""
+    if [[ ! -z "$CYPHER_ALGORITHM" ]]; then
+        extra_args="$extra_args --cypher-algo $CYPHER_ALGORITHM"
+    fi
+    echo ${extra_args}
+}
+
 function __gpg_passphrase() {
-    echo gpg --output - --batch --passphrase \"${CYPHER_PASSPHRASE}\" --symmetric -
+    local extra_args=$(__gpg_common_extra_args)
+    echo gpg --output - --batch --passphrase \"${CYPHER_PASSPHRASE}\" --symmetric ${extra_args} -
 }
 
 function __gpg_recipients() {
-    printf "%s" "gpg --output - --encrypt"
+    printf "%s %s" "gpg --output - --encrypt" "$(__gpg_common_extra_args)"
     while read email; do
         printf " -r \"%s\"" "$email"
     done < <(echo ${CYPHER_KEYS} | tr ' ' '\n')
