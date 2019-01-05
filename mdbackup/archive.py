@@ -18,10 +18,13 @@
 import logging
 from pathlib import Path
 import subprocess
-from typing import List, Optional
+from typing import List, Optional, Callable, Tuple, NewType
 
 
-def archive_folder(backup_path: Path, folder: Path, strategies: List = []) -> str:
+StrategyCallable = NewType('StrategyCallable', Callable[[], Tuple[str, str]])
+
+
+def archive_folder(backup_path: Path, folder: Path, strategies: List[StrategyCallable]=None) -> str:
     """
     Given a folder of a backup, archives it into a ``tar`` file and, optionally, compresses the file using different
     strategies. By default, no compression is done.
@@ -32,6 +35,8 @@ def archive_folder(backup_path: Path, folder: Path, strategies: List = []) -> st
 
     The returned value is the file name for the archived folder.
     """
+    if strategies is None:
+        strategies = []
     logger = logging.getLogger(__name__)
     filename = folder.parts[-1] + '.tar'
     directory = folder.relative_to(backup_path)
@@ -45,7 +50,7 @@ def archive_folder(backup_path: Path, folder: Path, strategies: List = []) -> st
             filename += ext
             end_cmd = f'| {cmd}'
 
-    #Do the compression
+    # Do the compression
     logger.debug(f'Executing command ["bash", "-c", \'tar -c "{str(directory)}" {end_cmd} > "{filename}"\']')
     _exec = subprocess.run(['bash', '-c', f'tar -c "{str(directory)}" {end_cmd} > "{filename}"'],
                            cwd=str(backup_path), check=True)
@@ -53,7 +58,7 @@ def archive_folder(backup_path: Path, folder: Path, strategies: List = []) -> st
     return filename
 
 
-def gzip_strategy(level: int = 5):
+def gzip_strategy(level: int = 5) -> StrategyCallable:
     """
     Compression strategy that uses ``gzip`` to compress the ``tar`` file.
     """
@@ -63,7 +68,7 @@ def gzip_strategy(level: int = 5):
     return gzip
 
 
-def xz_strategy(level: int = 5):
+def xz_strategy(level: int = 5) -> StrategyCallable:
     """
     Compression strategy that uses ``xz`` to compress the ``tar`` file.
     """
@@ -73,31 +78,50 @@ def xz_strategy(level: int = 5):
     return xz
 
 
-def get_compression_strategy(strategy_name: str, level: Optional[int]):
-    if strategy_name == 'gzip':
-        return gzip_strategy(level)
-    elif strategy_name == 'xz':
-        return xz_strategy(level)
+COMPRESSION_STRATEGIES = {
+    'gzip': gzip_strategy,
+    'xz': xz_strategy,
+}
+
+
+def get_compression_strategy(strategy_name: str, level: Optional[int]) -> Callable:
+    func = COMPRESSION_STRATEGIES.get(strategy_name.lower())
+    if func is not None:
+        return func(level)
     else:
-        raise ValueError(f'Unknown compression strategy "{strategy_name}"')
+        raise KeyError(f'Unknown compression strategy "{strategy_name}"')
 
 
-def gpg_passphrase_strategy(passphrase: str):
+def gpg_passphrase_strategy(passphrase: str) -> StrategyCallable:
     """
     Compression and encryption strategy that uses ``gpg`` (using passphrase) to compress and encrypt the ``tar`` file.
     """
-    def gpg(filename: str):
+    def gpg():
         return f'gpg --compress-algo 0 --output - --batch --passphrase "{passphrase}" --symmetric -', '.asc'
 
     return gpg
 
 
-def gpg_key_strategy(recipients: List[str]):
+def gpg_key_strategy(keys: List[str]) -> StrategyCallable:
     """
     Compression and encryption strategy that uses ``gpg`` (using a key) to compress and encrypt the ``tar`` file.
     """
-    def gpg(filename: str):
-        recv = ' '.join([f'-r {email}' for email in recipients])
+    def gpg():
+        recv = ' '.join([f'-r {email}' for email in keys])
         return f'gpg --compress-algo 0 --output - --encrypt {recv} -', '.asc'
 
     return gpg
+
+
+CYPHER_STRATEGIES = {
+    'gpg-passphrase': gpg_passphrase_strategy,
+    'gpg-keys': gpg_key_strategy,
+}
+
+
+def get_cypher_strategy(strategy_name: str, **kwargs) -> StrategyCallable:
+    func = CYPHER_STRATEGIES.get(strategy_name.lower())
+    if func is not None:
+        return func(**kwargs)
+    else:
+        raise KeyError(f'Unknown cypher strategy "{strategy_name}"')

@@ -19,52 +19,52 @@
 ##                       BEGIN UTILITIES FOR UTILITES                        ##
 ###############################################################################
 
-[ -z "$MYSQLNETWORK" ] && export MYSQLNETWORK='host'
-[ -z "$MYSQLIMAGE" ] && export MYSQLIMAGE='mariadb'
-[ -z "$MYSQLHOST" ] && export MYSQLHOST='localhost'
-[ ! -z "$MYSQLPASSWORD" ] && export MYSQLPASSWORD="-p$MYSQLPASSWORD"
-[ ! -z "$MYSQLUSER" ] && export MYSQLUSER="-u $MYSQLUSER"
+[[ -z "$MYSQLNETWORK" ]] && export MYSQLNETWORK='host'
+[[ -z "$MYSQLIMAGE" ]] && export MYSQLIMAGE='mariadb'
+[[ -z "$MYSQLHOST" ]] && export MYSQLHOST='localhost'
+[[ ! -z "$MYSQLPASSWORD" ]] && export MYSQLPASSWORD="-p$MYSQLPASSWORD"
+[[ ! -z "$MYSQLUSER" ]] && export MYSQLUSER="-u $MYSQLUSER"
 function __run_mysql() {
-    if [ ! -z "$DOCKER" ]; then
+    if [[ ! -z "$DOCKER" ]]; then
         exec docker container run \
             --rm \
             -i \
-            --network=$MYSQLNETWORK \
-            $MYSQLIMAGE \
+            --network=${MYSQLNETWORK} \
+            ${MYSQLIMAGE} \
             "$@"
     else
         exec "$@"
     fi
 }
 
-[ -z "$PGNETWORK" ] && export PGNETWORK='host'
-[ -z "$PGUSER" ] && export PGUSER='postgres'
-[ -z "$PGIMAGE" ] && export PGIMAGE='postgres'
-[ -z "$PGHOST" ] && export PGHOST='localhost'
+[[ -z "$PGNETWORK" ]] && export PGNETWORK='host'
+[[ -z "$PGUSER" ]] && export PGUSER='postgres'
+[[ -z "$PGIMAGE" ]] && export PGIMAGE='postgres'
+[[ -z "$PGHOST" ]] && export PGHOST='localhost'
 function __run_psql() {
-    if [ ! -z "$DOCKER" ]; then
+    if [[ ! -z "$DOCKER" ]]; then
         exec docker container run \
             --rm \
             -i \
-            --network=$PGNETWORK \
-            -e PGPASSWORD=$PGPASSWORD \
-            -u $PGUSER \
-            $PGIMAGE \
+            --network=${PGNETWORK} \
+            -e PGPASSWORD=${PGPASSWORD} \
+            -u ${PGUSER} \
+            ${PGIMAGE} \
             "$@"
     else
-        exec sudo -u $PGUSER "$@"
+        exec sudo -u ${PGUSER} "$@"
     fi
 }
 
 function __gpg_passphrase() {
-    echo gpg --output - --batch --passphrase \"$GPG_PASSPHRASE\" --symmetric -
+    echo gpg --output - --batch --passphrase \"${CYPHER_PASSPHRASE}\" --symmetric -
 }
 
 function __gpg_recipients() {
     printf "%s" "gpg --output - --encrypt"
     while read email; do
         printf " -r \"%s\"" "$email"
-    done < <(echo $GPG_KEYS | tr ' ' '\n')
+    done < <(echo ${CYPHER_KEYS} | tr ' ' '\n')
     echo " -"
 }
 
@@ -86,18 +86,19 @@ function __xz() {
 # $2 -> Filename
 # $COMPRESSION_STRATEGY -> gzip or xz will compress the output, empty to not to compress
 # $COMPRESSION_LEVEL -> Level of compression
-# $GPG_KEYS -> Encrypt the copy using keys from recipient emails
-# $GPG_PASSPHRASE -> Encrypt the copy using a passphrase
+# $CYPHER_STRATEGY -> gpg-keys or gpg-passphrase will cypher the output, empty to not to cypher
+# $CYPHER_KEYS -> Encrypt the copy using keys from recipient keys (emaisl in GPG)
+# $CYPHER_PASSPHRASE -> Encrypt the copy using a passphrase
 function compress-encrypt() {
     local final_cmd="$1"
     local extension=""
 
-    if [ -z "$1" ]; then
+    if [[ -z "$1" ]]; then
         echo "Command is empty"
         return 1
     fi
 
-    if [ -z "$2" ]; then
+    if [[ -z "$2" ]]; then
         echo "Filename is empty"
         return 2
     fi
@@ -113,15 +114,18 @@ function compress-encrypt() {
             ;;
     esac
 
-    if [ ! -z "$GPG_KEYS" ]; then
-        final_cmd="$final_cmd | $(__gpg_recipients)"
-        extension="${extension}.asc"
-    elif [ ! -z "$GPG_PASSPHRASE" ]; then
-        final_cmd="$final_cmd | $(__gpg_passphrase)"
-        extension="${extension}.asc"
-    fi
+    case "$CYPHER_STRATEGY" in
+        "gpg-keys" )
+            final_cmd="$final_cmd | $(__gpg_recipients)"
+            extension="${extension}.asc"
+            ;;
+        "gpg-passphrase" )
+            final_cmd="$final_cmd | $(__gpg_passphrase)"
+            extension="${extension}.asc"
+            ;;
+    esac
 
-    eval "$final_cmd > \"${2}${extension}\""
+    eval "${final_cmd} > \"${2}${extension}\""
     return $?
 }
 
@@ -129,7 +133,7 @@ function compress-encrypt() {
 # $2 -> Name of the destination folder in the backup
 # ... extra arguments are passed to rsync
 function backup-folder() {
-    if [ ! -d "$1" && ! -f "$1" ]; then
+    if [[ ! -d "$1" && ! -f "$1" ]]; then
         echo "Source '$1' does not exist"
         return 1
     fi
@@ -181,11 +185,15 @@ function backup-remote-folder() {
 # $1 -> database to backup
 # See compress_encrypt...
 function backup-postgres-database() {
-    compress-encrypt "__run_psql pg_dump -h $PGHOST \"$1\"" "$1" || return $?
+    compress-encrypt "__run_psql pg_dump -h $PGHOST \"$1\"" "$1.sql" || return $?
 }
 
 # $1 -> database to backup
 # See compress_encrypt...
 function backup-mysql-database() {
-    compress-encrypt "__run_mysql mysqldump -h $MYSQLHOST $MYSQLPASSWORD $MYSQLUSER \"$1\"" "$1" || return $?
+    compress-encrypt "__run_mysql mysqldump -h $MYSQLHOST $MYSQLPASSWORD $MYSQLUSER \"$1\"" "$1.sql" || return $?
+}
+
+function backup-docker-volume() {
+    compress-encrypt "docker container run --rm -i -v \"$1\":/backup alpine tar -c -C /backup ." "$1.tar" || return $?
 }

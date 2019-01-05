@@ -19,22 +19,20 @@ import json
 import logging
 from pathlib import Path
 import shutil
-import subprocess
 import sys
 
 from .archive import (
     archive_folder,
     get_compression_strategy,
-    gpg_passphrase_strategy,
-    gpg_key_strategy,
-    gzip_strategy,
+    get_cypher_strategy,
 )
 from .backup import do_backup, get_backup_folders_sorted
 from .config import Config
 from .storage.storage import create_storage_instance
 
+
 def main():
-    #Check if configuration file exists and read it
+    # Check if configuration file exists and read it
     try:
         config = Config('config/config.json')
     except (FileNotFoundError, IsADirectoryError, NotADirectoryError) as e:
@@ -50,21 +48,24 @@ def main():
                         level=config.log_level)
     logger = logging.getLogger('mdbackups')
 
-    #Do backups
+    # Do backups
     backups_path = config.backups_path
     backup = do_backup(backups_path,
                        config.custom_utils_script,
                        **config.env,
                        compression_strategy=config.compression_strategy,
-                       compression_level=config.compression_level)
+                       compression_level=config.compression_level,
+                       cypher_strategy=config.cypher_strategy,
+                       **{f'cypher_{key}': value
+                          for key, value in (config.cypher_params.items() if config.cypher_params is not None else [])})
     final_items = []
     items_to_remove = []
 
-    #(do the following only if there are any providers defined)
+    # (do the following only if there are any providers defined)
     if len(config.providers) > 0:
-        #Compress directories
+        # Compress directories
         for item in backup.iterdir():
-            #Compress if it is a directory
+            # Compress if it is a directory
             if item.is_dir():
                 strategies = []
 
@@ -74,10 +75,8 @@ def main():
                         config.compression_level,
                     ))
 
-                if 'gpg_key' in config.env:
-                    strategies.append(gpg_key_strategy(config.env['gpg_keys']))
-                elif 'gpg_passphrase' in config.env:
-                    strategies.append(gpg_passphrase_strategy(config.env['gpg_passphrase']))
+                if config.cypher_strategy is not None:
+                    strategies.append(get_cypher_strategy(config.cypher_strategy, **config.cypher_params))
 
                 filename = archive_folder(backup, item, strategies)
 
@@ -87,47 +86,47 @@ def main():
                 final_items.append(item)
 
         try:
-            #Upload files to storage providers
+            # Upload files to storage providers
             backup_folder_name = backup.relative_to(backups_path).parts[0]
             for prov_config in config.providers:
-                #Detect provider type and instantiate it
+                # Detect provider type and instantiate it
                 storage = create_storage_instance(prov_config)
 
                 if storage is not None:
-                    #Create folder for this backup
+                    # Create folder for this backup
                     try:
                         backup_cloud_folder = storage.create_folder(backup_folder_name, prov_config.backups_path)
                     except Exception:
-                        #If we cannot create it, will continue to the next configured provider
+                        # If we cannot create it, will continue to the next configured provider
                         logger.exception(f'Could not create folder {backup_folder_name}')
                         continue
 
-                    #Upload every file
+                    # Upload every file
                     for item in final_items:
                         try:
                             logger.info(f'Uploading {item} to {backup_cloud_folder}')
                             storage.upload(item, backup_cloud_folder)
                         except Exception:
-                            #Log only in case of error (tries to upload as much as it can)
+                            # Log only in case of error (tries to upload as much as it can)
                             logger.exception(f'Could not upload file {item}')
                 else:
-                    #The provider is invalid, show error
+                    # The provider is invalid, show error
                     logger.error(f'Unknown storage provider "{prov_config.type}", ignoring...')
         finally:
-            #Remove compressed directories
+            # Remove compressed directories
             for item in items_to_remove:
                 logger.info(f'Removing file from compressed directory {item}')
                 item.unlink()
 
-    #Cleanup old backups
+    # Cleanup old backups
     max_backups = config.max_backups_kept
     backups_list = get_backup_folders_sorted(backups_path)
     logger.debug('List of folders available:\n{}'.format('\n'.join([str(b) for b in backups_list])))
     for old in backups_list[0:max(0, len(backups_list)-max_backups)]:
-        logger.warn(f'Removing old backup folder {old}')
+        logger.warning(f'Removing old backup folder {old}')
         try:
-            shutil.rmtree(old)
-        except Exception:
+            shutil.rmtree(str(old.absolute()))
+        except OSError:
             logger.exception(f'Could not completely remove backup {old}')
 
 

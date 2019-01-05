@@ -52,29 +52,6 @@
       "type": "object",
       "title": "Environment variables that will be passed to the scripts, includes predefined configurations available for configuring scripts",
       "properties": {
-        "gpg_passphrase": {
-          "$id": "#/properties/env/properties/gpg_passphrase",
-          "type": "string",
-          "title": "If set, the compressed files will be cyphered and compressed using GPG with the passphrase given",
-          "default": "",
-          "examples": [
-            "Ap0werful[passw@rd]"
-          ],
-          "pattern": "^(.*)$"
-        },
-        "gpg_keys": {
-          "$id": "#/properties/env/properties/gpg_keys",
-          "type": "array",
-          "title": "If set, the compressed files will be cyphered and compressed using GPG with the keys of the recipient emails given",
-          "examples": [
-            [ "melchor9000@gmail.com" ]
-          ],
-          "items": {
-            "$id": "#/properties/env/properties/gpg_keys/items",
-            "type": "string",
-            "pattern": "^(.+@.+\\..+)$"
-          }
-        },
         "docker": {
           "$id": "#/properties/env/properties/docker",
           "type": "string",
@@ -218,6 +195,49 @@
           "default": 5,
           "enum": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ]
         }
+      }
+    },
+    "cypher": {
+      "$id": "#/properties/cypher",
+      "type": ["object", "null"],
+      "title": "Configures the cypher strategy to use",
+      "required": [
+        "strategy"
+      ],
+      "properties": {
+        "strategy": {
+          "$id": "#/properties/cypher/properties/strategy",
+          "type": "string",
+          "title": "Selects the cypher strategy to follow",
+          "default": null,
+          "enum": [
+            "gpg-passphrase",
+            "gpg-keys"
+          ]
+        },
+        "passphrase": {
+          "$id": "#/properties/cypher/properties/passphrase",
+          "type": ["string", "null"],
+          "title": "For a strategy requiring one, uses this as cypher passphrase (symmetric cypher)",
+          "default": null,
+          "examples": [
+            "Ap0werful[passw@rd]"
+          ],
+          "pattern": "^(.*)$"
+        },
+        "keys": {
+          "$id": "#/properties/cypher/properties/keys",
+          "type": "array",
+          "title": "For a strategy requiring one, uses the list items as keys to cypher (asymmetric cypher)",
+          "examples": [
+            [ "melchor9000@gmail.com" ]
+          ],
+          "items": {
+            "$id": "#/properties/cypher/properties/keys/items",
+            "type": "string",
+            "pattern": "^(.+@.+\\..+)$"
+          }
+        },
       }
     },
     "providers": {

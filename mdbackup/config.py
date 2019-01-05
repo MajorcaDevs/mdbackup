@@ -18,7 +18,10 @@
 import json
 import logging
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Union, Any
+
+from mdbackup.utils import change_keys
+
 
 class ProviderConfig(object):
     def __init__(self, provider_dict: Dict[str, str]):
@@ -44,7 +47,7 @@ class ProviderConfig(object):
         return self.__extra[key]
 
     def get(self, key: str, default=None):
-        return self.__extra.get(key)
+        return self.__extra.get(key, default)
 
 
 class Config(object):
@@ -55,7 +58,7 @@ class Config(object):
     or credentials, can be stored in different places, for security reasons.
     """
 
-    def __init__(self, path: Path):
+    def __init__(self, path: Union[Path, str, bytes]):
         """
         Creates an instance of the configuration with the given ``config.json``
         """
@@ -76,22 +79,20 @@ class Config(object):
         self.__log_level = logging.getLevelName(conf.get('logLevel', 'WARNING'))
         self.__max_backups_kept = conf.get('maxBackupsKept', 7)
         self.__env = conf.get('env', {})
-        self.__providers = self._parse_providers(conf.get('providers'))
+        self.__providers = [ProviderConfig(provider_dict) for provider_dict in conf.get('providers', [])]
         if 'compression' in conf:
             self.__compression_level = conf['compression'].get('level', 5)
             self.__compression_strategy = conf['compression']['strategy']
         else:
             self.__compression_level = None
             self.__compression_strategy = None
+        if 'cypher' in conf:
+            self.__cypher_strategy = conf['cypher']['strategy']
+            self.__cypher_params = change_keys(conf['cypher'])
+            del self.__cypher_params['strategy']
 
         Config.__check_paths(self.__backups_path)
         Config.__check_paths(self.__custom_utils_script)
-
-    def _parse_providers(self, providers):
-        if providers is None:
-            return []
-
-        return [ProviderConfig(provider_dict) for provider_dict in providers]
 
     @staticmethod
     def __check_paths(path: Path):
@@ -157,3 +158,17 @@ class Config(object):
         :return: The compression level
         """
         return self.__compression_level
+
+    @property
+    def cypher_strategy(self) -> Optional[str]:
+        """
+        :return: The cypher strategy
+        """
+        return self.__cypher_strategy
+
+    @property
+    def cypher_params(self) -> Optional[Dict[str, Any]]:
+        """
+        :return: The cypher parameters for the given strategy
+        """
+        return self.__cypher_params
