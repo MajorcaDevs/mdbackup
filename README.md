@@ -34,7 +34,7 @@ Now you can run the utility (only if you have enabled the virtual env) with `mdb
 
 ## Creating the configuration
 
-You have available under `config/config.schema.json` the JSON schema of the configuration file. You can use it like this on an app like Visual Studio code:
+You have available under `config/config.schema.json` the JSON schema of the configuration file. You can use it like this on an app like Visual Studio Code or PyCharm:
 
 ```json
 {
@@ -51,8 +51,6 @@ This allows you to auto-complete with the elements available in the configuratio
     "customUtilsScript": "(optional) Define an additional utilities script that will be loaded in every step script",
     "maxBackupsKept": 7, //If not defined, by default are 7 backups to keep
     "env": {
-        "gpg_passphrase": "If set, it will cypher everything with GPG and this value will be used as passphrase",
-        "gpg_keys": "If set, the compressed files will be cyphered and compressed using GPG with the keys of the recipient emails given (is an array of strings)",
         "docker": "If set, the utilities will run in a docker container instead of using native commands",
         "pgnetwork": "[Docker] Defines which network will use to connect to the database (default host)",
         "pgimage": "[Docker] Defines which image will use to run the container (default postgres)",
@@ -68,6 +66,11 @@ This allows you to auto-complete with the elements available in the configuratio
     "compression": {
       "strategy": "gzip|xz",
       "level": 8
+    },
+    "cypher": {
+      "strategy": "gpg-keys|gpg-passphrase",
+      "passphrase": "If using gpg-passphrase, this will be used as passphrase for the cypher",
+      "keys": "If using gpg-keys, this will be used as recipients option for the gpg cypher (emails)"
     },
     "providers": [
         {
@@ -137,7 +140,7 @@ You can define as many steps as you wish. The idea is to keep every step as simp
   - **Example**: `backup-remote-folder '10.10.10.254' "/var/lib/unifi/backup/autobackup/" unifi` will copy the contents of `/var/lib/unifi/backup/autobackup/` from the server `10.10.10.254` to the local directory `unifi`.
 
 `backup-postgres-database`:
-  - **Description**: Makes a backup of a database in PostgreSQL. By default uses the tools installed in the system, but if `docker` is define in the settings, it will use a docker container. If `gpg_passphrase` is set, the file will be encrypted using GPG and that value as passphrase.
+  - **Description**: Makes a backup of a database in PostgreSQL. By default uses the tools installed in the system, but if `docker` is define in the settings, it will use a docker container. Uses the configured compress and cypher strategies to create the backup.
   - **Parameters**:
      1. Database to backup
   - **Environment variables**:
@@ -149,7 +152,7 @@ You can define as many steps as you wish. The idea is to keep every step as simp
   - **Example**: `backup-postgres-database "postgres"` Will copy the database `postgres` into a compressed (and maybe encrypted) sql script named the same as the database.
 
 `backup-mysql-database`:
-  - **Description**: Makes a backup of a database in MySQL/MariaDB. By default uses the tools installed in the system, but if `docker` is define in the settings, it will use a docker container. If `gpg_passphrase` is set, the file will be encrypted using GPG and that value as passphrase.
+  - **Description**: Makes a backup of a database in MySQL/MariaDB. By default uses the tools installed in the system, but if `docker` is define in the settings, it will use a docker container. Uses the configured compress and cypher strategies to create the backup.
   - **Parameters**:
      1. Database to backup
   - **Environment variables**:
@@ -159,6 +162,18 @@ You can define as many steps as you wish. The idea is to keep every step as simp
      - `mysqluser`: Defines the user from who the connection will be made. Defaults to user that runs the utility.
      - `mysqlpassword`: If set, this password will be used to connect to the database.
   - **Example**: `backup-mysql-database "wordpress"` Will copy the database `wordpress` into a compressed (and maybe encrypted) sql script named the same as the database.
+
+`backup-docker-volume`:
+  - **Description**: Makes a backup (in a `.tar` file) of a Docker volume given its name. Uses the configured compress and cypher strategies to create the backup.
+  - **Parameters**:
+    1. Name of the volume to backup
+  - **Example**: `backup-docker-volume "wordpress-content"`
+
+`backup-docker-volume-physically`:
+  - **Description**: Makes a backup of a Docker volume given its name copying the folder given in `docker volume inspect` json.
+  - **Parameters**:
+    1. Name of the volume to backup
+  - **Example**: `backup-docker-volume-physically "wordpress-content"`
 
 ## Automating running of backups
 

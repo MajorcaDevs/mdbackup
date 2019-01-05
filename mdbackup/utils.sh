@@ -183,17 +183,31 @@ function backup-remote-folder() {
 }
 
 # $1 -> database to backup
-# See compress_encrypt...
+# See compress-encrypt...
 function backup-postgres-database() {
     compress-encrypt "__run_psql pg_dump -h $PGHOST \"$1\"" "$1.sql" || return $?
 }
 
 # $1 -> database to backup
-# See compress_encrypt...
+# See compress-encrypt...
 function backup-mysql-database() {
     compress-encrypt "__run_mysql mysqldump -h $MYSQLHOST $MYSQLPASSWORD $MYSQLUSER \"$1\"" "$1.sql" || return $?
 }
 
+# $1 -> volume to backup
+# See compress-encrypt...
 function backup-docker-volume() {
     compress-encrypt "docker container run --rm -i -v \"$1\":/backup alpine tar -c -C /backup ." "$1.tar" || return $?
+}
+
+# $1 -> volume to backup
+# See backup-folder...
+function backup-docker-volume-physically() {
+    if docker volume inspect "$1" > /dev/null; then
+        local dst=$(docker volume inspect "$1" --format "{{.Mountpoint}}")
+        backup-folder "$DST" "$1" || return $?
+    else
+        echo "Volume '$1' does not exist"
+        return 1
+    fi
 }
