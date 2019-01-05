@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import json
+from json.decoder import JSONDecodeError
 import logging
 from pathlib import Path
 import shutil
@@ -28,7 +28,7 @@ from .archive import (
 )
 from .backup import do_backup, get_backup_folders_sorted
 from .config import Config
-from .storage.storage import create_storage_instance
+from .storage import create_storage_instance
 
 
 def main():
@@ -43,6 +43,10 @@ def main():
         print('Configuration is malformed')
         print(e.args[0])
         sys.exit(2)
+    except JSONDecodeError as e:
+        print('Configuration is malformed')
+        print(e.args[0])
+        sys.exit(3)
 
     logging.basicConfig(format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
                         level=config.log_level)

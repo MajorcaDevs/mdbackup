@@ -16,34 +16,22 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from abc import ABC, abstractmethod
-from enum import Enum
 from pathlib import Path
-from typing import Union, List, Any, Optional
-
-from mdbackup.storage.drive import GDriveStorage
+from typing import Union, List, Generic, TypeVar
 
 
-class AbstractStorage(ABC):
+T = TypeVar('T')
+
+
+class AbstractStorage(ABC, Generic[T]):
     @abstractmethod
-    def list_directory(self, path: Union[str, Path, Any]) -> List[Any]:
+    def list_directory(self, path: Union[str, Path, T]) -> List[T]:
         pass
 
     @abstractmethod
-    def create_folder(self, name: str, parent: Union[Path, str, Any]=None) -> Any:
+    def create_folder(self, name: str, parent: Union[Path, str, T]=None) -> T:
         pass
 
     @abstractmethod
-    def upload(self, path: Path, parent: Union[Path, str, Any]=None):
+    def upload(self, path: Path, parent: Union[Path, str, T]=None):
         pass
-
-
-class StorageImplementation(Enum):
-    GDrive = GDriveStorage
-
-
-def create_storage_instance(params) -> Optional[AbstractStorage]:
-    try:
-        impl = next((impl for impl in StorageImplementation if impl.name.lower() == params.type.lower()))
-        return impl(params)
-    except StopIteration:
-        return None

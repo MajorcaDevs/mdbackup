@@ -27,7 +27,7 @@ from pydrive.drive import GoogleDrive, GoogleDriveFile
 from mdbackup.storage.storage import AbstractStorage
 
 
-class GDriveStorage(AbstractStorage):
+class GDriveStorage(AbstractStorage[GoogleDriveFile]):
 
     def __init__(self, params):
         """
@@ -98,7 +98,7 @@ class GDriveStorage(AbstractStorage):
 
         return self._traverse(path)
 
-    def list_directory(self, path) -> List[GoogleDriveFile]:
+    def list_directory(self, path: Union[str, Path, GoogleDriveFile]) -> List[GoogleDriveFile]:
         """
         Returns a list of of GoogleDriveFile for the folder in that path.
         The path must exist and must be a directory.
@@ -134,7 +134,7 @@ class GDriveStorage(AbstractStorage):
             'parents': [{'id': parent_drive['id']}],
             'mimeType': 'application/vnd.google-apps.folder',
         })
-        self.__log.info(f'Creating folder {name} [parent "{parent.metadata["title"]}" {parent["id"]}]')
+        self.__log.info(f'Creating folder {name} [parent "{parent_drive.metadata["title"]}" {parent_drive["id"]}]')
         dir1.Upload()
         return dir1
 
@@ -166,7 +166,8 @@ class GDriveStorage(AbstractStorage):
             'mimeType': mime_type,
             'parents': [{'id': parent['id']}],
         })
-        self.__log.info(f'Uploading file {file_path} with attributes {file1.items()} [parent "{parent.metadata["title"]}" {parent["id"]}]')
+        self.__log.info(f'Uploading file {file_path} with attributes {file1.items()} '
+                        f'[parent "{parent.metadata["title"]}" {parent["id"]}]')
         file1.SetContentFile(file_path)
         file1.Upload()
 
