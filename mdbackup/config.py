@@ -50,6 +50,25 @@ class ProviderConfig(object):
         return self.__extra.get(key, default)
 
 
+class SecretConfig(object):
+    def __init__(self, secret_type: str, secret_env: Dict[str, str], secret_config: Dict[str, any]):
+        self.__type = secret_type
+        self.__config = secret_config
+        self.__env = secret_env
+
+    @property
+    def type(self) -> str:
+        return self.__type
+
+    @property
+    def config(self) -> Dict[str, any]:
+        return self.__config
+
+    @property
+    def env(self) -> Dict[str, str]:
+        return self.__env
+
+
 class Config(object):
     """
     The configuration object. Retreives any configuration of the system from many different places.
@@ -80,6 +99,8 @@ class Config(object):
         self.__max_backups_kept = conf.get('maxBackupsKept', 7)
         self.__env = conf.get('env', {})
         self.__providers = [ProviderConfig(provider_dict) for provider_dict in conf.get('providers', [])]
+        self.__secrets = [SecretConfig(key, secret_dict['env'], secret_dict['config'])
+                          for key, secret_dict in conf.get('secrets', {}).items()]
         if 'compression' in conf:
             self.__compression_level = conf['compression'].get('level', 5)
             self.__compression_strategy = conf['compression']['strategy']
@@ -144,6 +165,13 @@ class Config(object):
         :return: The list of cloud providers where the backups will be uploaded
         """
         return self.__providers
+
+    @property
+    def secrets(self) -> List[SecretConfig]:
+        """
+        :return: The list of secret backend configurations from where some config will be obtained securely
+        """
+        return self.__secrets
 
     @property
     def compression_strategy(self) -> Optional[str]:

@@ -22,7 +22,7 @@ import re
 import os
 import subprocess
 from tempfile import NamedTemporaryFile
-from typing import List, Dict
+from typing import List, Dict, Union, Callable
 
 
 def generate_backup_path(backups_folder: Path) -> Path:
@@ -48,7 +48,7 @@ def get_steps_scripts() -> List[Path]:
     return [script.absolute() for script in scripts]
 
 
-def run_step(step: Path, cwd: Path, env: Dict[str, str] = {}):
+def run_step(step: Path, cwd: Path, env: Dict[str, Union[str, int, float, Callable[[], str]]]):
     """
     Runs this step, with the current working directory defined in ``cwd``
     and, optionally, extra environment variables defined in ``env``.
@@ -57,7 +57,10 @@ def run_step(step: Path, cwd: Path, env: Dict[str, str] = {}):
     full_env = dict(os.environ)
     for key, value in env.items():
         if value is not None:
-            full_env[key.upper()] = str(value)
+            if callable(value):
+                full_env[key.upper()] = value()
+            else:
+                full_env[key.upper()] = str(value)
     return subprocess.run([str(step)],
                           stderr=subprocess.PIPE,
                           stdout=subprocess.PIPE,
@@ -76,7 +79,8 @@ def generate_script(step_script: Path, custom_utils: str = None) -> Path:
     with NamedTemporaryFile(delete=False) as tmp:
         tmp.write(b'#!/usr/bin/env bash\n')
         tmp.write(f'source {me_irl}/utils.sh\n'.encode('utf-8'))
-        if custom_utils is not None: tmp.write(f'source {custom_utils}\n'.encode('utf-8'))
+        if custom_utils is not None:
+            tmp.write(f'source {custom_utils}\n'.encode('utf-8'))
         tmp.write(b'\n')
         with open(step_script, 'r') as script_file:
             script_file_contents = script_file.read()

@@ -63,6 +63,30 @@ This allows you to auto-complete with the elements available in the configuratio
         "mysqluser": "The username to connect to the database",
         "mysqlpassword": "If defined, sets the password which will be used to connect to the database"
     },
+    "secrets": { //Instead of hardcoding the passwords in the config file, you can get the values from a secret backend
+      "file": { //Files that contains the values
+        "env": {
+          "pgpassword": "/path/to/pg-password", //Absolute path
+          "mysqlpassword": "mysql-password" //Relative path
+        },
+        "config": {
+          "basePath": "/backups/secrets" //Optional if all paths are absolute, mandatory if any path is relative
+        }
+      },
+      "vault": { //Vault: https://www.vaultproject.io/
+        "env": {
+          "pguser": "secret/pg#user", //First the path (without v1 and initial /), then the key inside the secret
+          "pgpassword": "secret/pg#password",
+          "mysqluser": "secret/mysql#user",
+          "mysqlpassword": "secret/mysql#password"
+        },
+        "config": {
+          "apiBaseUrl": "http://localhost:8200", //API base url
+          "roleId": "56c90891-83d5-81da-ac71-02ad8ed7fbfe", //Role ID
+          "secretId": "9d261dc7-1bef-5759-6c72-63d57e58ffec" //Secret ID
+        }
+      }
+    },
     "compression": {
       "strategy": "gzip|xz",
       "level": 8 //Compression level from 0 to 9

@@ -21,6 +21,7 @@ from pathlib import Path
 import shutil
 import sys
 
+from mdbackup.secrets import get_secret_backend_implementation
 from .archive import (
     archive_folder,
     get_compression_strategy,
@@ -52,6 +53,16 @@ def main():
                         level=config.log_level)
     logger = logging.getLogger('mdbackups')
 
+    # Prepare secret backends (if any) and its env getters (aka functions that gets the right value from the backend)
+    secret_backends = [(get_secret_backend_implementation(secret.type, secret.config), secret.env)
+                       for secret in config.secrets]
+    secret_env = [{key: (lambda value: lambda: secret.get_secret(value))(value) for key, value in env.items()}
+                  for secret, env in secret_backends]
+    secret_env_flatten = {}
+    for secret_env_dict in secret_env:
+        for key, value in secret_env_dict.items():
+            secret_env_flatten[key] = value
+
     # Do backups
     backups_path = config.backups_path
     backup = do_backup(backups_path,
@@ -61,7 +72,8 @@ def main():
                        compression_level=config.compression_level,
                        cypher_strategy=config.cypher_strategy,
                        **{f'cypher_{key}': value
-                          for key, value in (config.cypher_params.items() if config.cypher_params is not None else [])})
+                          for key, value in (config.cypher_params.items() if config.cypher_params is not None else [])},
+                       **secret_env_flatten)
     final_items = []
     items_to_remove = []
 
