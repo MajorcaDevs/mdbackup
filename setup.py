@@ -32,5 +32,6 @@ setuptools.setup(
         'PyDrive',
         'python-magic',
         'requests',
+        'boto3'
     ]
 )

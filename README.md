@@ -103,6 +103,15 @@ This allows you to auto-complete with the elements available in the configuratio
             "backupsPath": "Path in Google Drive where the backups will be located",
             "clientSecrets": "config/client_secrets.json",
             "authTokens": "config/auth_tokens.json"
+        },
+        {
+            "type": "s3",
+            "backupsPath": "Path in Google Drive where the backups will be located",
+            "region": "Region of the S3 storage",
+            "endpoint": "Endpoint (if not set, uses Amazon S3 endpoint)",
+            "accessKeyId": "Access Key ID",
+            "accessSecretKey": "Access Secret Key",
+            "bucket": "Name of the bucket"
         }
     ]
 }

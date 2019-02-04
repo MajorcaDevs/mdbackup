@@ -349,7 +349,8 @@
             "$id": "#/properties/providers/items/properties/type",
             "type": "string",
             "enum": [
-              "gdrive"
+              "gdrive",
+              "s3"
             ],
             "title": "Provider type",
             "default": ""
