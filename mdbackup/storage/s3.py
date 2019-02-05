@@ -15,12 +15,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import logger
+import logging
 from pathlib import Path
 from typing import Union, List
 
 import boto3
-import botocore.client
 
 from mdbackup.storage.storage import AbstractStorage
 
@@ -28,7 +27,7 @@ from mdbackup.storage.storage import AbstractStorage
 class S3Storage(AbstractStorage[str]):
 
     def __init__(self, config):
-        self.__log = logger.createLogger(__name__)
+        self.__log = logging.getLogger(__name__)
         self.__s3 = boto3.client(
             's3',
             region_name=config['region'],
