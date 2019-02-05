@@ -19,36 +19,28 @@ import logging
 from pathlib import Path
 from typing import Union, List
 
-import boto3
+from b2blaze import B2
+from b2blaze.models.bucket import B2Bucket
 
 from mdbackup.storage.storage import AbstractStorage
 
 
-class S3Storage(AbstractStorage[str]):
+class B2Storage(AbstractStorage[str]):
 
     def __init__(self, config):
         self.__log = logging.getLogger(__name__)
-        self.__s3 = boto3.client(
-            's3',
-            region_name=config['region'],
-            endpoint_url=config.get('endpoint'),
-            aws_access_key_id=config['accessKeyId'],
-            aws_secret_access_key=config['accessSecretKey'],
-        )
-
-        self.__bucket: str = config['bucket']
+        self.__b2 = B2(key_id=config['keyId'], application_key=config['appKey'])
+        self.__bucket: B2Bucket = self.__b2.buckets.get(config['bucket'])
+        self.__password: str = config.get('password')
         self.__pre = config['backupsPath']
 
     def list_directory(self, path: Union[str, Path, str]) -> List[str]:
-        path = path if isinstance(path, str) else str(path)
-        return [item['Key'] for item in self.__s3.list_objects_v2(Bucket=self.__bucket)['Contents']
-                if item['Key'].startswith(self.__pre + path)]
+        path = path if isinstance(path, str) else str(path.absolute())
+        return [item.file_name for item in self.__bucket.files.all(include_hidden=True)
+                if item.file_name.startswith(self.__pre + path)]
 
     def create_folder(self, name: str, parent: Union[Path, str, str]=None) -> str:
-        key = self.__pre + f'{parent}/{name}/'
-        self.__log.info(f'Creating folder {key}')
-        ret = self.__s3.put_object(Key=key, Bucket=self.__bucket)
-        self.__log.debug(ret)
+        key = self.__pre + f'{parent.absolute()}/{name}/'
         return key
 
     def upload(self, path: Path, parent: Union[Path, str, str]=None):
@@ -60,5 +52,9 @@ class S3Storage(AbstractStorage[str]):
             key = path.name
         key = self.__pre + key
         self.__log.info(f'Uploading file {key} (from {path})')
-        ret = self.__s3.upload_file(str(path.absolute()), self.__bucket, key)
+        with open(str(path.absolute()), 'rb') as file_to_upload:
+            ret = self.__bucket.files.upload(contents=file_to_upload,
+                                             file_name=key,
+                                             bucket_name=self.__bucket,
+                                             password=self.__password)
         self.__log.debug(ret)

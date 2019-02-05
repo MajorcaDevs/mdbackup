@@ -350,7 +350,8 @@
             "type": "string",
             "enum": [
               "gdrive",
-              "s3"
+              "s3",
+              "b2"
             ],
             "title": "Provider type",
             "default": ""

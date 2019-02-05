@@ -106,12 +106,20 @@ This allows you to auto-complete with the elements available in the configuratio
         },
         {
             "type": "s3",
-            "backupsPath": "Path in Google Drive where the backups will be located",
+            "backupsPath": "Path in S3 where the backups will be located",
             "region": "Region of the S3 storage",
             "endpoint": "Endpoint (if not set, uses Amazon S3 endpoint)",
             "accessKeyId": "Access Key ID",
             "accessSecretKey": "Access Secret Key",
             "bucket": "Name of the bucket"
+        },
+        {
+            "type": "b2",
+            "backupsPath": "Path in B2 where the backups will be located",
+            "keyId": "B2 Key ID",
+            "appKey": "B2 Application Key",
+            "bucket": "Name of the bucket",
+            "password": "(optional) Protects files with passwords"
         }
     ]
 }
