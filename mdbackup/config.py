@@ -51,10 +51,12 @@ class ProviderConfig(object):
 
 
 class SecretConfig(object):
-    def __init__(self, secret_type: str, secret_env: Dict[str, str], secret_config: Dict[str, any]):
+    def __init__(self, secret_type: str, secret_env: Optional[Dict[str, str]], secret_config: Dict[str, any],
+                 secret_providers: Optional[List[str]]):
         self.__type = secret_type
         self.__config = secret_config
-        self.__env = secret_env
+        self.__env = secret_env if secret_env is not None else {}
+        self.__providers = secret_providers if secret_providers is not None else []
 
     @property
     def type(self) -> str:
@@ -67,6 +69,10 @@ class SecretConfig(object):
     @property
     def env(self) -> Dict[str, str]:
         return self.__env
+
+    @property
+    def providers(self) -> List[str]:
+        return self.__providers
 
 
 class Config(object):
@@ -99,7 +105,7 @@ class Config(object):
         self.__max_backups_kept = conf.get('maxBackupsKept', 7)
         self.__env = conf.get('env', {})
         self.__providers = [ProviderConfig(provider_dict) for provider_dict in conf.get('providers', [])]
-        self.__secrets = [SecretConfig(key, secret_dict['env'], secret_dict['config'])
+        self.__secrets = [SecretConfig(key, secret_dict.get('env'), secret_dict['config'], secret_dict.get('providers'))
                           for key, secret_dict in conf.get('secrets', {}).items()]
         if 'compression' in conf:
             self.__compression_level = conf['compression'].get('level', 5)

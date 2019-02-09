@@ -16,9 +16,14 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from abc import ABC, abstractmethod
+from typing import Dict
 
 
 class AbstractSecretsBackend(ABC):
     @abstractmethod
     def get_secret(self, key: str) -> str:
+        pass
+
+    @abstractmethod
+    def get_provider(self, key: str) -> Dict[str, any]:
         pass

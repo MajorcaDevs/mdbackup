@@ -201,6 +201,14 @@
                   "pattern": "^/([^/]+/)*$"
                 }
               }
+            },
+            "providers": {
+              "$id": "#/properties/secrets/properties/file/properties/providers",
+              "type": "array",
+              "title": "Configure cloud storage providers from json files",
+              "examples": [
+                [ "secret/backups/providers/digitalocean", "secret/backups/providers/backblaze" ]
+              ]
             }
           }
         },
@@ -209,7 +217,6 @@
           "type": "object",
           "title": "File secrets backend",
           "required": [
-            "env",
             "config"
           ],
           "properties": {
@@ -246,6 +253,14 @@
                   "title": "Secret ID of the AppAuth login"
                 }
               }
+            },
+            "providers": {
+              "$id": "#/properties/secrets/properties/vault/properties/providers",
+              "type": "array",
+              "title": "Configure cloud storage providers securely from Vault",
+              "examples": [
+                [ "secret/backups/providers/digitalocean", "secret/backups/providers/backblaze" ]
+              ]
             }
           }
         }

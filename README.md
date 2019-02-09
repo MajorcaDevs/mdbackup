@@ -71,20 +71,30 @@ This allows you to auto-complete with the elements available in the configuratio
         },
         "config": {
           "basePath": "/backups/secrets" //Optional if all paths are absolute, mandatory if any path is relative
-        }
+        },
+        "providers": [
+          "providers/digital-ocean.json", //Must be paths to json files.
+          "providers/gdrive.json",        //The files must have the same structure as the provider type.
+          "providers/amazon.json"         //See below (in providers section) for the structure of each type.
+        ]
       },
       "vault": { //Vault: https://www.vaultproject.io/
         "env": {
-          "pguser": "secret/pg#user", //First the path (without v1 and initial /), then the key inside the secret
-          "pgpassword": "secret/pg#password",
-          "mysqluser": "secret/mysql#user",
-          "mysqlpassword": "secret/mysql#password"
+          "pguser": "secret/backups/env/pg#user", //First the path (without v1 and initial /), then the key inside the secret
+          "pgpassword": "secret/backups/env/pg#password",
+          "mysqluser": "secret/backups/env/mysql#user",
+          "mysqlpassword": "secret/backups/env/mysql#password"
         },
         "config": {
           "apiBaseUrl": "http://localhost:8200", //API base url
           "roleId": "56c90891-83d5-81da-ac71-02ad8ed7fbfe", //Role ID
           "secretId": "9d261dc7-1bef-5759-6c72-63d57e58ffec" //Secret ID
-        }
+        },
+        "providers": [
+          "secret/backups/providers/digital-ocean", //The secret must have the same structure as the provider type.
+          "secret/backups/providers/gdrive",        //See below (in providers section) for the structure of each type.
+          "secret/backups/providers/amazon"
+        ]
       }
     },
     "compression": {
