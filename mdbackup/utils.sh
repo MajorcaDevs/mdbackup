@@ -214,7 +214,7 @@ function backup-docker-volume() {
 function backup-docker-volume-physically() {
     if docker volume inspect "$1" > /dev/null; then
         local dst=$(docker volume inspect "$1" --format "{{.Mountpoint}}")
-        backup-folder "$DST" "$1" || return $?
+        backup-folder "$dst" "$1" || return $?
     else
         echo "Volume '$1' does not exist"
         return 1

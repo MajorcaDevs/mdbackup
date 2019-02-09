@@ -120,6 +120,7 @@ def do_backup(backups_folder: Path, custom_utils: str = None, **kwargs) -> Path:
             logger.error(f'Script returned {output.returncode}')
             if output.stdout: logger.error(f'stdout\n{output.stdout.decode("utf-8")}')
             if output.stderr: logger.error(f'stderr\n{output.stderr.decode("utf-8")}')
+            raise Exception(f'The step {step_script} failed, backup will stop')
         else:
             if output.stdout: logger.debug(f'stdout\n{output.stdout.decode("utf-8")}')
             if output.stderr: logger.debug(f'stderr\n{output.stderr.decode("utf-8")}')
