@@ -37,7 +37,7 @@ class S3Storage(AbstractStorage[str]):
         )
 
         self.__bucket: str = config['bucket']
-        self.__pre = config['backupsPath']
+        self.__pre = config.backups_path
 
     def list_directory(self, path: Union[str, Path, str]) -> List[str]:
         path = path if isinstance(path, str) else str(path)
