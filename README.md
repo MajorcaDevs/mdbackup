@@ -227,6 +227,21 @@ You can define as many steps as you wish. The idea is to keep every step as simp
     1. Name of the volume to backup
   - **Example**: `backup-docker-volume-physically "wordpress-content"`
 
+`backup-file`:
+  - **Description**: Makes a backup of a file. Compares with the previous backup to avoid a copy and hard-link with the previous one, or copies it if there are differences.
+  - **Parameters**:
+    1. File to backup
+    2. (optional) Folder where to put the file when copying
+  - **Example**: `backup-file /etc/ssh/sshd sys-config/etc/ssh`
+
+`backup-file-encrypted`:
+  - **Description**: Makes a backup of a file and compress and encrypts it using the configuration in strategies defined. Compares with the previous backup to avoid a copy and hard-link with the previous one, or copies it if there are differences.
+  - **Parameters**:
+    1. File to backup
+    2. (optional) Folder where to put the file when copying
+  - **Example**: `backup-file-encrypted /etc/ssh/sshd sys-config/etc/ssh`
+
+
 ## Automating running of backups
 
 In this section, systemd and cron ways are going to be explained. systemd is the preferred way in case your system has it.
