@@ -27,22 +27,29 @@ class VaultSecretsBackend(AbstractSecretsBackend):
         super().__init__()
 
         self._api = config['apiBaseUrl']
+        self._cert = config.get('cert')
 
         res = requests.post(f'{self._api}/v1/auth/approle/login', json={
             'role_id': config['roleId'],
             'secret_id': config['secretId'],
-        })
+        }, verify=self._cert)
         if res.status_code == 200:
             self._client_token = res.json()['auth']['client_token']
         else:
             raise requests.HTTPError(res.status_code, 'Could not login into Vault', res.content)
 
+    def __kv_get(self, key: str) -> Dict[str, any]:
+        res = requests.get(f'{self._api}/v1/{key}', headers={'X-Vault-Token': self._client_token}, verify=self._cert)
+        if res.status_code == 200:
+            return res.json()
+        else:
+            raise requests.HTTPError(res.status_code, f'Could not get secret {key}', res.content)
+
     def get_secret(self, key: str) -> str:
         split = key.split('#')
         if len(split) != 2:
             raise KeyError(f'"{key}" is invalid: expected "backend/path/to/secret#key"')
-        res = requests.get(f'{self._api}/v1/{split[0]}', headers={'X-Vault-Token': self._client_token})
-        if res.status_code == 200:
-            return res.json()['data'][split[1]]
-        else:
-            raise requests.HTTPError(res.status_code, f'Could not get secret {key}', res.content)
+        return self.__kv_get(split[0])['data'][split[1]]
+
+    def get_provider(self, key: str) -> Dict[str, any]:
+        return self.__kv_get(key)['data']

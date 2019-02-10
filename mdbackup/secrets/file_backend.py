@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import json
 from pathlib import Path
 from typing import Dict
 
@@ -37,3 +38,7 @@ class FileSecretsBackend(AbstractSecretsBackend):
             while len(contents[-1]) == 0:
                 contents.pop()
         return '\n'.join(contents)
+
+    def get_provider(self, key: str) -> Dict[str, any]:
+        contents = self.get_secret(key)
+        return json.loads(contents)

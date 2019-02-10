@@ -28,7 +28,7 @@ from .archive import (
     get_cypher_strategy,
 )
 from .backup import do_backup, get_backup_folders_sorted
-from .config import Config
+from .config import Config, ProviderConfig
 from .storage import create_storage_instance
 
 
@@ -54,14 +54,20 @@ def main():
     logger = logging.getLogger('mdbackups')
 
     # Prepare secret backends (if any) and its env getters (aka functions that gets the right value from the backend)
-    secret_backends = [(get_secret_backend_implementation(secret.type, secret.config), secret.env)
+    secret_backends = [(get_secret_backend_implementation(secret.type, secret.config), secret)
                        for secret in config.secrets]
-    secret_env = [{key: (lambda value: lambda: secret.get_secret(value))(value) for key, value in env.items()}
-                  for secret, env in secret_backends]
-    secret_env_flatten = {}
-    for secret_env_dict in secret_env:
-        for key, value in secret_env_dict.items():
-            secret_env_flatten[key] = value
+    secret_env = {}
+    for secret_backend, secret in secret_backends:
+        for key, secret_key in secret.env.items():
+            logger.debug(f'Getting env secret {key} from {secret.type}:{secret_key}')
+            secret_env[key] = secret_backend.get_secret(secret_key)
+
+    for secret_backend, secret in secret_backends:
+        for key in secret.providers:
+            logger.debug(f'Getting provider secret from {secret.type}:{key}')
+            provider = ProviderConfig(secret_backend.get_provider(key))
+            logger.debug(f'Provider type is {provider.type}')
+            config.providers.append(provider)
 
     # Do backups
     backups_path = config.backups_path
@@ -74,7 +80,7 @@ def main():
                            cypher_strategy=config.cypher_strategy,
                            **{f'cypher_{key}': value
                               for key, value in (config.cypher_params.items() if config.cypher_params is not None else [])},
-                           **secret_env_flatten)
+                           **secret_env)
     except Exception as e:
         logger.error(e)
         shutil.rmtree(str(backups_path / '.partial'))
