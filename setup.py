@@ -28,11 +28,4 @@ setuptools.setup(
         ]
     },
     include_package_data=True,
-    install_requires=[
-        'PyDrive',
-        'python-magic',
-        'requests',
-        'boto3',
-        'b2blaze'
-    ]
 )

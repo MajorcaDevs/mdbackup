@@ -32,6 +32,16 @@ pip install mdbackup*.whl
 
 Now you can run the utility (only if you have enabled the virtual env) with `mdbackup`. In this folder it is recommended to store the `config` and `steps` folders.
 
+ > **Note:** to be able to use some of the cloud storages and secrets backends, you will be requested to install some packages.
+ > 
+ > This is a list of the optional dependencies:
+ >  1. `python-magic` (every cloud storage provider needs this) - requires to have installed `libmagic` (C library)
+ >  2. `boto3` for S3 cloud storage provider
+ >  3. `b2blaze` for BackBlaze cloud storage provider
+ >  4. `PyDrive` for Google Drive cloud storage provider
+ >  5. `requests` for Vault secrets backend
+ >  6. `pyyaml` (optional) for File secrets backend
+
 ## Creating the configuration
 
 You have available under `config/config.schema.json` the JSON schema of the configuration file. You can use it like this on an app like Visual Studio Code or PyCharm:
@@ -143,12 +153,63 @@ The configuration file must be located in `config/config.json`. It is recommende
 ### env
 This section defines environment variables that will be available when running the steps scripts. It have some predefined (shown before), but you can define whatever more you want.
 
-### Google Drive provider `gdrive`
+### Cloud Storage Providers
+
+#### Google Drive `gdrive`
+
+ > In order to use this provider, you must install `PyDrive` and `python-magic`: `pip install PyDrive python-magic`
+
 In case of Google Drive, to gather the `client_secrets.json`, you should get them from the [Google Developer's Console][1], going to _Credentials_ and creating one new _OAuth 2.0 Client IDs_. Every one of them have a download icon, this will download that file.
 
 The `auth_tokens.json` is created when a user logs in. To do that, run the utility manually and (in some point) it will ask you to go to an URL. Here is where you log in with an account and, at the end, Google will give you a token. Copy and paste it into the terminal. Now you will see the files uploading to Google Drive.
 
 The `backupsFolder` **must exist** before running the utility.
+
+#### S3-like `s3`
+
+ > In order to use this provider, you must install `boto3` and `python-magic`: `pip install boto3 python-magic`
+ 
+You can use any S3 compatible cloud storage provider to store the beckups. Fill correctly every parameter of the provider and let the magic happen.
+
+The `backupsPath` in S3 is like a prefix for the file keys. It is recommended to put something here to easily organise the backups from the rest of files in the bucket. The initial slash `/` is removed when uploading the files.
+
+The content type of the files will be guessed and set in the metadata when uploading.
+
+#### BackBlaze `b2`
+
+ > In order to use this provider, you must install `b2blaze` and `python-magic`: `pip install b2blaze python-magic`
+
+The `backupsPath` in S3 is like a prefix for the file keys. It is recommended to put something here to easily organise the backups from the rest of files in the bucket. The initial slash `/` is removed when uploading the files.
+
+The content type of the files will be guessed and set in the metadata when uploading.
+
+### Secrets backends
+
+To improve security, some of the configuration can be retrieved from a secrets backend. To be more precise, some environment variable can be added and cloud providers can also be added from the backends.
+
+ > Google Cloud storage provider should not be used from any secrets backend as it is useless (the backends cannot write data for security reasons)
+
+#### File
+
+This is a simple secrets backend. It is not suitable to use in production, but can be useful to be used in Docker containers.
+
+Every environment variable to inject, will be read from the file specified as value. In fact, every value (which are paths) will be transformed to their values. The paths can be absolute, or relative. To resolve relative paths, you must define `basePath`.
+
+For cloud storage providers, the backend will read json or yaml files, which must have the configuration for a backend. They must use the same structure shown in the providers section of the example json.
+
+ > To be able to read `yaml` files, you must install `pyyaml`: `pip install pyyaml`
+
+#### Vault
+
+Production-ready secrets backend, really useful to have credentials stored in a centralized server, but retrievable from any client in a network.
+
+ > In order to use Vault backend, you must install `requests`: `pip install requests`
+
+Currently, it only supports KV backend for reading secrets.
+
+Environment variables are replaced by their values from the path in the KV. As every path in the KV storage is Key-Value, you must define which key should get to obtain the value. `secrets/backups/env/postgres#user` will retrieve the path `secrets/backups/env/postgres` and key `user`. If the key is not set, will use `vaule` by default.
+
+For cloud storage providers, the KV in the path should contain the same structure as expected in the provider configuration (as seen in the example json). In this case, no key must be defined, it will take the whole path as configuration. 
 
 ## Creating your first steps
 

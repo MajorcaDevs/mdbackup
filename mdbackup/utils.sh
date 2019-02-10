@@ -148,7 +148,7 @@ function backup-folder() {
     fi
 
     SRC="$1"
-    DST_PARTIAL="./.$2.partial"
+    DST_PARTIAL="./.$(echo $2 | tr '/' '_').partial"
     DST="$2"
     shift
     shift
