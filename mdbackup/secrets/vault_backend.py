@@ -27,18 +27,19 @@ class VaultSecretsBackend(AbstractSecretsBackend):
         super().__init__()
 
         self._api = config['apiBaseUrl']
+        self._cert = config.get('cert')
 
         res = requests.post(f'{self._api}/v1/auth/approle/login', json={
             'role_id': config['roleId'],
             'secret_id': config['secretId'],
-        })
+        }, verify=self._cert)
         if res.status_code == 200:
             self._client_token = res.json()['auth']['client_token']
         else:
             raise requests.HTTPError(res.status_code, 'Could not login into Vault', res.content)
 
     def __kv_get(self, key: str) -> Dict[str, any]:
-        res = requests.get(f'{self._api}/v1/{key}', headers={'X-Vault-Token': self._client_token})
+        res = requests.get(f'{self._api}/v1/{key}', headers={'X-Vault-Token': self._client_token}, verify=self._cert)
         if res.status_code == 200:
             return res.json()
         else:

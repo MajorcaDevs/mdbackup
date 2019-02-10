@@ -94,7 +94,7 @@ def main():
         # Compress directories
         for item in backup.iterdir():
             # Compress if it is a directory
-            if item.is_dir():
+            if item.resolve().is_dir():
                 strategies = []
 
                 if config.compression_strategy is not None:
@@ -109,12 +109,12 @@ def main():
                         **config.cypher_params,
                     ))
 
-                filename = archive_folder(backup, item, strategies)
+                filename = archive_folder(backup, item.resolve(), strategies)
 
                 final_items.append(Path(backup, filename))
                 items_to_remove.append(Path(backup, filename))
             else:
-                final_items.append(item)
+                final_items.append(item.resolve())
 
         try:
             # Upload files to storage providers

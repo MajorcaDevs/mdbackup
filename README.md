@@ -88,7 +88,8 @@ This allows you to auto-complete with the elements available in the configuratio
         "config": {
           "apiBaseUrl": "http://localhost:8200", //API base url
           "roleId": "56c90891-83d5-81da-ac71-02ad8ed7fbfe", //Role ID
-          "secretId": "9d261dc7-1bef-5759-6c72-63d57e58ffec" //Secret ID
+          "secretId": "9d261dc7-1bef-5759-6c72-63d57e58ffec", //Secret ID
+          "cert": "Path to a certificate bundle or false to disable TLS certificate validation"
         },
         "providers": [
           "secret/backups/providers/digital-ocean", //The secret must have the same structure as the provider type.
