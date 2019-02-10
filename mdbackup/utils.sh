@@ -160,6 +160,7 @@ function backup-folder() {
         --group \
         --times \
         --recursive \
+        --links \
         --delete \
         --delete-excluded \
         --partial-dir=".partial" \
