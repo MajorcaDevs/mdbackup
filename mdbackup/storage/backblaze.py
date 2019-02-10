@@ -21,6 +21,7 @@ from typing import Union, List
 
 from b2blaze import B2
 from b2blaze.models.bucket import B2Bucket
+import magic
 
 from mdbackup.storage.storage import AbstractStorage
 
@@ -60,5 +61,6 @@ class B2Storage(AbstractStorage[str]):
         self.__log.info(f'Uploading file {key} (from {path})')
         with open(str(path.absolute()), 'rb') as file_to_upload:
             ret = self.__bucket.files.upload(contents=file_to_upload,
-                                             file_name=key)
+                                             file_name=key,
+                                             mime_content_type=magic.from_file(str(path.absolute()), mime=True))
         self.__log.debug(ret)

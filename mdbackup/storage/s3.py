@@ -20,6 +20,7 @@ from pathlib import Path
 from typing import Union, List
 
 import boto3
+import magic
 
 from mdbackup.storage.storage import AbstractStorage
 
@@ -66,5 +67,10 @@ class S3Storage(AbstractStorage[str]):
         if key.startswith('/'):
             key = key[1:]
         self.__log.info(f'Uploading file {key} (from {path})')
-        ret = self.__s3.upload_file(str(path.absolute()), self.__bucket, key)
+        ret = self.__s3.upload_file(str(path.absolute()),
+                                    self.__bucket,
+                                    key,
+                                    ExtraArgs={
+                                        'ContentType': magic.from_file(str(path.absolute()), mime=True),
+                                    })
         self.__log.debug(ret)

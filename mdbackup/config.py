@@ -77,7 +77,7 @@ class SecretConfig(object):
 
 class Config(object):
     """
-    The configuration object. Retreives any configuration of the system from many different places.
+    The configuration object. Retrieves any configuration of the system from many different places.
 
     The main configuration lies on a ``config.json`` file, but parts of the configuration, like environment variables
     or credentials, can be stored in different places, for security reasons.

@@ -171,7 +171,7 @@ class GDriveStorage(AbstractStorage[GoogleDriveFile]):
         file1.SetContentFile(file_path)
         file1.Upload()
 
-    def upload(self, path, parent = None):
+    def upload(self, path, parent=None):
         """
         Uploads something to Google Drive.
         """

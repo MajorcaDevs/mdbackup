@@ -41,8 +41,7 @@ def main():
         print('Check the paths and run again the utility')
         sys.exit(1)
     except KeyError as e:
-        print('Configuration is malformed')
-        print(e.args[0])
+        print(f'Configuration is malformed: key {e.args[0]} is not defined')
         sys.exit(2)
     except JSONDecodeError as e:
         print('Configuration is malformed')
@@ -54,8 +53,13 @@ def main():
     logger = logging.getLogger('mdbackups')
 
     # Prepare secret backends (if any) and its env getters (aka functions that gets the right value from the backend)
-    secret_backends = [(get_secret_backend_implementation(secret.type, secret.config), secret)
-                       for secret in config.secrets]
+    try:
+        secret_backends = [(get_secret_backend_implementation(secret.type, secret.config), secret)
+                           for secret in config.secrets]
+    except ImportError as e:
+        # Log not-found module and exit
+        logger.exception(e.args[0], e.args[1])
+        sys.exit(4)
     secret_env = {}
     for secret_backend, secret in secret_backends:
         for key, secret_key in secret.env.items():

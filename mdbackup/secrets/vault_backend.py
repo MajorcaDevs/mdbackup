@@ -48,7 +48,7 @@ class VaultSecretsBackend(AbstractSecretsBackend):
     def get_secret(self, key: str) -> str:
         split = key.split('#')
         if len(split) != 2:
-            raise KeyError(f'"{key}" is invalid: expected "backend/path/to/secret#key"')
+            split += 'value'
         return self.__kv_get(split[0])['data'][split[1]]
 
     def get_provider(self, key: str) -> Dict[str, any]:
