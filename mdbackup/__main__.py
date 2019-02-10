@@ -15,11 +15,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import argparse
 from json.decoder import JSONDecodeError
 import logging
 from pathlib import Path
 import shutil
 import sys
+from typing import Tuple, List
 
 from mdbackup.secrets import get_secret_backend_implementation
 from .archive import (
@@ -32,27 +34,7 @@ from .config import Config, ProviderConfig
 from .storage import create_storage_instance
 
 
-def main():
-    # Check if configuration file exists and read it
-    try:
-        config = Config('config/config.json')
-    except (FileNotFoundError, IsADirectoryError, NotADirectoryError) as e:
-        print(e.args[0])
-        print('Check the paths and run again the utility')
-        sys.exit(1)
-    except KeyError as e:
-        print('Configuration is malformed')
-        print(e.args[0])
-        sys.exit(2)
-    except JSONDecodeError as e:
-        print('Configuration is malformed')
-        print(e.args[0])
-        sys.exit(3)
-
-    logging.basicConfig(format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
-                        level=config.log_level)
-    logger = logging.getLogger('mdbackups')
-
+def main_do_backup(logger: logging.Logger, config: Config) -> Path:
     # Prepare secret backends (if any) and its env getters (aka functions that gets the right value from the backend)
     secret_backends = [(get_secret_backend_implementation(secret.type, secret.config), secret)
                        for secret in config.secrets]
@@ -70,96 +52,171 @@ def main():
             config.providers.append(provider)
 
     # Do backups
-    backups_path = config.backups_path
     try:
-        backup = do_backup(backups_path,
-                           config.custom_utils_script,
-                           **config.env,
-                           compression_strategy=config.compression_strategy,
-                           compression_level=config.compression_level,
-                           cypher_strategy=config.cypher_strategy,
-                           **{f'cypher_{key}': value
-                              for key, value in (config.cypher_params.items() if config.cypher_params is not None else [])},
-                           **secret_env)
+        cypher_items = config.cypher_params.items() if config.cypher_params is not None else []
+        cypher_env = {f'cypher_{key}': value for key, value in cypher_items}
+        return do_backup(config.backups_path,
+                         config.custom_utils_script,
+                         **config.env,
+                         compression_strategy=config.compression_strategy,
+                         compression_level=config.compression_level,
+                         cypher_strategy=config.cypher_strategy,
+                         **cypher_env,
+                         **secret_env)
     except Exception as e:
         logger.error(e)
-        shutil.rmtree(str(backups_path / '.partial'))
+        shutil.rmtree(str(config.backups_path / '.partial'))
         sys.exit(1)
 
+
+def main_compress_folders(config: Config, backup: Path) -> Tuple[List[Path], List[Path]]:
     final_items = []
     items_to_remove = []
 
+    # Compress directories
+    for item in backup.iterdir():
+        # Compress if it is a directory
+        if item.resolve().is_dir():
+            strategies = []
+
+            if config.compression_strategy is not None:
+                strategies.append(get_compression_strategy(
+                    config.compression_strategy,
+                    config.compression_level,
+                ))
+
+            if config.cypher_strategy is not None:
+                strategies.append(get_cypher_strategy(
+                    config.cypher_strategy,
+                    **config.cypher_params,
+                ))
+
+            filename = archive_folder(backup, item.resolve(), strategies)
+
+            final_items.append(Path(backup, filename))
+            items_to_remove.append(Path(backup, filename))
+        else:
+            final_items.append(item.resolve())
+
+    return final_items, items_to_remove
+
+
+def main_upload_backup(logger: logging.Logger, config: Config, backup: Path):
+    has_compressed = False
+    final_items, items_to_remove = None, []
+
     # (do the following only if there are any providers defined)
-    if len(config.providers) > 0:
-        # Compress directories
-        for item in backup.iterdir():
-            # Compress if it is a directory
-            if item.resolve().is_dir():
-                strategies = []
+    if len(config.providers) == 0:
+        return
 
-                if config.compression_strategy is not None:
-                    strategies.append(get_compression_strategy(
-                        config.compression_strategy,
-                        config.compression_level,
-                    ))
+    try:
+        # Upload files to storage providers
+        backup_folder_name = backup.relative_to(config.backups_path).parts[0]
+        for prov_config in config.providers:
+            # Detect provider type and instantiate it
+            storage = create_storage_instance(prov_config)
 
-                if config.cypher_strategy is not None:
-                    strategies.append(get_cypher_strategy(
-                        config.cypher_strategy,
-                        **config.cypher_params,
-                    ))
+            if storage is not None:
+                if not has_compressed:
+                    final_items, items_to_remove = main_compress_folders(config, backup)
+                    has_compressed = True
 
-                filename = archive_folder(backup, item.resolve(), strategies)
+                # Create folder for this backup
+                try:
+                    logger.info(f'Creating folder {backup_folder_name} in {prov_config.backups_path}')
+                    backup_cloud_folder = storage.create_folder(backup_folder_name, prov_config.backups_path)
+                except Exception as e:
+                    # If we cannot create it, will continue to the next configured provider
+                    logger.exception(f'Could not create folder {backup_folder_name}', e)
+                    continue
 
-                final_items.append(Path(backup, filename))
-                items_to_remove.append(Path(backup, filename))
-            else:
-                final_items.append(item.resolve())
-
-        try:
-            # Upload files to storage providers
-            backup_folder_name = backup.relative_to(backups_path).parts[0]
-            for prov_config in config.providers:
-                # Detect provider type and instantiate it
-                storage = create_storage_instance(prov_config)
-
-                if storage is not None:
-                    # Create folder for this backup
+                # Upload every file
+                for item in final_items:
                     try:
-                        logger.info(f'Creating folder {backup_folder_name} in {prov_config.backups_path}')
-                        backup_cloud_folder = storage.create_folder(backup_folder_name, prov_config.backups_path)
-                    except Exception:
-                        # If we cannot create it, will continue to the next configured provider
-                        logger.exception(f'Could not create folder {backup_folder_name}')
-                        continue
+                        logger.info(f'Uploading {item} to {backup_cloud_folder}')
+                        storage.upload(item, backup_cloud_folder)
+                    except Exception as e:
+                        # Log only in case of error (tries to upload as much as it can)
+                        logger.exception(f'Could not upload file {item}', e)
+            else:
+                # The provider is invalid, show error
+                logger.error(f'Unknown storage provider "{prov_config.type}", ignoring...')
+    finally:
+        # Remove compressed directories
+        for item in items_to_remove:
+            logger.info(f'Removing file from compressed directory {item}')
+            item.unlink()
 
-                    # Upload every file
-                    for item in final_items:
-                        try:
-                            logger.info(f'Uploading {item} to {backup_cloud_folder}')
-                            storage.upload(item, backup_cloud_folder)
-                        except Exception:
-                            # Log only in case of error (tries to upload as much as it can)
-                            logger.exception(f'Could not upload file {item}')
-                else:
-                    # The provider is invalid, show error
-                    logger.error(f'Unknown storage provider "{prov_config.type}", ignoring...')
-        finally:
-            # Remove compressed directories
-            for item in items_to_remove:
-                logger.info(f'Removing file from compressed directory {item}')
-                item.unlink()
 
+def main_clean_up(logger: logging.Logger, config: Config):
     # Cleanup old backups
     max_backups = config.max_backups_kept
-    backups_list = get_backup_folders_sorted(backups_path)
+    backups_list = get_backup_folders_sorted(config.backups_path)
     logger.debug('List of folders available:\n{}'.format('\n'.join([str(b) for b in backups_list])))
-    for old in backups_list[0:max(0, len(backups_list)-max_backups)]:
+    for old in backups_list[0:max(0, len(backups_list) - max_backups)]:
         logger.warning(f'Removing old backup folder {old}')
         try:
             shutil.rmtree(str(old.absolute()))
         except OSError:
             logger.exception(f'Could not completely remove backup {old}')
+
+
+def main():
+    parser = argparse.ArgumentParser(description=('Small but customizable utility to create backups and store them in '
+                                                  'cloud storage providers'))
+
+    parser.add_argument('-c', '--config',
+                        help='Path to configuration (default: config/config.json)',
+                        default='config/config.json')
+    parser.add_argument('--backup-only',
+                        help='Only does the backup actions',
+                        action='store_true',
+                        default=False)
+    parser.add_argument('--upload-current-only',
+                        help='Only uploads the last backup',
+                        action='store_true',
+                        default=False)
+    parser.add_argument('--cleanup-only',
+                        help='Only does the backup cleanup',
+                        action='store_true',
+                        default=False)
+
+    args = parser.parse_args()
+
+    # Check if configuration file exists and read it
+    try:
+        config = Config(args.config)
+    except (FileNotFoundError, IsADirectoryError, NotADirectoryError) as e:
+        print(e.args[0])
+        print('Check the paths and run again the utility')
+        sys.exit(1)
+    except KeyError as e:
+        print('Configuration is malformed')
+        print(e.args[0])
+        sys.exit(2)
+    except JSONDecodeError as e:
+        print('Configuration is malformed')
+        print(e.args[0])
+        sys.exit(3)
+
+    logging.basicConfig(format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+                        level=config.log_level)
+    logger = logging.getLogger('mdbackup')
+
+    try:
+        if args.backup_only:
+            backup = main_do_backup(logger, config)
+            logger.info(f'Backup done: {backup.absolute()}')
+        elif args.upload_current_only:
+            main_upload_backup(logger, config, (config.backups_path / 'current').resolve())
+        elif args.cleanup_only:
+            main_clean_up(logger, config)
+        else:
+            backup = main_do_backup(logger, config)
+            main_upload_backup(logger, config, backup)
+            main_clean_up(logger, config)
+    except Exception as e:
+        logger.exception(e)
 
 
 if __name__ == '__main__':
