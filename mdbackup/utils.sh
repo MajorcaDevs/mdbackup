@@ -160,6 +160,7 @@ function backup-folder() {
         --group \
         --times \
         --recursive \
+        --links \
         --delete \
         --delete-excluded \
         --partial-dir=".partial" \
@@ -218,5 +219,41 @@ function backup-docker-volume-physically() {
     else
         echo "Volume '$1' does not exist"
         return 1
+    fi
+}
+
+# $1 -> file to backup
+# $2 -> (optional) folder where to write the file
+function backup-file() {
+    local old="../current/$2/$(basename "$1")"
+    local new="./$2/$(basename "$1")"
+    if [[ ! -d "./$2" ]]; then
+        mkdir -p "./$2" || return $?
+    fi
+
+    if [[ ! -f "$old" ]] || ! cmp -s "$old" "$1" ; then
+        cp -a "$1" "$new" || return $?
+    else
+        ln "$old" "$new" || return $?
+    fi
+}
+
+# $1 -> file to backup
+# $2 -> (optional) folder where to write the file
+# See compress-encrypt
+function backup-file-encrypted() {
+    local old="../current/$2/$(basename "$1")"
+    local new="./$2/$(basename "$1")"
+    if [[ ! -d "./$2" ]]; then
+        mkdir -p "./$2" || return $?
+    fi
+
+    compress-encrypt "cat '$1'" "$new~" || return $?
+
+    if [[ ! -f "$old" ]] || ! cmp -s "$old" "$new~" ; then
+        mv "$new~" "$new" || return $?
+    else
+        ln "$old" "$new" || return $?
+        rm "$new~" || return $?
     fi
 }
