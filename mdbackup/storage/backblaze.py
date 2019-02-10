@@ -32,29 +32,33 @@ class B2Storage(AbstractStorage[str]):
         self.__b2 = B2(key_id=config['keyId'], application_key=config['appKey'])
         self.__bucket: B2Bucket = self.__b2.buckets.get(config['bucket'])
         self.__password: str = config.get('password')
-        self.__pre = config['backupsPath']
+        self.__pre = config.backups_path if not config.backups_path.endswith('/') else config.backups_path[:-1]
 
     def list_directory(self, path: Union[str, Path, str]) -> List[str]:
-        path = path if isinstance(path, str) else str(path.absolute())
+        path = path if isinstance(path, str) else str(path)
         return [item.file_name for item in self.__bucket.files.all(include_hidden=True)
-                if item.file_name.startswith(self.__pre + path)]
+                if item.file_name.startswith(self.__pre + '/' + path)]
 
     def create_folder(self, name: str, parent: Union[Path, str, str]=None) -> str:
-        key = self.__pre + f'{parent.absolute()}/{name}/'
+        key = f'{parent}/{name}/'
+        if key.startswith('/'):
+            key = key[1:]
         return key
 
     def upload(self, path: Path, parent: Union[Path, str, str]=None):
         if isinstance(parent, Path):
-            key = f'{parent.absolute()}/{path.name}'
+            key = '/'.join(parent.absolute().parts + (path.name,))
         elif isinstance(parent, str):
-            key = f'{parent}/{path.name}'
+            if parent.endswith('/'):
+                key = (parent + path.name)
+            else:
+                key = f'{parent}/{path.name}'
         else:
             key = path.name
-        key = self.__pre + key
+        if key.startswith('/'):
+            key = key[1:]
         self.__log.info(f'Uploading file {key} (from {path})')
         with open(str(path.absolute()), 'rb') as file_to_upload:
             ret = self.__bucket.files.upload(contents=file_to_upload,
-                                             file_name=key,
-                                             bucket_name=self.__bucket,
-                                             password=self.__password)
+                                             file_name=key)
         self.__log.debug(ret)

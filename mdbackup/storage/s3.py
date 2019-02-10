@@ -37,28 +37,34 @@ class S3Storage(AbstractStorage[str]):
         )
 
         self.__bucket: str = config['bucket']
-        self.__pre = config['backupsPath']
+        self.__pre = config.backups_path if not config.backups_path.endswith('/') else config.backups_path[:-1]
 
     def list_directory(self, path: Union[str, Path, str]) -> List[str]:
         path = path if isinstance(path, str) else str(path)
         return [item['Key'] for item in self.__s3.list_objects_v2(Bucket=self.__bucket)['Contents']
-                if item['Key'].startswith(self.__pre + path)]
+                if item['Key'].startswith(self.__pre + '/' + path)]
 
     def create_folder(self, name: str, parent: Union[Path, str, str]=None) -> str:
-        key = self.__pre + f'{parent}/{name}/'
+        key = f'{parent}/{name}/'
+        if key.startswith('/'):
+            key = key[1:]
         self.__log.info(f'Creating folder {key}')
         ret = self.__s3.put_object(Key=key, Bucket=self.__bucket)
         self.__log.debug(ret)
-        return key
+        return f'{parent}/{name}/'
 
     def upload(self, path: Path, parent: Union[Path, str, str]=None):
         if isinstance(parent, Path):
-            key = f'{parent.absolute()}/{path.name}'
+            key = '/'.join(parent.absolute().parts + (path.name,))
         elif isinstance(parent, str):
-            key = f'{parent}/{path.name}'
+            if parent.endswith('/'):
+                key = (parent + path.name)
+            else:
+                key = f'{parent}/{path.name}'
         else:
             key = path.name
-        key = self.__pre + key
+        if key.startswith('/'):
+            key = key[1:]
         self.__log.info(f'Uploading file {key} (from {path})')
         ret = self.__s3.upload_file(str(path.absolute()), self.__bucket, key)
         self.__log.debug(ret)

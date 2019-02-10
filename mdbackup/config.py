@@ -111,6 +111,9 @@ class Config(object):
             self.__cypher_strategy = conf['cypher']['strategy']
             self.__cypher_params = change_keys(conf['cypher'])
             del self.__cypher_params['strategy']
+        else:
+            self.__cypher_strategy = None
+            self.__cypher_params = None
 
         Config.__check_paths(self.__backups_path)
         Config.__check_paths(self.__custom_utils_script)

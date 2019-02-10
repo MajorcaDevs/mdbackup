@@ -32,6 +32,7 @@ setuptools.setup(
         'PyDrive',
         'python-magic',
         'requests',
-        'boto3'
+        'boto3',
+        'b2blaze'
     ]
 )

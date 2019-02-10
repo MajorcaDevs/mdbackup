@@ -65,15 +65,21 @@ def main():
 
     # Do backups
     backups_path = config.backups_path
-    backup = do_backup(backups_path,
-                       config.custom_utils_script,
-                       **config.env,
-                       compression_strategy=config.compression_strategy,
-                       compression_level=config.compression_level,
-                       cypher_strategy=config.cypher_strategy,
-                       **{f'cypher_{key}': value
-                          for key, value in (config.cypher_params.items() if config.cypher_params is not None else [])},
-                       **secret_env_flatten)
+    try:
+        backup = do_backup(backups_path,
+                           config.custom_utils_script,
+                           **config.env,
+                           compression_strategy=config.compression_strategy,
+                           compression_level=config.compression_level,
+                           cypher_strategy=config.cypher_strategy,
+                           **{f'cypher_{key}': value
+                              for key, value in (config.cypher_params.items() if config.cypher_params is not None else [])},
+                           **secret_env_flatten)
+    except Exception as e:
+        logger.error(e)
+        shutil.rmtree(str(backups_path / '.partial'))
+        sys.exit(1)
+
     final_items = []
     items_to_remove = []
 
@@ -114,6 +120,7 @@ def main():
                 if storage is not None:
                     # Create folder for this backup
                     try:
+                        logger.info(f'Creating folder {backup_folder_name} in {prov_config.backups_path}')
                         backup_cloud_folder = storage.create_folder(backup_folder_name, prov_config.backups_path)
                     except Exception:
                         # If we cannot create it, will continue to the next configured provider
