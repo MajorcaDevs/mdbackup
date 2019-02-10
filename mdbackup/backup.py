@@ -30,7 +30,7 @@ def generate_backup_path(backups_folder: Path) -> Path:
     Creates a path with the folder (named with the right structure)
     that will be used as backup folder in this run.
     """
-    now = datetime.now()
+    now = datetime.utcnow()
     isostring = now.isoformat(timespec='minutes')
     return Path(backups_folder, isostring)
 
