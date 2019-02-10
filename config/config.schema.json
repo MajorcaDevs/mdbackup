@@ -251,6 +251,11 @@
                   "$id": "#/properties/secrets/properties/vault/properties/config/properties/secretId",
                   "type": "string",
                   "title": "Secret ID of the AppAuth login"
+                },
+                "cert": {
+                  "$id": "#/properties/secrets/properties/vault/properties/config/properties/cert",
+                  "type": ["string", "boolean"],
+                  "title": "Path to a certificate bundle. If set to false, disables TLS certificate verification"
                 }
               }
             },
