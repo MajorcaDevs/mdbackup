@@ -26,6 +26,7 @@
 [[ ! -z "$MYSQLUSER" ]] && export MYSQLUSER="-u $MYSQLUSER"
 function __run_mysql() {
     if [[ ! -z "$DOCKER" ]]; then
+        echo "DEBUG: docker container run --rm -i --network=${MYSQLNETWORK} ${MYSQLIMAGE} $@"
         exec docker container run \
             --rm \
             -i \
@@ -33,6 +34,7 @@ function __run_mysql() {
             ${MYSQLIMAGE} \
             "$@"
     else
+        echo "DEBUG: $@"
         exec "$@"
     fi
 }
@@ -43,6 +45,7 @@ function __run_mysql() {
 [[ -z "$PGHOST" ]] && export PGHOST='localhost'
 function __run_psql() {
     if [[ ! -z "$DOCKER" ]]; then
+        echo "DEBUG: docker container run --rm -i --network ${PGNETWORK} -e PGPASSWORD={...} -u ${PGUSER} ${PGIMAGE} $@"
         exec docker container run \
             --rm \
             -i \
@@ -52,6 +55,7 @@ function __run_psql() {
             ${PGIMAGE} \
             "$@"
     else
+        echo "DEBUG: sudo -u ${PGUSER} $@"
         exec sudo -u ${PGUSER} "$@"
     fi
 }
@@ -103,12 +107,12 @@ function compress-encrypt() {
     local extension=""
 
     if [[ -z "$1" ]]; then
-        echo "Command is empty"
+        >&2 echo "Command is empty"
         return 1
     fi
 
     if [[ -z "$2" ]]; then
-        echo "Filename is empty"
+        >&2 echo "Filename is empty"
         return 2
     fi
 
@@ -134,6 +138,8 @@ function compress-encrypt() {
             ;;
     esac
 
+    echo "Running command '${final_cmd}' to file ${2}${extension}"
+    echo "DEBUG: ${final_cmd} > \"${2}${extension}\""
     eval "${final_cmd} > \"${2}${extension}\""
     return $?
 }
@@ -143,7 +149,7 @@ function compress-encrypt() {
 # ... extra arguments are passed to rsync
 function backup-folder() {
     if [[ ! -d "$1" && ! -f "$1" ]]; then
-        echo "Source '$1' does not exist"
+        >&2 echo "Source '$1' does not exist"
         return 1
     fi
 
@@ -153,6 +159,9 @@ function backup-folder() {
     shift
     shift
 
+    echo "Copying folder from $SRC to $DST"
+    echo "DEBUG: rsync --acls --xattrs --owner --group --times --recursive --links --delete --delete-excluded" \
+        --partial-dir='.partial' --link-dest="'../../current/$DST'" "$@" "'$SRC'" "'$DST_PARTIAL'"
     rsync \
         --acls \
         --xattrs \
@@ -167,6 +176,7 @@ function backup-folder() {
         --link-dest="../../current/$DST" \
         "$@" \
         "$SRC" "$DST_PARTIAL" || return $?
+    echo "DEBUG: mv '${DST_PARTIAL}' './${DST}'"
     mv "$DST_PARTIAL" "./$DST" || return $?
 }
 
@@ -181,7 +191,12 @@ function backup-remote-folder() {
     shift
     shift
     shift
+
+    echo "Copying remote folder $SRC from $IP to $DST"
     #https://www.digitalocean.com/community/tutorials/how-to-copy-files-with-rsync-over-ssh
+    echo "DEBUG: rsync -avz $@ --recursive --delete --delete-excluded --partial-dir='.partial'" \
+        --link-dest="'../../current/$DST'" -e 'ssh -o StrictHostKeyChecking=no -o UsersKnownHostsFile=/dev/null' \
+        "$IP:$SRC" "$DST"
     rsync -avz "$@" \
         --recursive \
         --delete \
@@ -195,29 +210,35 @@ function backup-remote-folder() {
 # $1 -> database to backup
 # See compress-encrypt...
 function backup-postgres-database() {
+    echo "Doing backup of psql database $1"
     compress-encrypt "__run_psql pg_dump -h $PGHOST \"$1\"" "$1.sql" || return $?
 }
 
 # $1 -> database to backup
 # See compress-encrypt...
 function backup-mysql-database() {
+    echo "Doing backaup of mysql database $1"
     compress-encrypt "__run_mysql mysqldump -h $MYSQLHOST $MYSQLPASSWORD $MYSQLUSER \"$1\"" "$1.sql" || return $?
 }
 
 # $1 -> volume to backup
 # See compress-encrypt...
 function backup-docker-volume() {
+    echo "Doing backup of docker volume $1"
     compress-encrypt "docker container run --rm -i -v \"$1\":/backup alpine tar -c -C /backup ." "$1.tar" || return $?
 }
 
 # $1 -> volume to backup
 # See backup-folder...
 function backup-docker-volume-physically() {
+    echo "DEBUG: docker volume inspect $1"
     if docker volume inspect "$1" > /dev/null; then
+        echo "Preparing backup of local docker volume $1"
+        echo "DEBUG: docker volume inspect $1 --format '{{.Mountpoint}}'"
         local dst=$(docker volume inspect "$1" --format "{{.Mountpoint}}")
         backup-folder "$dst" "$1" || return $?
     else
-        echo "Volume '$1' does not exist"
+        >&2 echo "Volume '$1' does not exist"
         return 1
     fi
 }
@@ -228,12 +249,16 @@ function backup-file() {
     local old="../current/$2/$(basename "$1")"
     local new="./$2/$(basename "$1")"
     if [[ ! -d "./$2" ]]; then
+        echo "DEBUG: mkdir -p ./$2"
         mkdir -p "./$2" || return $?
     fi
 
+    echo "Copying file $1 to $new"
     if [[ ! -f "$old" ]] || ! cmp -s "$old" "$1" ; then
+        echo "DEBUG: cp -a $1 $new"
         cp -a "$1" "$new" || return $?
     else
+        echo "DEBUG: ln $old $new"
         ln "$old" "$new" || return $?
     fi
 }
@@ -245,15 +270,21 @@ function backup-file-encrypted() {
     local old="../current/$2/$(basename "$1")"
     local new="./$2/$(basename "$1")"
     if [[ ! -d "./$2" ]]; then
+        echo "DEBUG: mkdir -p ./$2"
         mkdir -p "./$2" || return $?
     fi
 
+    echo "Copying, compressing and encrypting file $1"
     compress-encrypt "cat '$1'" "$new~" || return $?
+    local final_new=$(echo "$new"* | tr -d '~')
 
-    if [[ ! -f "$old" ]] || ! cmp -s "$old" "$new~" ; then
-        mv "$new~" "$new" || return $?
+    if [[ ! -f "$old" ]] || ! cmp -s "$old"* "$new~"* ; then
+        echo "DEBUG:" mv "$new~"* "$new"*
+        mv "$new~"* "$final_new" || return $?
     else
-        ln "$old" "$new" || return $?
-        rm "$new~" || return $?
+        echo "DEBUG:" ln "$old"* "$final_new"
+        ln "$old"* "$final_new" || return $?
+        echo "DEBUG:" rm "$new~"*
+        rm "$new~"* || return $?
     fi
 }
