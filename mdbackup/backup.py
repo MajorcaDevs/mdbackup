@@ -22,6 +22,7 @@ import re
 import os
 import subprocess
 from tempfile import NamedTemporaryFile
+from threading import Thread
 from typing import List, Dict, Union, Callable
 
 
@@ -48,12 +49,13 @@ def get_steps_scripts() -> List[Path]:
     return [script.absolute() for script in scripts]
 
 
-def run_step(step: Path, cwd: Path, env: Dict[str, Union[str, int, float, Callable[[], str]]]):
+def run_step(step: Path, cwd: Path, env: Dict[str, Union[str, int, float, Callable[[], str]]]) -> int:
     """
     Runs this step, with the current working directory defined in ``cwd``
     and, optionally, extra environment variables defined in ``env``.
     Returns the completed subprocess object.
     """
+    logger = logging.getLogger(__name__)
     full_env = dict(os.environ)
     for key, value in env.items():
         if value is not None:
@@ -61,11 +63,25 @@ def run_step(step: Path, cwd: Path, env: Dict[str, Union[str, int, float, Callab
                 full_env[key.upper()] = value()
             else:
                 full_env[key.upper()] = str(value)
-    return subprocess.run([str(step)],
-                          stderr=subprocess.PIPE,
-                          stdout=subprocess.PIPE,
-                          cwd=str(cwd),
-                          env=full_env)
+
+    process = subprocess.Popen([str(step)],
+                               stderr=subprocess.PIPE,
+                               stdout=subprocess.PIPE,
+                               cwd=str(cwd),
+                               env=full_env,
+                               bufsize=1)
+    # Print stderr lines in a thread
+    stderr_thread = Thread(target=lambda: [logger.error(err_line[:-1].decode('UTF-8')) for err_line in process.stderr])
+    stderr_thread.start()
+    # Read every line (from stdout) into the logger
+    for line in process.stdout:
+        if line.startswith(b'DEBUG: '):
+            logger.debug(line[7:-1].decode('UTF-8'))
+        else:
+            logger.info(line[:-1].decode('UTF-8'))
+    # Join thread and wait to wait process (same as join, but in processes)
+    stderr_thread.join()
+    return process.wait()
 
 
 def generate_script(step_script: Path, custom_utils: str = None) -> Path:
@@ -115,15 +131,10 @@ def do_backup(backups_folder: Path, custom_utils: str = None, **kwargs) -> Path:
         tmp_path = generate_script(step_script, custom_utils)
         tmp_path.chmod(0o755)
 
-        output = run_step(tmp_path, tmp_backup, kwargs)
-        if output.returncode != 0:
-            logger.error(f'Script returned {output.returncode}')
-            if output.stdout: logger.error(f'stdout\n{output.stdout.decode("utf-8")}')
-            if output.stderr: logger.error(f'stderr\n{output.stderr.decode("utf-8")}')
+        return_code = run_step(tmp_path, tmp_backup, kwargs)
+        if return_code != 0:
+            logger.error(f'Script returned {return_code}')
             raise Exception(f'The step {step_script} failed, backup will stop')
-        else:
-            if output.stdout: logger.debug(f'stdout\n{output.stdout.decode("utf-8")}')
-            if output.stderr: logger.debug(f'stderr\n{output.stderr.decode("utf-8")}')
         tmp_path.unlink()
 
     backup = generate_backup_path(backups_folder)
