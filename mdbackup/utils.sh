@@ -211,7 +211,7 @@ function backup-remote-folder() {
 # See compress-encrypt...
 function backup-postgres-database() {
     echo "Doing backup of psql database $1"
-    compress-encrypt "__run_psql pg_dump -h $PGHOST \"$1\"" "$1.sql" || return $?
+    compress-encrypt "__run_psql pg_dump -w -h $PGHOST \"$1\"" "$1.sql" || return $?
 }
 
 # $1 -> database to backup
