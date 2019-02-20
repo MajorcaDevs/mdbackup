@@ -26,7 +26,6 @@
 [[ ! -z "$MYSQLUSER" ]] && export MYSQLUSER="-u $MYSQLUSER"
 function __run_mysql() {
     if [[ ! -z "$DOCKER" ]]; then
-        echo "DEBUG: docker container run --rm -i --network=${MYSQLNETWORK} ${MYSQLIMAGE} $@"
         exec docker container run \
             --rm \
             -i \
@@ -34,7 +33,6 @@ function __run_mysql() {
             ${MYSQLIMAGE} \
             "$@"
     else
-        echo "DEBUG: $@"
         exec "$@"
     fi
 }
@@ -44,7 +42,6 @@ function __run_mysql() {
 [[ -z "$PGIMAGE" ]] && export PGIMAGE='postgres'
 function __run_psql() {
     if [[ ! -z "$DOCKER" ]]; then
-        echo "DEBUG: docker container run --rm -i --network ${PGNETWORK} -e PGPASSWORD={...} -u ${PGUSER} ${PGIMAGE} $@"
         exec docker container run \
             --rm \
             -i \
@@ -55,10 +52,8 @@ function __run_psql() {
             "$@"
     else
         if (cat /etc/passwd | grep "${PGUSER}" > /dev/null 2>&); then
-            echo "DEBUG: sudo -u ${PGUSER} $@"
             exec sudo -u ${PGUSER} "$@"
         else
-            echo "DEBUG: $@"
             exec "$@"
         fi
     fi

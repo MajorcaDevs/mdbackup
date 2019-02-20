@@ -126,6 +126,7 @@ def do_backup(backups_folder: Path, custom_utils: str = None, **kwargs) -> Path:
 
     logger.info(f'Temporary backup folder is {tmp_backup}')
     tmp_backup.mkdir(exist_ok=True, parents=True)
+    tmp_backup.chmod(0o777)
     for step_script in get_steps_scripts():
         logger.info(f'Running script {step_script}')
         tmp_path = generate_script(step_script, custom_utils)
@@ -138,6 +139,7 @@ def do_backup(backups_folder: Path, custom_utils: str = None, **kwargs) -> Path:
         tmp_path.unlink()
 
     backup = generate_backup_path(backups_folder)
+    tmp_backup.chmod(0o754)
     logger.info(f'Moving {tmp_backup} to {backup}')
     tmp_backup.rename(backup)
 
