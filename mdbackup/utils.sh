@@ -26,7 +26,6 @@
 [[ ! -z "$MYSQLUSER" ]] && export MYSQLUSER="-u $MYSQLUSER"
 function __run_mysql() {
     if [[ ! -z "$DOCKER" ]]; then
-        echo "DEBUG: docker container run --rm -i --network=${MYSQLNETWORK} ${MYSQLIMAGE} $@"
         exec docker container run \
             --rm \
             -i \
@@ -34,7 +33,6 @@ function __run_mysql() {
             ${MYSQLIMAGE} \
             "$@"
     else
-        echo "DEBUG: $@"
         exec "$@"
     fi
 }
@@ -42,10 +40,8 @@ function __run_mysql() {
 [[ -z "$PGNETWORK" ]] && export PGNETWORK='host'
 [[ -z "$PGUSER" ]] && export PGUSER='postgres'
 [[ -z "$PGIMAGE" ]] && export PGIMAGE='postgres'
-[[ -z "$PGHOST" ]] && export PGHOST='localhost'
 function __run_psql() {
     if [[ ! -z "$DOCKER" ]]; then
-        echo "DEBUG: docker container run --rm -i --network ${PGNETWORK} -e PGPASSWORD={...} -u ${PGUSER} ${PGIMAGE} $@"
         exec docker container run \
             --rm \
             -i \
@@ -55,8 +51,11 @@ function __run_psql() {
             ${PGIMAGE} \
             "$@"
     else
-        echo "DEBUG: sudo -u ${PGUSER} $@"
-        exec sudo -u ${PGUSER} "$@"
+        if (cat /etc/passwd | grep "${PGUSER}" > /dev/null 2>&); then
+            exec sudo -u ${PGUSER} "$@"
+        else
+            exec "$@"
+        fi
     fi
 }
 
@@ -211,7 +210,24 @@ function backup-remote-folder() {
 # See compress-encrypt...
 function backup-postgres-database() {
     echo "Doing backup of psql database $1"
-    compress-encrypt "__run_psql pg_dump -w -h $PGHOST \"$1\"" "$1.sql" || return $?
+    local extra_args=''
+    if [[ ! -z "$PGHOST" ]]; then
+        extra_args="$extra_args --dbname='postgresql://$PGUSER"
+        if [[ ! -z "$PGPASSWORD" ]]; then
+            extra_args="${extra_args}:${PGPASSWORD}"
+        fi
+        extra_args="${extra_args}@${PGHOST}"
+        if [[ ! -z "$PGPORT" ]]; then
+            extra_args="${extra_args}:${PGPORT}"
+        fi
+        extra_args="${extra_args}/${1}'"
+    else
+        if [[ ! -z "$PGPORT" ]]; then
+            extra_args="$extra_args -p $PGPORT"
+        fi
+        extra_args="$extra_args '$1'"
+    fi
+    compress-encrypt "__run_psql pg_dump -w $extra_args" "$1.sql" || return $?
 }
 
 # $1 -> database to backup
