@@ -233,7 +233,7 @@ function backup-postgres-database() {
 # $1 -> database to backup
 # See compress-encrypt...
 function backup-mysql-database() {
-    echo "Doing backaup of mysql database $1"
+    echo "Doing backup of mysql database $1"
     compress-encrypt "__run_mysql mysqldump -h $MYSQLHOST $MYSQLPASSWORD $MYSQLUSER \"$1\"" "$1.sql" || return $?
 }
 
@@ -302,5 +302,63 @@ function backup-file-encrypted() {
         ln "$old"* "$final_new" || return $?
         echo "DEBUG:" rm "$new~"*
         rm "$new~"* || return $?
+    fi
+}
+
+function backup-mikrotik() {
+    echo "Doing backup of MikroTik device $1"
+    local DATE='$(date "+%Y-%m-%d")'
+
+    # Check if Mikrotik specific directory exists
+    if [[ ! -d $MIKROTIKDIR ]]; then
+        mkdir ./$MIKROTIKDIR
+    fi
+
+    # Check for ssh key and then backup
+    if [[ -z $MIKROTIKSSHKEY ]]; then
+        echo "DEBUG: SSH Key not detected, bypassing SSH password with sshpass"
+
+        if [[ -z $MIKROTIKFULLBACKUP ]]; then
+            sshpass -p '${MIKROTIKPASS}' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $MIKROTIKUSER@$MIKROTIKHOST /system backup save name="$MIKROTIKHOST-$DATE-full" && \
+            scp $MIKROTIKUSER@$MIKROTIKHOST:$MIKROTIKHOST-$DATE-full.backup ./$MIKROTIKDIR
+        fi
+
+        if [[ -z $MIKROTIKEXPORTSCRIPTS ]]; then
+            sshpass -p '${MIKROTIKPASS}' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $MIKROTIKUSER@$MIKROTIKHOST /system script export file="$MIKROTIKHOST-$DATE-scripts" && \
+            scp $MIKROTIKUSER@$MIKROTIKHOST:$MIKROTIKHOST-$DATE-scripts.rsc ./$MIKROTIKDIR
+        fi
+
+        if [[ -z $MIKROTIKEXPORTSYSTEMCONFIG ]]; then
+            sshpass -p '${MIKROTIKPASS}' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $MIKROTIKUSER@$MIKROTIKHOST /system export file="$MIKROTIKHOST-$DATE-sysconf" && \
+            scp $MIKROTIKUSER@$MIKROTIKHOST:$MIKROTIKHOST-$DATE-sysconf.rsc ./$MIKROTIKDIR                    
+        fi
+
+        if [[ -z $MIKROTIKEXPORTGLOBALCONFIG ]]; then
+            sshpass -p '${MIKROTIKPASS}' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $MIKROTIKUSER@$MIKROTIKHOST /export file="$MIKROTIKHOST-$DATE-globalconf" && \
+            scp $MIKROTIKUSER@$MIKROTIKHOST:$MIKROTIKHOST-$DATE-globalconf.rsc ./$MIKROTIKDIR                
+        fi
+
+    else
+        echo "DEBUG: Detected SSH Key, sshpass won't be needed"
+
+        if [[ -z $MIKROTIKFULLBACKUP ]]; then
+            ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $MIKROTIKUSER@$MIKROTIKHOST /system backup save name="$MIKROTIKHOST-$DATE-full" && \
+            scp $MIKROTIKUSER@$MIKROTIKHOST:$MIKROTIKHOST-$DATE-full.backup ./$MIKROTIKDIR
+        fi
+
+        if [[ -z $MIKROTIKEXPORTSCRIPTS ]]; then
+            ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $MIKROTIKUSER@$MIKROTIKHOST /system script export file="$MIKROTIKHOST-$DATE-scripts" && \
+            scp $MIKROTIKUSER@$MIKROTIKHOST:$MIKROTIKHOST-$DATE-scripts.rsc ./$MIKROTIKDIR
+        fi
+
+        if [[ -z $MIKROTIKEXPORTSYSTEMCONFIG ]]; then
+            ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $MIKROTIKUSER@$MIKROTIKHOST /system export file="$MIKROTIKHOST-$DATE-sysconf" && \
+            scp $MIKROTIKUSER@$MIKROTIKHOST:$MIKROTIKHOST-$DATE-sysconf.rsc ./$MIKROTIKDIR                    
+        fi
+
+        if [[ -z $MIKROTIKEXPORTGLOBALCONFIG ]]; then
+            ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $MIKROTIKUSER@$MIKROTIKHOST /export file="$MIKROTIKHOST-$DATE-globalconf" && \
+            scp $MIKROTIKUSER@$MIKROTIKHOST:$MIKROTIKHOST-$DATE-globalconf.rsc ./$MIKROTIKDIR                
+        fi
     fi
 }
