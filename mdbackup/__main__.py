@@ -142,7 +142,7 @@ def main_upload_backup(logger: logging.Logger, config: Config, backup: Path):
                         storage.upload(item, backup_cloud_folder)
                     except Exception as e:
                         # Log only in case of error (tries to upload as much as it can)
-                        logger.exception(f'Could not upload file {item}', e)
+                        logger.exception(f'Could not upload file {item}: {e}')
             else:
                 # The provider is invalid, show error
                 logger.error(f'Unknown storage provider "{prov_config.type}", ignoring...')
