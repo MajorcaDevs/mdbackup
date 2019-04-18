@@ -336,7 +336,7 @@ function backup-mikrotik() {
 
         if [[ -z $MIKROTIKEXPORTSYSTEMCONFIG ]]; then
             sshpass -p '${MIKROTIKPASS}' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $MIKROTIKUSER@$MIKROTIKHOST /system export file="$MIKROTIKHOST-$DATE-sysconf" && \
-            scp $MIKROTIKUSER@$MIKROTIKHOST:$MIKROTIKHOST-$DATE-sysconf.rsc "./$MIKROTIKDIR" || \
+            scp "$MIKROTIKUSER@$MIKROTIKHOST:$MIKROTIKHOST-$DATE-sysconf.rsc" "./$MIKROTIKDIR" || \
             return $?
         fi
 
@@ -350,25 +350,25 @@ function backup-mikrotik() {
         echo "DEBUG: Detected SSH Key, sshpass won't be needed"
 
         if [[ -z "$MIKROTIKFULLBACKUP" ]]; then
-            ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $MIKROTIKUSER@$MIKROTIKHOST /system backup save name="$MIKROTIKHOST-$DATE-full" && \
+            ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i $MIKROTIKSSHKEY $MIKROTIKUSER@$MIKROTIKHOST /system backup save name="$MIKROTIKHOST-$DATE-full" && \
             scp "$MIKROTIKUSER@$MIKROTIKHOST:$MIKROTIKHOST-$DATE-full.backup" "./$MIKROTIKDIR" || \
             return $?
         fi
 
         if [[ -z "$MIKROTIKEXPORTSCRIPTS" ]]; then
-            ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $MIKROTIKUSER@$MIKROTIKHOST /system script export file="$MIKROTIKHOST-$DATE-scripts" && \
+            ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i $MIKROTIKSSHKEY $MIKROTIKUSER@$MIKROTIKHOST /system script export file="$MIKROTIKHOST-$DATE-scripts" && \
             scp "$MIKROTIKUSER@$MIKROTIKHOST:$MIKROTIKHOST-$DATE-scripts.rsc" "./$MIKROTIKDIR" || \
             return $?
         fi
 
         if [[ -z "$MIKROTIKEXPORTSYSTEMCONFIG" ]]; then
-            ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $MIKROTIKUSER@$MIKROTIKHOST /system export file="$MIKROTIKHOST-$DATE-sysconf" && \
+            ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i $MIKROTIKSSHKEY $MIKROTIKUSER@$MIKROTIKHOST /system export file="$MIKROTIKHOST-$DATE-sysconf" && \
             scp "$MIKROTIKUSER@$MIKROTIKHOST:$MIKROTIKHOST-$DATE-sysconf.rsc" "./$MIKROTIKDIR" || \
             return $?
         fi
 
         if [[ -z "$MIKROTIKEXPORTGLOBALCONFIG" ]]; then
-            ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $MIKROTIKUSER@$MIKROTIKHOST /export file="$MIKROTIKHOST-$DATE-globalconf" && \
+            ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i $MIKROTIKSSHKEY $MIKROTIKUSER@$MIKROTIKHOST /export file="$MIKROTIKHOST-$DATE-globalconf" && \
             scp "$MIKROTIKUSER@$MIKROTIKHOST:$MIKROTIKHOST-$DATE-globalconf.rsc" "./$MIKROTIKDIR" || \
             return $?
         fi
