@@ -10,3 +10,6 @@ steps/
 
 config/*
 !config/config.schema.json
+
+Pipfile
+__pycache__

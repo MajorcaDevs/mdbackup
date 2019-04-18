@@ -51,7 +51,7 @@ function __run_psql() {
             ${PGIMAGE} \
             "$@"
     else
-        if (cat /etc/passwd | grep "${PGUSER}" > /dev/null 2>&); then
+        if (cat /etc/passwd | grep "${PGUSER}" > /dev/null 2> /dev/null); then
             exec sudo -u ${PGUSER} "$@"
         else
             exec "$@"
@@ -86,6 +86,11 @@ function __gzip() {
 
 function __xz() {
     echo "xz -z -T 0 -$COMPRESSION_LEVEL -c -"
+}
+
+function equals_i() {
+    [[ "$(echo $1 | tr '[:upper:]' '[:lower:]')" == "$2" ]]
+    return $?
 }
 
 
@@ -305,12 +310,40 @@ function backup-file-encrypted() {
     fi
 }
 
+# $1 -> User of the mikrotik device
+# $2 -> Host of the mikrotik device
+# $3 -> Port to the SSH of the device
+# MIKROTIKDIR -> (Optional) Folder where to store the backups in local
+# MIKROTIKSSHKEY -> (Optional) If set, will use this SSH Identity Key to connect to the device
+# MIKROTIKPASS -> (Optional) If set, will use this password to connect to the device (requires sshpass)
+# MIKROTIKFULLBACKUP -> (Optional) If set, will do a full backup
+# MIKROTIKEXPORTSCRIPTS -> (Optional) If set, will do a scripts backup
+# MIKROTIKEXPORTSYSTEMCONFIG -> (Optional) If set, will do a system config backup
+# MIKROTIKEXPORTGLOBALCONFIG -> (Optional) If set, will do a global config backup
 function backup-mikrotik() {
     echo "Doing backup of MikroTik device $1"
     local DATE='$(date "+%Y-%m-%d")'
-    
+
+    if [[ -z "$1" ]]; then
+        echo "You have to define the user"
+        return 1
+    fi
+
+    if [[ -z "$2" ]]; then
+        echo "You have to define the host"
+        return 1
+    fi
+
+    local MIKROTIKUSER="$1"
+    local MIKROTIKHOST="$2"
+    local MIKROTIKPORT="$3"
+
+    if [[ -z "$MIKROTIKPORT" ]]; then
+        MIKROTIKPORT="22"
+    fi
+
     if [[ -z "$MIKROTIKDIR" ]]; then
-        MIKROTIKDIR="mikrotik-$MIKROTIKSHOT"
+        MIKROTIKDIR="mikrotik-$MIKROTIKHOST"
     fi
 
     # Check if Mikrotik specific directory exists
@@ -318,59 +351,55 @@ function backup-mikrotik() {
         mkdir ./$MIKROTIKDIR || return $?
     fi
 
+    local ssh_to_mikrotik=""
+    local scp_to_mikrotik=""
+
     # Check for ssh key and then backup
     if [[ -z "$MIKROTIKSSHKEY" ]]; then
         echo "DEBUG: SSH Key not detected, bypassing SSH password with sshpass"
 
-        if [[ -z "$MIKROTIKFULLBACKUP" ]]; then
-            sshpass -p "${MIKROTIKPASS}" ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $MIKROTIKUSER@$MIKROTIKHOST /system backup save name="$MIKROTIKHOST-$DATE-full" && \
-            scp $MIKROTIKUSER@$MIKROTIKHOST:"$MIKROTIKHOST-$DATE-full.backup" "./$MIKROTIKDIR" || \
-            return $?
+        # Check if password is not empty
+        if [[ -z "$MIKROTIKPASS" ]]; then
+            echo "The password is empty"
+            return 1
         fi
 
-        if [[ -z "$MIKROTIKEXPORTSCRIPTS" ]]; then
-            sshpass -p "${MIKROTIKPASS}" ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $MIKROTIKUSER@$MIKROTIKHOST /system script export file="$MIKROTIKHOST-$DATE-scripts" && \
-            scp "$MIKROTIKUSER@$MIKROTIKHOST:$MIKROTIKHOST-$DATE-scripts.rsc" "./$MIKROTIKDIR" || \
-            return $?
-        fi
-
-        if [[ -z $MIKROTIKEXPORTSYSTEMCONFIG ]]; then
-            sshpass -p '${MIKROTIKPASS}' ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $MIKROTIKUSER@$MIKROTIKHOST /system export file="$MIKROTIKHOST-$DATE-sysconf" && \
-            scp "$MIKROTIKUSER@$MIKROTIKHOST:$MIKROTIKHOST-$DATE-sysconf.rsc" "./$MIKROTIKDIR" || \
-            return $?
-        fi
-
-        if [[ -z $MIKROTIKEXPORTGLOBALCONFIG ]]; then
-            sshpass -p "${MIKROTIKPASS}" ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $MIKROTIKUSER@$MIKROTIKHOST /export file="$MIKROTIKHOST-$DATE-globalconf" && \
-            scp "$MIKROTIKUSER@$MIKROTIKHOST:$MIKROTIKHOST-$DATE-globalconf.rsc" "./$MIKROTIKDIR" || \
-            return $?
-        fi
-
+        ssh_to_mikrotik="sshpass -p \"${MIKROTIKPASS}\" ssh -p $MIKROTIKPORT -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no \"$MIKROTIKUSER@$MIKROTIKHOST\""
+        scp_to_mikrotik="sshpass -p \"${MIKROTIKPASS}\" scp -P $MIKROTIKPORT \"$MIKROTIKUSER@$MIKROTIKHOST\""
     else
         echo "DEBUG: Detected SSH Key, sshpass won't be needed"
 
-        if [[ -z "$MIKROTIKFULLBACKUP" ]]; then
-            ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i $MIKROTIKSSHKEY $MIKROTIKUSER@$MIKROTIKHOST /system backup save name="$MIKROTIKHOST-$DATE-full" && \
-            scp "$MIKROTIKUSER@$MIKROTIKHOST:$MIKROTIKHOST-$DATE-full.backup" "./$MIKROTIKDIR" || \
-            return $?
+        # Check if SSH key identity exists
+        if [[ ! -f "$MIKROTIKSSHKEY" ]]; then
+            echo "The SSH Key ${MIKROTIKSSHKEY} does not exist"
+            return 1
         fi
 
-        if [[ -z "$MIKROTIKEXPORTSCRIPTS" ]]; then
-            ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i $MIKROTIKSSHKEY $MIKROTIKUSER@$MIKROTIKHOST /system script export file="$MIKROTIKHOST-$DATE-scripts" && \
-            scp "$MIKROTIKUSER@$MIKROTIKHOST:$MIKROTIKHOST-$DATE-scripts.rsc" "./$MIKROTIKDIR" || \
-            return $?
-        fi
+        ssh_to_mikrotik="ssh -p $MIKROTIKPORT -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i \"$MIKROTIKSSHKEY\" \"$MIKROTIKUSER@$MIKROTIKHOST\""
+        scp_to_mikrotik="scp -P $MIKROTIKPORT -i \"$MIKROTIKSSHKEY\" \"$MIKROTIKUSER@$MIKROTIKHOST\""
+    fi
 
-        if [[ -z "$MIKROTIKEXPORTSYSTEMCONFIG" ]]; then
-            ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i $MIKROTIKSSHKEY $MIKROTIKUSER@$MIKROTIKHOST /system export file="$MIKROTIKHOST-$DATE-sysconf" && \
-            scp "$MIKROTIKUSER@$MIKROTIKHOST:$MIKROTIKHOST-$DATE-sysconf.rsc" "./$MIKROTIKDIR" || \
-            return $?
-        fi
+    if equals_i "$MIKROTIKFULLBACKUP" true; then
+        echo "Doing Mikrotik full backup"
+        eval $ssh_to_mikrotik /system backup save name=\"$MIKROTIKHOST-$DATE-full\" || return $?
+        eval ${scp_to_mikrotik}:"$MIKROTIKHOST-$DATE-full.backup" "./$MIKROTIKDIR" || return $?
+    fi
 
-        if [[ -z "$MIKROTIKEXPORTGLOBALCONFIG" ]]; then
-            ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i $MIKROTIKSSHKEY $MIKROTIKUSER@$MIKROTIKHOST /export file="$MIKROTIKHOST-$DATE-globalconf" && \
-            scp "$MIKROTIKUSER@$MIKROTIKHOST:$MIKROTIKHOST-$DATE-globalconf.rsc" "./$MIKROTIKDIR" || \
-            return $?
-        fi
+    if equals_i "$MIKROTIKEXPORTSCRIPTS" true; then
+        echo "Doing Mikrotik export scripts backup"
+        eval $ssh_to_mikrotik /system script export file="$MIKROTIKHOST-$DATE-scripts" || return $?
+        eval ${scp_to_mikrotik}:"$MIKROTIKHOST-$DATE-scripts.rsc" "./$MIKROTIKDIR" || return $?
+    fi
+
+    if equals_i "$MIKROTIKEXPORTSYSTEMCONFIG" true; then
+        echo "Doing Mikrotik export system config backup"
+        eval $ssh_to_mikrotik /system export file="$MIKROTIKHOST-$DATE-sysconf" || return $?
+        eval ${scp_to_mikrotik}:"$MIKROTIKHOST-$DATE-sysconf.rsc" "./$MIKROTIKDIR" || return $?
+    fi
+
+    if equals_i "$MIKROTIKEXPORTGLOBALCONFIG" true; then
+        echo "Doing Mikrotik export global config backup"
+        eval $ssh_to_mikrotik /export file="$MIKROTIKHOST-$DATE-globalconf" || return $?
+        eval ${scp_to_mikrotik}:"$MIKROTIKHOST-$DATE-globalconf.rsc" "./$MIKROTIKDIR" || return $?
     fi
 }
