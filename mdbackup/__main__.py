@@ -148,7 +148,7 @@ def main_upload_backup(logger: logging.Logger, config: Config, backup: Path):
                     except Exception as e:
                         # Log only in case of error (tries to upload as much as it can)
                         run_hook('upload:error', prov_config.type, str(backup), str(e))
-                        logger.exception(f'Could not upload file {item}', e)
+                        logger.exception(f'Could not upload file {item}: {e}')
 
                 run_hook('upload:after', prov_config.type, str(backup), backup_cloud_folder)
             else:

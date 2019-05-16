@@ -321,6 +321,22 @@ You can define as many steps as you wish. The idea is to keep every step as simp
     2. (optional) Folder where to put the file when copying
   - **Example**: `backup-file-encrypted /etc/ssh/sshd sys-config/etc/ssh`
 
+`backup-mikrotik`:
+  - **Description**: Makes a backup of a Mikrotik device via SSH. The files will be stored in the device and then downloaded into local.
+  - **Parameters**:
+    1. User of the mikrotik device
+    2. Host of the mikrotik device
+    3. (Optional) Port to the SSH of the device - by default 22
+  - **Environment variables**:
+    - `MIKROTIKDIR`: (Optional) Folder where to store the backups in local
+    - `MIKROTIKSSHKEY`: (Either) Will use this SSH Identity Key to connect to the device
+    - `MIKROTIKPASS` -> (Either) Will use this password to connect to the device (requires `sshpass`)
+    - `MIKROTIKFULLBACKUP` -> (Optional) If set, will do a full backup
+    - `MIKROTIKEXPORTSCRIPTS` -> (Optional) If set, will do a scripts backup
+    - `MIKROTIKEXPORTSYSTEMCONFIG` -> (Optional) If set, will do a system config backup
+    - `MIKROTIKEXPORTGLOBALCONFIG` -> (Optional) If set, will do a global config backup
+  - **Example**: `backup-mikrotik "mdbackup" "192.168.1.1" 2222`
+
 
 ## Arguments
 

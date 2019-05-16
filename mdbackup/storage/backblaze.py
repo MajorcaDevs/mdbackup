@@ -32,6 +32,8 @@ class B2Storage(AbstractStorage[str]):
         self.__log = logging.getLogger(__name__)
         self.__b2 = B2(key_id=config['keyId'], application_key=config['appKey'])
         self.__bucket: B2Bucket = self.__b2.buckets.get(config['bucket'])
+        if self.__bucket is not None:
+            raise Exception(f'The bucket {config['bucket']} does not exist or could not connect to it. Check configuration...')
         self.__password: str = config.get('password')
         self.__pre = config.backups_path if not config.backups_path.endswith('/') else config.backups_path[:-1]
 
