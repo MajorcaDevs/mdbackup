@@ -31,6 +31,7 @@ from .archive import (
 )
 from .backup import do_backup, get_backup_folders_sorted
 from .config import Config, ProviderConfig
+from .hooks import define_hook, run_hook
 from .storage import create_storage_instance
 
 
@@ -70,6 +71,7 @@ def main_do_backup(logger: logging.Logger, config: Config) -> Path:
                          **secret_env)
     except Exception as e:
         logger.error(e)
+        run_hook('backup:errpr', str(config.backups_path / '.partial'), str(e))
         shutil.rmtree(str(config.backups_path / '.partial'))
         sys.exit(1)
 
@@ -126,12 +128,15 @@ def main_upload_backup(logger: logging.Logger, config: Config, backup: Path):
                     final_items, items_to_remove = main_compress_folders(config, backup)
                     has_compressed = True
 
+                run_hook('upload:before', prov_config.type, str(backup))
+
                 # Create folder for this backup
                 try:
                     logger.info(f'Creating folder {backup_folder_name} in {prov_config.backups_path}')
                     backup_cloud_folder = storage.create_folder(backup_folder_name, prov_config.backups_path)
                 except Exception as e:
                     # If we cannot create it, will continue to the next configured provider
+                    run_hook('upload:error', prov_config.type, str(backup), str(e))
                     logger.exception(f'Could not create folder {backup_folder_name}', e)
                     continue
 
@@ -142,7 +147,10 @@ def main_upload_backup(logger: logging.Logger, config: Config, backup: Path):
                         storage.upload(item, backup_cloud_folder)
                     except Exception as e:
                         # Log only in case of error (tries to upload as much as it can)
+                        run_hook('upload:error', prov_config.type, str(backup), str(e))
                         logger.exception(f'Could not upload file {item}', e)
+
+                run_hook('upload:after', prov_config.type, str(backup), backup_cloud_folder)
             else:
                 # The provider is invalid, show error
                 logger.error(f'Unknown storage provider "{prov_config.type}", ignoring...')
@@ -160,10 +168,13 @@ def main_clean_up(logger: logging.Logger, config: Config):
     logger.debug('List of folders available:\n{}'.format('\n'.join([str(b) for b in backups_list])))
     for old in backups_list[0:max(0, len(backups_list) - max_backups)]:
         logger.warning(f'Removing old backup folder {old}')
+        run_hook('oldBackup:deleting', str(old.absolute()))
         try:
             shutil.rmtree(str(old.absolute()))
-        except OSError:
+            run_hook('oldBackup:deleted', str(old.absolute()))
+        except OSError as e:
             logger.exception(f'Could not completely remove backup {old}')
+            run_hook('oldBackup:error', str(old.absolute()), str(e))
 
 
 def main():
@@ -207,6 +218,9 @@ def main():
     logging.basicConfig(format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
                         level=config.log_level)
     logger = logging.getLogger('mdbackup')
+
+    # Configure hooks
+    [define_hook(name, script) for (name, script) in config.hooks.items()]
 
     try:
         if args.backup_only:

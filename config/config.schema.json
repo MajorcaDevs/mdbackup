@@ -388,6 +388,58 @@
           }
         }
       }
+    },
+    "hooks": {
+      "$id": "#/properties/hooks",
+      "type": "object",
+      "title": "Run scripts or one-liner scripts before or after things occur",
+      "properties": {
+        "backup:before": {
+          "$id": "#/properties/hooks/properties/backup:before",
+          "type": "string",
+          "title": "Run the script when the backup is going to be done"
+        },
+        "backup:after": {
+          "$id": "#/properties/hooks/properties/backup:after",
+          "type": "string",
+          "title": "Run the script when the backup is done, but before uploading it"
+        },
+        "backup:error": {
+          "$id": "#/properties/hooks/properties/backup:error",
+          "type": "string",
+          "title": "Run the script when the backup has failed for some reason"
+        },
+        "upload:before": {
+          "$id": "#/properties/hooks/properties/upload:before",
+          "type": "string",
+          "title": "Run the script when the backup is going to be uploaded using one provider"
+        },
+        "upload:after": {
+          "$id": "#/properties/hooks/properties/upload:after",
+          "type": "string",
+          "title": "Run the script when the backup have been uploaded using one provider"
+        },
+        "upload:error": {
+          "$id": "#/properties/hooks/properties/upload:error",
+          "type": "string",
+          "title": "Run the script when the backup could not be uploaded using one provider"
+        },
+        "oldBackup:deleting": {
+          "$id": "#/properties/hooks/properties/oldBackup:deleting",
+          "type": "string",
+          "title": "Run the script when an old backup is going to be deleted"
+        },
+        "oldBackup:deleted": {
+          "$id": "#/properties/hooks/properties/oldBackup:deleted",
+          "type": "string",
+          "title": "Run the script when an old backup is already deleted"
+        },
+        "oldBackup:error": {
+          "$id": "#/properties/hooks/properties/oldBackup:error",
+          "type": "string",
+          "title": "Run the script when an old backup failed when it was being deleted"
+        }
+      }
     }
   }
 }

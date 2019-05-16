@@ -25,6 +25,8 @@ from tempfile import NamedTemporaryFile
 from threading import Thread
 from typing import List, Dict, Union, Callable
 
+from .hooks import run_hook
+
 
 def generate_backup_path(backups_folder: Path) -> Path:
     """
@@ -124,6 +126,8 @@ def do_backup(backups_folder: Path, custom_utils: str = None, **kwargs) -> Path:
     logger = logging.getLogger(__name__)
     tmp_backup = Path(backups_folder, '.partial')
 
+    run_hook('backup:before', str(tmp_backup))
+
     logger.info(f'Temporary backup folder is {tmp_backup}')
     tmp_backup.mkdir(exist_ok=True, parents=True)
     tmp_backup.chmod(0o755)
@@ -146,6 +150,8 @@ def do_backup(backups_folder: Path, custom_utils: str = None, **kwargs) -> Path:
     if current_backup.is_symlink():
         current_backup.unlink()
     os.symlink(backup, current_backup)
+
+    run_hook('backup:after', str(backup))
 
     return backup
 
