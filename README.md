@@ -142,7 +142,18 @@ This allows you to auto-complete with the elements available in the configuratio
             "bucket": "Name of the bucket",
             "password": "(optional) Protects files with passwords"
         }
-    ]
+    ],
+    "hooks": {
+      "backup:before": "echo $@",
+      "backup:after": "path/to/script",
+      "backup:error": "wombo combo $1 $2",
+      "upload:before": "echo $@",
+      "upload:after": "echo $@",
+      "upload:error": "echo $@",
+      "oldBackup:deleting": "echo $@",
+      "oldBackup:deleted": "echo $@",
+      "oldBackup:error": "echo $@"
+    }
 }
 ```
 
@@ -210,6 +221,13 @@ Currently, it only supports KV backend for reading secrets.
 Environment variables are replaced by their values from the path in the KV. As every path in the KV storage is Key-Value, you must define which key should get to obtain the value. `secrets/backups/env/postgres#user` will retrieve the path `secrets/backups/env/postgres` and key `user`. If the key is not set, will use `vaule` by default.
 
 For cloud storage providers, the KV in the path should contain the same structure as expected in the provider configuration (as seen in the example json). In this case, no key must be defined, it will take the whole path as configuration. 
+
+
+### Hooks
+
+Hooks are scripts that run when some event is going to happen or just happened. Is useful to define extend the tool with your custom scripts, including one-liner scrips. The hook is run with `sh` so scripts can be defined inlined. If a hook is not defined, won't run anything.
+
+The output of the script is redirected to the logger using the `DEBUG` level. If you have some troubles with your hook script, set the log level to `DEBUG`.
 
 ## Creating your first steps
 

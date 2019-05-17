@@ -107,6 +107,7 @@ class Config(object):
         self.__providers = [ProviderConfig(provider_dict) for provider_dict in conf.get('providers', [])]
         self.__secrets = [SecretConfig(key, secret_dict.get('env'), secret_dict['config'], secret_dict.get('providers'))
                           for key, secret_dict in conf.get('secrets', {}).items()]
+        self.__hooks = conf.get('hooks', {})
         if 'compression' in conf:
             self.__compression_level = conf['compression'].get('level', 5)
             self.__compression_strategy = conf['compression']['strategy']
@@ -209,3 +210,10 @@ class Config(object):
         :return: The cypher parameters for the given strategy
         """
         return self.__cypher_params
+
+    @property
+    def hooks(self) -> Dict[str, str]:
+        """
+        :return: The hooks dictionary
+        """
+        return self.__hooks
