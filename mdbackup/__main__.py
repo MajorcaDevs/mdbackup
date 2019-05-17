@@ -71,7 +71,7 @@ def main_do_backup(logger: logging.Logger, config: Config) -> Path:
                          **secret_env)
     except Exception as e:
         logger.error(e)
-        run_hook('backup:errpr', str(config.backups_path / '.partial'), str(e))
+        run_hook('backup:error', str(config.backups_path / '.partial'), str(e))
         shutil.rmtree(str(config.backups_path / '.partial'))
         sys.exit(1)
 
