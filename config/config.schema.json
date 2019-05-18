@@ -373,7 +373,8 @@
               "s3",
               "b2",
               "ftp",
-              "ftps"
+              "ftps",
+              "sftp"
             ],
             "title": "Provider type",
             "default": ""

@@ -33,8 +33,9 @@ class FTPStorage(AbstractStorage[Path]):
         self.__dir = Path(params.backups_path)
 
     def __del__(self):
-        self.__log.debug('Closing connection')
-        self.__conn.close()
+        if hasattr(self, '_FTPStorage__conn') or hasattr(self, '_FTPSStorage__conn'):
+            self.__log.debug('Closing connection')
+            self.__conn.close()
 
     def _create_connection(self, params: ProviderConfig):
         self.__log.debug('Creating connection to FTP server ' + params['host'])

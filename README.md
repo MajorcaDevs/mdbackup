@@ -41,6 +41,7 @@ Now you can run the utility (only if you have enabled the virtual env) with `mdb
  >  4. `PyDrive` for Google Drive cloud storage provider
  >  5. `requests` for Vault secrets backend
  >  6. `pyyaml` (optional) for File secrets backend
+ >  7. `paramiko` for the SFTP storage provider 
 
 ## Creating the configuration
 
@@ -159,6 +160,21 @@ This allows you to auto-complete with the elements available in the configuratio
           "acct":  "(optional) Account information for the user",
           "keyFile": "(optional) If needed, define a custom key file",
           "certFile": "(optional) If needed, define a custom certificate file"
+        },
+        {
+          "type": "sftp",
+          "backupsPath": "Path in the SFTP where the backups will be located",
+          "host": "Host where the SFTP server is located",
+          "port": "(optional) Port of the SFTP server (by default 22)",
+          "user": "User to connect to the SFTP server",
+          "password": "(optional) Password for the user",
+          "privateKey": "(optional) Private Key in base64",
+          "privateKeyPath": "(optional) Private Key file path",
+          "allowAgent": "(optional) if true, then the connection will interact with the SSH Agent, false if this behaviour is not desired (false by default)",
+          "compress": "(optional) if true, then the connection is compressed (false by default)",
+          "knownHostsPolicy": "(optional) Changes the Known Hosts Policy. 'reject' will reject any connection to a server that is not known (default behaviour), 'auto-add' will add to the known-hosts list this server, 'ignore' will print a warning but it will let you connect.",
+          "hostKeysFilePath": "(optional) Path to the known-hosts file",
+          "disableHostKeys": (optional) If set to false, it won't load any known-hosts file (by default is true)"
         }
     ],
     "hooks": {
@@ -219,6 +235,29 @@ The content type of the files will be guessed and set in the metadata when uploa
 This provider uses FTP or FTPS to upload the files to a server. Requires the host to be able to connect. It is recommended to use an user and password for security reasons. Furthermore, if the server is outside your local network, you should use FTPS or SFTP instead.
 
 For FTPS, if the server uses a "custom"/"self-signed" certificate chain, `keyFile` and `certFile` should be defined.
+
+### SFTP `sftp`
+
+ > In order to use this provider, you must install `paramiko`: `pip install paramiko` (you will also need the C compiler and _python dev_ package)
+
+This provider uses SFTP to upload the files to a server. Requires the host, an user and a authentication method to be able to connect.
+
+The authentication is attempted using the following order:
+
+- If `privateKey` or `privateKeyFile` is defined, then this method will be used. If the private key is cyphered, use `password` as the passphrase of the key.
+- If `allowAgent` is true, then will use the SSH Agent to connect to the server.
+- Any key in `~/.ssh`
+- If the `password` is defined, then the classic username/password login (discouraged)
+
+The known-hosts list is loaded by default from the default location `~/.ssh/known_hosts`. If `hostKeysFilePath` is defined, then this file will be used instead. If `disableHostKeys` is set to false, then no known-hosts will be loaded.
+
+The `knownHostsPolicy` will set the policy that will be used when the SSH connection is set, but the host is being checked as a known or not-known host. The following policies are allowed:
+
+- `reject` will close the connection if the host is not-known (default behaviour).
+- `auto-add` will add to the list of known-hosts if the host is not-known.
+- `ignore` will print a warning if the host is not-known.
+
+**Note**: if the `knownHostsPolicy` is `auto-add` and `hostKeysFilePath` is defined, then the new host will be saved into the file.
 
 
 ### Secrets backends
