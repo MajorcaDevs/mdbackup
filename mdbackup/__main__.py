@@ -118,7 +118,7 @@ def main_upload_backup(logger: logging.Logger, config: Config, backup: Path):
 
     try:
         # Upload files to storage providers
-        backup_folder_name = backup.relative_to(config.backups_path).parts[0]
+        backup_folder_name = backup.relative_to(config.backups_path.resolve()).parts[0]
         for prov_config in config.providers:
             # Detect provider type and instantiate it
             storage = create_storage_instance(prov_config)
@@ -151,6 +151,7 @@ def main_upload_backup(logger: logging.Logger, config: Config, backup: Path):
                         logger.exception(f'Could not upload file {item}: {e}')
 
                 run_hook('upload:after', prov_config.type, str(backup), backup_cloud_folder)
+                del storage
             else:
                 # The provider is invalid, show error
                 logger.error(f'Unknown storage provider "{prov_config.type}", ignoring...')

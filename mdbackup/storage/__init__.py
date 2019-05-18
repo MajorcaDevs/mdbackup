@@ -22,12 +22,24 @@ def load_s3_storage():
     return S3Storage
 
 
+@check('FTP storage')
+def load_ftp_storage(secure):
+    from mdbackup.storage.ftp import FTPStorage, FTPSStorage
+    return FTPSStorage if secure else FTPStorage
+
+
+__impls = {
+    'gdrive': load_gdrive_storage,
+    's3': load_s3_storage,
+    'b2': load_backblaze_storage,
+    'ftp': lambda: load_ftp_storage(False),
+    'ftps': lambda: load_ftp_storage(True),
+}
+
+
 def create_storage_instance(params) -> Optional[AbstractStorage[T]]:
     try:
-        return {
-            'gdrive': load_gdrive_storage,
-            's3': load_s3_storage,
-            'b2': load_backblaze_storage,
-        }[params.type.lower()]()(params)
+        impl = __impls[params.type.lower()]
     except KeyError:
         return None
+    return impl()(params)

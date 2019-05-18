@@ -120,27 +120,45 @@ This allows you to auto-complete with the elements available in the configuratio
     },
     "providers": [
         {
-            "type": "gdrive",
-            "backupsPath": "Path in Google Drive where the backups will be located",
-            "clientSecrets": "config/client_secrets.json",
-            "authTokens": "config/auth_tokens.json"
+          "type": "gdrive",
+          "backupsPath": "Path in Google Drive where the backups will be located",
+          "clientSecrets": "config/client_secrets.json",
+          "authTokens": "config/auth_tokens.json"
         },
         {
-            "type": "s3",
-            "backupsPath": "Path in S3 where the backups will be located",
-            "region": "Region of the S3 storage",
-            "endpoint": "Endpoint (if not set, uses Amazon S3 endpoint)",
-            "accessKeyId": "Access Key ID",
-            "accessSecretKey": "Access Secret Key",
-            "bucket": "Name of the bucket"
+          "type": "s3",
+          "backupsPath": "Path in S3 where the backups will be located",
+          "region": "Region of the S3 storage",
+          "endpoint": "Endpoint (if not set, uses Amazon S3 endpoint)",
+          "accessKeyId": "Access Key ID",
+          "accessSecretKey": "Access Secret Key",
+          "bucket": "Name of the bucket"
         },
         {
-            "type": "b2",
-            "backupsPath": "Path in B2 where the backups will be located",
-            "keyId": "B2 Key ID",
-            "appKey": "B2 Application Key",
-            "bucket": "Name of the bucket",
-            "password": "(optional) Protects files with passwords"
+          "type": "b2",
+          "backupsPath": "Path in B2 where the backups will be located",
+          "keyId": "B2 Key ID",
+          "appKey": "B2 Application Key",
+          "bucket": "Name of the bucket",
+          "password": "(optional) Protects files with passwords"
+        },
+        {
+          "type": "ftp",
+          "backupsPath": "Path in the FTP where the backups will be located",
+          "host": "Host (with or without the port) where the FTP server is located",
+          "user": "(optional) User to connect to the FTP server",
+          "password": "(optional) Password for the user",
+          "acct":  "(optional) Account information for the user"
+        },
+        {
+          "type": "ftps",
+          "backupsPath": "Path in the FTPS where the backups will be located",
+          "host": "Host (with or without the port) where the FTPS server is located",
+          "user": "(optional) User to connect to the FTPS server",
+          "password": "(optional) Password for the user",
+          "acct":  "(optional) Account information for the user",
+          "keyFile": "(optional) If needed, define a custom key file",
+          "certFile": "(optional) If needed, define a custom certificate file"
         }
     ],
     "hooks": {
@@ -193,6 +211,15 @@ The content type of the files will be guessed and set in the metadata when uploa
 The `backupsPath` in S3 is like a prefix for the file keys. It is recommended to put something here to easily organise the backups from the rest of files in the bucket. The initial slash `/` is removed when uploading the files.
 
 The content type of the files will be guessed and set in the metadata when uploading.
+
+#### FTP(S) `ftp` | `ftps`
+
+ > This provider does not need any extra package, uses `ftplib` from Python
+
+This provider uses FTP or FTPS to upload the files to a server. Requires the host to be able to connect. It is recommended to use an user and password for security reasons. Furthermore, if the server is outside your local network, you should use FTPS or SFTP instead.
+
+For FTPS, if the server uses a "custom"/"self-signed" certificate chain, `keyFile` and `certFile` should be defined.
+
 
 ### Secrets backends
 
