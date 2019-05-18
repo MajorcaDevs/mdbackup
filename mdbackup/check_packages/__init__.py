@@ -1,11 +1,11 @@
 import functools
 
 
-def check_b2blaze(package: str):
+def check_b2sdk(package: str):
     try:
-        import b2blaze
+        import b2sdk
     except ImportError as e:
-        raise ImportError(f'To use {package}, install b2blaze package: pip install b2blaze', e)
+        raise ImportError(f'To use {package}, install b2sdk package: pip install b2sdk', e)
 
 
 def check_boto3(package: str):

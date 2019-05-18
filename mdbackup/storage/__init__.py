@@ -1,10 +1,10 @@
 from typing import Optional
 
-from mdbackup.check_packages import check, check_b2blaze, check_boto3, check_magic, check_pydrive
+from mdbackup.check_packages import check, check_b2sdk, check_boto3, check_magic, check_pydrive
 from mdbackup.storage.storage import AbstractStorage, T
 
 
-@check('BackBlaze cloud storage', check_b2blaze, check_magic)
+@check('BackBlaze cloud storage', check_b2sdk, check_magic)
 def load_backblaze_storage():
     from mdbackup.storage.backblaze import B2Storage
     return B2Storage
