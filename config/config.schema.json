@@ -371,7 +371,10 @@
             "enum": [
               "gdrive",
               "s3",
-              "b2"
+              "b2",
+              "ftp",
+              "ftps",
+              "sftp"
             ],
             "title": "Provider type",
             "default": ""

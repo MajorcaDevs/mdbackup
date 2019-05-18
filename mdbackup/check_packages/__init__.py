@@ -37,6 +37,13 @@ def check_pydrive(package: str):
         raise ImportError(f'To use {package}, you must install PyDrive: pip install PyDrive', e)
 
 
+def check_paramiko(package: str):
+    try:
+        from paramiko import SSHClient
+    except ImportError as e:
+        raise ImportError(f'To use {package}, you must install paramiko: pip install paramiko', e)
+
+
 def check(package: str, *funcs):
     def check_dec(func):
         @functools.wraps(func)
