@@ -1,0 +1,14 @@
+FROM python:3.7.3-alpine
+LABEL owner="MajorcaDevs"
+COPY ./mdbackup/ /mdbackup 
+COPY ./MANIFEST.in /mdbackup
+COPY ./README.md /mdbackup
+COPY ./setup.py /mdbackup
+WORKDIR mdbackup
+
+RUN mkdir /backups && apk update && apk upgrade && \
+apk add bash rsync openssh tar xz gnupg gzip musl-dev libffi-dev openssl-dev && \
+apk add --virtual .bdeps gcc make && pip install . && \ 
+pip install python-magic boto3 b2blaze PyDrive requests==2.19.1 pyyaml paramiko urllib3==1.21.1 && \
+apk del .bdeps && rm -rf /var/cache/apk/
+
