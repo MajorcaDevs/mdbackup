@@ -1,6 +1,6 @@
 from typing import Optional
 
-from mdbackup.check_packages import check, check_b2sdk, check_boto3, check_magic, check_pydrive
+from mdbackup.check_packages import check, check_b2sdk, check_boto3, check_magic, check_pydrive, check_paramiko
 from mdbackup.storage.storage import AbstractStorage, T
 
 
@@ -22,12 +22,31 @@ def load_s3_storage():
     return S3Storage
 
 
+@check('FTP storage')
+def load_ftp_storage(secure):
+    from mdbackup.storage.ftp import FTPStorage, FTPSStorage
+    return FTPSStorage if secure else FTPStorage
+
+
+@check('SFTP storage', check_paramiko)
+def load_sftp_storage():
+    from mdbackup.storage.sftp import SFTPStorage
+    return SFTPStorage
+
+
+__impls = {
+    'gdrive': load_gdrive_storage,
+    's3': load_s3_storage,
+    'b2': load_backblaze_storage,
+    'ftp': lambda: load_ftp_storage(False),
+    'ftps': lambda: load_ftp_storage(True),
+    'sftp': load_sftp_storage,
+}
+
+
 def create_storage_instance(params) -> Optional[AbstractStorage[T]]:
     try:
-        return {
-            'gdrive': load_gdrive_storage,
-            's3': load_s3_storage,
-            'b2': load_backblaze_storage,
-        }[params.type.lower()]()(params)
+        impl = __impls[params.type.lower()]
     except KeyError:
         return None
+    return impl()(params)
