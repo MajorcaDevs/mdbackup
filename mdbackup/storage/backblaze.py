@@ -40,8 +40,9 @@ class B2Storage(AbstractStorage[str]):
 
     def list_directory(self, path: Union[str, Path, str]) -> List[str]:
         path = path if isinstance(path, str) else str(path)
-        return [f['fileName'] for f in bucket.list_file_names()['files'] 
-                if item.file_name.startswith(self.__pre + '/' + path)]
+        return [f['fileName'] for f in bucket.list_file_names()['files']]
+                if path.startswith('/'):
+                    path = path[1:]
 
     def create_folder(self, name: str, parent: Union[Path, str, str]=None) -> str:
         key = f'{parent}/{name}/'
