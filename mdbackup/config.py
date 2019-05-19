@@ -43,6 +43,9 @@ class ProviderConfig(object):
         """
         return self.__backups_path
 
+    def __contains__(self, item: str):
+        return item in self.__extra
+
     def __getitem__(self, key: str):
         return self.__extra[key]
 
