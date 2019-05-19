@@ -174,7 +174,7 @@ This allows you to auto-complete with the elements available in the configuratio
           "compress": "(optional) if true, then the connection is compressed (false by default)",
           "knownHostsPolicy": "(optional) Changes the Known Hosts Policy. 'reject' will reject any connection to a server that is not known (default behaviour), 'auto-add' will add to the known-hosts list this server, 'ignore' will print a warning but it will let you connect.",
           "hostKeysFilePath": "(optional) Path to the known-hosts file",
-          "disableHostKeys": (optional) If set to false, it won't load any known-hosts file (by default is true)"
+          "disableHostKeys": "(optional) If set to false, it won't load any known-hosts file (by default is true)"
         }
     ],
     "hooks": {
