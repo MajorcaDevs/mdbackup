@@ -38,6 +38,7 @@ class S3Storage(AbstractStorage[str]):
         )
 
         self.__bucket: str = config['bucket']
+        self.__storageclass: str = config.get('storageClass', 'STANDARD') 
         self.__pre = config.backups_path if not config.backups_path.endswith('/') else config.backups_path[:-1]
 
     def list_directory(self, path: Union[str, Path, str]) -> List[str]:
@@ -72,5 +73,6 @@ class S3Storage(AbstractStorage[str]):
                                     key,
                                     ExtraArgs={
                                         'ContentType': magic.from_file(str(path.absolute()), mime=True),
+                                        'StorageClass' : self.__storageclass
                                     })
         self.__log.debug(ret)

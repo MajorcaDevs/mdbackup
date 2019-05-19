@@ -133,7 +133,8 @@ This allows you to auto-complete with the elements available in the configuratio
           "endpoint": "Endpoint (if not set, uses Amazon S3 endpoint)",
           "accessKeyId": "Access Key ID",
           "accessSecretKey": "Access Secret Key",
-          "bucket": "Name of the bucket"
+          "bucket": "Name of the bucket",
+          "storageClass": "S3 Storage Class for backed-up files (only for Amazon S3)"
         },
         {
           "type": "b2",

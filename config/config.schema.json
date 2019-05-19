@@ -388,6 +388,13 @@
               "/Backups"
             ],
             "pattern": "^/(.*)$"
+          },
+          "storageClass": {
+            "$id": "#/properties/s3/properties/storageClass",
+            "type": "string",
+            "title": "S3 Storage Class for backed-up files (only for Amazon S3)",
+            "default": "STANDARD",
+            "enum": ["STANDARD","REDUCED_REDUNDANCY","STANDARD_IA","ONEZONE_IA","INTELLIGENT_TIERING","GLACIER","DEEP_ARCHIVE"]
           }
         }
       }
