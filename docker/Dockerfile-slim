@@ -1,4 +1,4 @@
-FROM python:3.7.3-slim
+FROM python:3.7-slim
 LABEL owner="MajorcaDevs"
 COPY ./mdbackup/ /mdbackup 
 COPY ./MANIFEST.in /mdbackup
@@ -6,8 +6,8 @@ COPY ./README.md /mdbackup
 COPY ./setup.py /mdbackup
 WORKDIR mdbackup
 
-RUN mkdir /backups && apt update && apt upgrade -y && \
+RUN mkdir /backups && apt update && \
 apt install rsync ssh tar xz-utils gpg gzip -y && \
 pip install . && pip install python-magic boto3 b2sdk PyDrive requests==2.19.1 pyyaml paramiko urllib3==1.21.1 && \
-apt autoremove -y && apt clean -y
+apt autoremove -y && apt clean -y && rm -rf /var/cache/apt
 
