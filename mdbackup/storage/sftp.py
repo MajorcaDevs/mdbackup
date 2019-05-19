@@ -20,12 +20,12 @@ import logging
 from pathlib import Path
 from typing import List, Union
 
-from mdbackup.config import ProviderConfig
+from mdbackup.config import StorageConfig
 from mdbackup.storage.storage import AbstractStorage
 
 
 class SFTPStorage(AbstractStorage[Path]):
-    def __init__(self, params: ProviderConfig):
+    def __init__(self, params: StorageConfig):
         self.__log = logging.getLogger(__name__)
         self.__conn = self._create_connection(params)
 
@@ -37,7 +37,7 @@ class SFTPStorage(AbstractStorage[Path]):
             self.__log.debug('Closing connection')
             self.__conn.close()
 
-    def _create_connection(self, params: ProviderConfig) -> SFTPClient:
+    def _create_connection(self, params: StorageConfig) -> SFTPClient:
         self.__log.debug('Creating connection to SSH server ' + params['host'])
         self.__ssh = SSHClient()
         if 'disableHostKeys' not in params or params['disableHostKeys']:

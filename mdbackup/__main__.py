@@ -30,7 +30,7 @@ from .archive import (
     get_cypher_strategy,
 )
 from .backup import do_backup, get_backup_folders_sorted
-from .config import Config, ProviderConfig
+from .config import Config, StorageConfig
 from .hooks import define_hook, run_hook
 from .storage import create_storage_instance
 
@@ -53,7 +53,7 @@ def main_do_backup(logger: logging.Logger, config: Config) -> Path:
     for secret_backend, secret in secret_backends:
         for key in secret.providers:
             logger.debug(f'Getting provider secret from {secret.type}:{key}')
-            provider = ProviderConfig(secret_backend.get_provider(key))
+            provider = StorageConfig(secret_backend.get_provider(key))
             logger.debug(f'Provider type is {provider.type}')
             config.providers.append(provider)
 
@@ -71,7 +71,7 @@ def main_do_backup(logger: logging.Logger, config: Config) -> Path:
                          **secret_env)
     except Exception as e:
         logger.error(e)
-        run_hook('backup:error', str(config.backups_path / '.partial'), str(e))
+        run_hook('backup:error', str(config.backups_path / '.partial'), str(e), e.args[1] if len(e.args) > 2 else '')
         shutil.rmtree(str(config.backups_path / '.partial'))
         sys.exit(1)
 
@@ -150,7 +150,7 @@ def main_upload_backup(logger: logging.Logger, config: Config, backup: Path):
                         run_hook('upload:error', prov_config.type, str(backup), str(e))
                         logger.exception(f'Could not upload file {item}: {e}')
 
-                run_hook('upload:after', prov_config.type, str(backup), backup_cloud_folder)
+                run_hook('upload:after', prov_config.type, str(backup), str(backup_cloud_folder))
                 del storage
             else:
                 # The provider is invalid, show error
@@ -165,6 +165,10 @@ def main_upload_backup(logger: logging.Logger, config: Config, backup: Path):
 def main_clean_up(logger: logging.Logger, config: Config):
     # Cleanup old backups
     max_backups = config.max_backups_kept
+    if max_backups == 0 or max_backups is None:
+        logger.debug('Ignoring local cleanup')
+        return
+
     backups_list = get_backup_folders_sorted(config.backups_path)
     logger.debug('List of folders available:\n{}'.format('\n'.join([str(b) for b in backups_list])))
     for old in backups_list[0:max(0, len(backups_list) - max_backups)]:

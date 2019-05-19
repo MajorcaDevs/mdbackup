@@ -136,11 +136,14 @@ def do_backup(backups_folder: Path, custom_utils: str = None, **kwargs) -> Path:
         tmp_path = generate_script(step_script, custom_utils)
         tmp_path.chmod(0o755)
 
+        run_hook(f'backup:step:{step_script.name}:before', str(tmp_backup))
         return_code = run_step(tmp_path, tmp_backup, kwargs)
         if return_code != 0:
             logger.error(f'Script returned {return_code}')
-            raise Exception(f'The step {step_script} failed, backup will stop')
+            run_hook(f'backup:step:{step_script.name}:error', str(tmp_backup), str(return_code))
+            raise Exception(f'The step {step_script} failed, backup will stop', step_script.name)
         tmp_path.unlink()
+        run_hook(f'backup:step:{step_script.name}:after', str(tmp_backup))
 
     backup = generate_backup_path(backups_folder)
     logger.info(f'Moving {tmp_backup} to {backup}')
