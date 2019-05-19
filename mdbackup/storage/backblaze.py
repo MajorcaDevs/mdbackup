@@ -19,8 +19,9 @@ import logging
 from pathlib import Path
 from typing import Union, List
 
-from b2blaze import B2
-from b2blaze.models.bucket import B2Bucket
+from b2sdk.api import B2Api
+from b2sdk.account_info.in_memory import InMemoryAccountInfo
+
 import magic
 
 from mdbackup.storage.storage import AbstractStorage
@@ -30,17 +31,18 @@ class B2Storage(AbstractStorage[str]):
 
     def __init__(self, config):
         self.__log = logging.getLogger(__name__)
-        self.__b2 = B2(key_id=config['keyId'], application_key=config['appKey'])
-        self.__bucket: B2Bucket = self.__b2.buckets.get(config['bucket'])
-        if self.__bucket is not None:
-            raise Exception(f'The bucket {config['bucket']} does not exist or could not connect to it. Check configuration...')
+        self.__info = InMemoryAccountInfo()
+        self.__b2_api = b2_api = B2Api(self.__info)
+        self.__b2 = b2_api.authorize_account("production", application_key_id=config['keyId'], application_key=config['appKey'])
+        self.__bucket: bucket = self.__b2_api.get_bucket_by_name(config['bucket'])
         self.__password: str = config.get('password')
         self.__pre = config.backups_path if not config.backups_path.endswith('/') else config.backups_path[:-1]
 
     def list_directory(self, path: Union[str, Path, str]) -> List[str]:
         path = path if isinstance(path, str) else str(path)
-        return [item.file_name for item in self.__bucket.files.all(include_hidden=True)
-                if item.file_name.startswith(self.__pre + '/' + path)]
+        if path.startswith('/'):
+            path = path[1:]
+        return [[file_name for (_, file_name) in bucket.ls("backups")]]
 
     def create_folder(self, name: str, parent: Union[Path, str, str]=None) -> str:
         key = f'{parent}/{name}/'
@@ -61,8 +63,9 @@ class B2Storage(AbstractStorage[str]):
         if key.startswith('/'):
             key = key[1:]
         self.__log.info(f'Uploading file {key} (from {path})')
-        with open(str(path.absolute()), 'rb') as file_to_upload:
-            ret = self.__bucket.files.upload(contents=file_to_upload,
+        file_to_upload = str(path.absolute())
+        ret = self.__bucket.upload_local_file(local_file=file_to_upload,
                                              file_name=key,
-                                             mime_content_type=magic.from_file(str(path.absolute()), mime=True))
+                                             content_type=magic.from_file(str(path.absolute()), mime=True),
+                                            )
         self.__log.debug(ret)

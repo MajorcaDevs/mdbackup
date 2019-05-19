@@ -37,7 +37,7 @@ Now you can run the utility (only if you have enabled the virtual env) with `mdb
  > This is a list of the optional dependencies:
  >  1. `python-magic` (every cloud storage provider needs this) - requires to have installed `libmagic` (C library)
  >  2. `boto3` for S3 cloud storage provider
- >  3. `b2blaze` for BackBlaze cloud storage provider
+ >  3. `b2sdk` for BackBlaze cloud storage provider
  >  4. `PyDrive` for Google Drive cloud storage provider
  >  5. `requests` for Vault secrets backend
  >  6. `pyyaml` (optional) for File secrets backend
@@ -222,7 +222,7 @@ The content type of the files will be guessed and set in the metadata when uploa
 
 #### BackBlaze `b2`
 
- > In order to use this provider, you must install `b2blaze` and `python-magic`: `pip install b2blaze python-magic`
+ > In order to use this provider, you must install `b2sdk` and `python-magic`: `pip install b2sdk python-magic`
 
 The `backupsPath` in S3 is like a prefix for the file keys. It is recommended to put something here to easily organise the backups from the rest of files in the bucket. The initial slash `/` is removed when uploading the files.
 
