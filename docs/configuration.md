@@ -19,17 +19,17 @@ This allows you to auto-complete with the elements available in the configuratio
     "customUtilsScript": "(optional) Define an additional utilities script that will be loaded in every step script",
     "maxBackupsKept": 7,
     "env": {
-        "docker": "If set, the utilities will run in a docker container instead of using native commands",
-        "pgnetwork": "[Docker] Defines which network will use to connect to the database (default host)",
-        "pgimage": "[Docker] Defines which image will use to run the container (default postgres)",
-        "pghost": "The host of the database (default localhost)",
-        "pguser": "The user to connect in the database (must exist)",
-        "pgpassword": "If set, will use this as password for connecting to the database",
-        "mysqlnetwork": "[Docker] Defines which network will use to connect to the database (default host)",
-        "mysqlimage": "[Docker] Defines which image will use to run the container (default mariadb)",
-        "mysqlhost": "127.0.0.1",
-        "mysqluser": "The username to connect to the database",
-        "mysqlpassword": "If defined, sets the password which will be used to connect to the database"
+      "docker": "If set, the utilities will run in a docker container instead of using native commands",
+      "pgnetwork": "[Docker] Defines which network will use to connect to the database (default host)",
+      "pgimage": "[Docker] Defines which image will use to run the container (default postgres)",
+      "pghost": "The host of the database (default localhost)",
+      "pguser": "The user to connect in the database (must exist)",
+      "pgpassword": "If set, will use this as password for connecting to the database",
+      "mysqlnetwork": "[Docker] Defines which network will use to connect to the database (default host)",
+      "mysqlimage": "[Docker] Defines which image will use to run the container (default mariadb)",
+      "mysqlhost": "127.0.0.1",
+      "mysqluser": "The username to connect to the database",
+      "mysqlpassword": "If defined, sets the password which will be used to connect to the database"
     },
     "secrets": {
       "secret-provider": {
@@ -43,7 +43,10 @@ This allows you to auto-complete with the elements available in the configuratio
         },
         "storage": [
           "storage/digital-ocean",
-          "storage/gdrive",
+          {
+            "key": "storage/gdrive",
+            "backupsPath": "/Backups/mbp"
+          },
           "storage/amazon"
         ]
       }
@@ -59,21 +62,21 @@ This allows you to auto-complete with the elements available in the configuratio
       "algorithm": "Defines the algorithm to use in the cypher process, depends in the strategy (currently one of `gpg --version` cyphers)"
     },
     "storage": [
-        {
-          "type": "provider-type-1",
-          "backupsPath": "Path in the storage provider where to store the backups",
-          "maxBackupsKept": 30,
-          "provider-specific-param-1": "config/client_secrets.json",
-          "provider-specific-param-2": false
-        },
-        {
-          "type": "provider-type-2",
-          "backupsPath": "Path in the storage provider where to store the backups",
-          "maxBackupsKept": 7,
-          "provider-specific-param-1": "THIS_IS-NOT-AN-API-KEY",
-          "provider-specific-param-2": "THIS_IS_NOT_AN-API-S3Cr3t",
-          "provider-specific-param-3": 10
-        }
+      {
+        "type": "provider-type-1",
+        "backupsPath": "Path in the storage provider where to store the backups",
+        "maxBackupsKept": 30,
+        "provider-specific-param-1": "config/client_secrets.json",
+        "provider-specific-param-2": false
+      },
+      {
+        "type": "provider-type-2",
+        "backupsPath": "Path in the storage provider where to store the backups",
+        "maxBackupsKept": 7,
+        "provider-specific-param-1": "THIS_IS-NOT-AN-API-KEY",
+        "provider-specific-param-2": "THIS_IS_NOT_AN-API-S3Cr3t",
+        "provider-specific-param-3": 10
+      }
     ],
     "hooks": {
       "backup:before": "echo $@",

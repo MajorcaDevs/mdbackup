@@ -47,7 +47,6 @@ The steps runs with some function utilities defined that can be used to simplify
 - **Example**: `backup-folder "/var/www/html" my-web` will copy the contents of `/var/www/html` into the folder `.../my-web`.
 - **Requirements**:
     - `rsync` must be installed on the system.
-    - Uses 
 
 ### `backup-remote-folder`
 - **Description**: Copies a remote folder to a local folder placed inside the backup folder. Uses `rsync` and `ssh`.
@@ -145,3 +144,25 @@ The steps runs with some function utilities defined that can be used to simplify
     - `MIKROTIKEXPORTSYSTEMCONFIG`: (Optional) If set, will do a system config backup.
     - `MIKROTIKEXPORTGLOBALCONFIG`: (Optional) If set, will do a global config backup.
 - **Example**: `backup-mikrotik "mdbackup" "192.168.1.1" 2222`
+
+
+## Create custom functions
+
+You can create custom functions and let the tool [load them](../configuration.md#customutilsscript) in each step script for you. Here it is some advices to help you get through.
+
+Remember that your function should be specific and do only one thing, but it should be as generic as possible. If you intend to get your function in as a predefined function, this must be a **must**.
+
+If the output is a single file or a few files not in a folder, it is recommended to use the helper function [`compress-encrypt`](#compress-encrypt), so it will output a compressed and/or encrypted file, depending on the configuration. Or if you change some configuration of the compression or cyphering, the changes will be reflected in your code as well.
+
+If there are credentials involved, get them from environment variables, never from parameters which someone could hardcode them. Remember that the environment variables can be obtained from secret backends which are more secure thatn hardcoded in any script nor the configuration file.
+
+If you have to change the directory, keep track of the initial *current working directory* (cwd), because all the files and folders must be written inside this folder. Don't hardcode this path, get it from `cwd` or `$PWD`.
+
+Docker can be used? Then could be a good idea to add an implementation that uses a docker container instead of the tools in the system.
+
+Using PostgreSQL or MySQL/MariaDB tools? Well, there are undocumented helpers that you can take advantage: `__run_mysql` and `__run_psql`. Just append this at the beginning of the command (`__run_psql pg_dump database`) and will take advantage of some of the configurations from the environment variables. You can even combine this with [`compress-encrypt`](#compress-encrypt): `compress-encrypt "__run_mysql mysqldump -h $MYSQLHOST database" "database.sql"`.
+
+
+## Ask for new functions
+
+Do you think the tool should include any function predefined? Did you create a custom function and you think it should be included in the tool? Don't hesitate in [filling an issue](https://github.com/MajorcaDevs/mdbackup/issues/new) or [sending us a pull request](https://github.com/MajorcaDevs/mdbackup/pulls).
