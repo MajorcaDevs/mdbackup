@@ -202,13 +202,26 @@
                 }
               }
             },
-            "providers": {
-              "$id": "#/properties/secrets/properties/file/properties/providers",
+            "storage": {
+              "$id": "#/properties/secrets/properties/file/properties/storage",
               "type": "array",
               "title": "Configure cloud storage providers from json files",
               "examples": [
                 [ "secret/backups/providers/digitalocean", "secret/backups/providers/backblaze" ]
-              ]
+              ],
+              "items": {
+                "$id": "#/properties/secrets/properties/file/properties/storage/items",
+                "type": [ "object", "string" ],
+                "title": "A key to access the secret or an object with the key and options to be added/overwrote from the configuration",
+                "required": [ "key" ],
+                "properties": {
+                  "key": {
+                    "$id": "#/properties/secrets/properties/file/properties/storage/items/properties/key",
+                    "type": "string",
+                    "title": "A key to access the secret"
+                  }
+                }
+              }
             }
           }
         },
@@ -259,13 +272,26 @@
                 }
               }
             },
-            "providers": {
-              "$id": "#/properties/secrets/properties/vault/properties/providers",
+            "storage": {
+              "$id": "#/properties/secrets/properties/vault/properties/storage",
               "type": "array",
               "title": "Configure cloud storage providers securely from Vault",
               "examples": [
                 [ "secret/backups/providers/digitalocean", "secret/backups/providers/backblaze" ]
-              ]
+              ],
+              "items": {
+                "$id": "#/properties/secrets/properties/vault/properties/storage/items",
+                "type": [ "object", "string" ],
+                "title": "A key to access the secret or an object with the key and options to be added/overwrote from the configuration",
+                "required": [ "key" ],
+                "properties": {
+                  "key": {
+                    "$id": "#/properties/secrets/properties/vault/properties/storage/items/properties/key",
+                    "type": "string",
+                    "title": "A key to access the secret"
+                  }
+                }
+              }
             }
           }
         }

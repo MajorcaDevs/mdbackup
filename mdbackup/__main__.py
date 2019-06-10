@@ -44,18 +44,31 @@ def main_do_backup(logger: logging.Logger, config: Config) -> Path:
         # Log not-found module and exit
         logger.exception(e.args[0], e.args[1])
         sys.exit(4)
-    secret_env = {}
-    for secret_backend, secret in secret_backends:
-        for key, secret_key in secret.env.items():
-            logger.debug(f'Getting env secret {key} from {secret.type}:{secret_key}')
-            secret_env[key] = secret_backend.get_secret(secret_key)
 
-    for secret_backend, secret in secret_backends:
-        for key in secret.providers:
-            logger.debug(f'Getting provider secret from {secret.type}:{key}')
-            provider = ProviderConfig(secret_backend.get_provider(key))
-            logger.debug(f'Provider type is {provider.type}')
-            config.providers.append(provider)
+    try:
+        secret_env = {}
+        for secret_backend, secret in secret_backends:
+            for key, secret_key in secret.env.items():
+                logger.debug(f'Getting env secret {key} from {secret.type}:{secret_key}')
+                secret_env[key] = secret_backend.get_secret(secret_key)
+
+        for secret_backend, secret in secret_backends:
+            for key in secret.storage:
+                logger.debug(f'Getting storage provider secret from {secret.type}:{key}')
+                if isinstance(key, dict):
+                    value = secret_backend.get_provider(key['key'])
+                    for o_key, o_value in key.items():
+                        value[o_key] = o_value
+                else:
+                    value = secret_backend.get_provider(key)
+                provider = ProviderConfig(value)
+                logger.debug(f'Provider type is {provider.type}')
+                config.providers.append(provider)
+    except Exception as e:
+        raise e
+    finally:
+        for secret_backend, _ in secret_backends:
+            del secret_backend
 
     # Do backups
     try:
