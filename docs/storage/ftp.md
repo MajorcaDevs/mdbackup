@@ -24,6 +24,7 @@ No extra python packages are required to use this provider. Uses `ftplib`, which
 {
   "type": "ftp",
   "backupsPath": "Path in the FTP where the backups will be located",
+  "maxBackupsKept": "Indicates how many backups to keep in this storage, or set to null to keep them all",
   "host": "Host (with or without the port) where the FTP server is located",
   "user": "(optional) User to connect to the FTP server",
   "password": "(optional) Password for the user",
@@ -35,6 +36,7 @@ No extra python packages are required to use this provider. Uses `ftplib`, which
 {
   "type": "ftps",
   "backupsPath": "Path in the FTPS where the backups will be located",
+  "maxBackupsKept": "Indicates how many backups to keep in this storage, or set to null to keep them all",
   "host": "Host (with or without the port) where the FTPS server is located",
   "user": "(optional) User to connect to the FTPS server",
   "password": "(optional) Password for the user",

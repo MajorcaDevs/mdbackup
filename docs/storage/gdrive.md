@@ -21,6 +21,7 @@ In order to use Google Drive, you must install the following python packages:
 {
   "type": "gdrive",
   "backupsPath": "Path in Google Drive where the backups will be located",
+  "maxBackupsKept": "Indicates how many backups to keep in this storage, or set to null to keep them all",
   "clientSecrets": "config/client_secrets.json",
   "authTokens": "config/auth_tokens.json"
 }

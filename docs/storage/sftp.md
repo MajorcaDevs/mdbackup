@@ -37,6 +37,7 @@ In order to use SFTP, you must install the following python packages:
 {
   "type": "sftp",
   "backupsPath": "Path in the SFTP where the backups will be located",
+  "maxBackupsKept": "Indicates how many backups to keep in this storage, or set to null to keep them all",
   "host": "Host where the SFTP server is located",
   "port": "(optional) Port of the SFTP server (by default 22)",
   "user": "User to connect to the SFTP server",
