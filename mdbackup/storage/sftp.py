@@ -18,13 +18,14 @@
 from paramiko import SSHClient, SFTPClient, PKey, RejectPolicy, AutoAddPolicy, WarningPolicy
 import logging
 from pathlib import Path
+import stat
 from typing import List, Union
 
 from mdbackup.config import StorageConfig
 from mdbackup.storage.storage import AbstractStorage
 
 
-class SFTPStorage(AbstractStorage[Path]):
+class SFTPStorage(AbstractStorage):
     def __init__(self, params: StorageConfig):
         self.__log = logging.getLogger(__name__)
         self.__conn = self._create_connection(params)
@@ -72,11 +73,11 @@ class SFTPStorage(AbstractStorage[Path]):
         self.__log.debug('Starting SFTP client')
         return self.__ssh.open_sftp()
 
-    def list_directory(self, path: Union[str, Path]) -> List[Path]:
+    def list_directory(self, path: Union[str, Path]) -> List[str]:
         self.__log.debug(f'Retrieving contents of directory {path}')
         return self.__conn.listdir(path)
 
-    def create_folder(self, name: str, parent: Union[Path, str] = None) -> Path:
+    def create_folder(self, name: str, parent: Union[Path, str] = None) -> str:
         path = self.__dir / parent
         self.__conn.chdir(str(path))
         if name not in self.list_directory(parent):
@@ -84,10 +85,22 @@ class SFTPStorage(AbstractStorage[Path]):
             self.__conn.mkdir(name)
         else:
             self.__log.debug(f'Folder "{path / name}"" already exists')
-        return path / name
+        return str(path / name)
 
     def upload(self, path: Path, parent: Union[Path, str] = None):
         dir_path = self.__dir / parent
         self.__conn.chdir(str(dir_path))
         self.__log.info(f'Uploading file {path} to {parent}')
         self.__conn.put(str(path), path.name, confirm=True)
+
+    def delete(self, path: Union[Path, str]):
+        path = self.__dir / path
+        path_stats = self.__conn.stat(str(path))
+        self.__log.info(f'Deleting {path}')
+        if stat.S_ISDIR(path_stats.st_mode):
+            entries_in_dir = self.__conn.listdir(str(path))
+            for entry in entries_in_dir:
+                self.delete(path / entry)
+            self.__conn.rmdir(str(path))
+        else:
+            self.__conn.unlink(str(path))
