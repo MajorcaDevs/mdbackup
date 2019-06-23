@@ -42,7 +42,7 @@ class S3Storage(AbstractStorage):
         self.__pre = config.backups_path if not config.backups_path.endswith('/') else config.backups_path[:-1]
         self.__pre = self.__pre if not self.__pre.startswith('/') else self.__pre[1:]
 
-    def list_directory(self, path: Union[str, Path, str], recursive=False) -> List[str]:
+    def list_directory_recursive(self, path: Union[str, Path]) -> List[str]:
         path = path if isinstance(path, str) else str(path)
         if path.startswith('/'):
             path = path[1:]
@@ -51,11 +51,14 @@ class S3Storage(AbstractStorage):
                  for key in [item['Key'].replace(f'{self.__pre}/', '')
                              for item in self.__s3.list_objects_v2(Bucket=self.__bucket, Prefix=full_path)['Contents']]
                  if key != '']
-        if not recursive:
-            rep_path = path + '/' if path != '' else path
-            items = [key for key in items
-                     if (len(key.replace(rep_path, '').split('/')) == 2 if key.endswith('/')
-                         else len(key.replace(rep_path, '').split('/')) == 1)]
+        return items
+
+    def list_directory(self, path: Union[str, Path]) -> List[str]:
+        items = self.list_directory_recursive(path)
+        rep_path = path + '/' if path != '' else path
+        items = [key for key in items
+                 if (len(key.replace(rep_path, '').split('/')) == 2 if key.endswith('/')
+                     else len(key.replace(rep_path, '').split('/')) == 1)]
         return items
 
     def create_folder(self, name: str, parent: Union[Path, str, str] = None) -> str:
@@ -97,7 +100,7 @@ class S3Storage(AbstractStorage):
         if path.startswith('/'):
             path = path[1:]
         self.__log.info(f'Deleting {self.__pre}/{path}')
-        objects_to_delete = self.list_directory(path, recursive=True)[::-1]
+        objects_to_delete = self.list_directory_recursive(path)[::-1]
         while len(objects_to_delete) > 0:
             ret = self.__s3.delete_objects(
                 Bucket=self.__bucket,

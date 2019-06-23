@@ -17,7 +17,7 @@
 
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Union, List, Generic, TypeVar
+from typing import Union, List
 
 
 class AbstractStorage(ABC):
