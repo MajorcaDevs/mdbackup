@@ -405,6 +405,11 @@
             "title": "Provider type",
             "default": ""
           },
+          "maxBackupsKept": {
+            "type": [ "number", "null" ],
+            "title": "Indicates how many backups will be kept in the storage provider",
+            "default": null
+          },
           "backupsPath": {
             "$id": "#/properties/gdrive/properties/backupsPath",
             "type": "string",

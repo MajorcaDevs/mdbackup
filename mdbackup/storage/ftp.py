@@ -24,7 +24,7 @@ from mdbackup.config import ProviderConfig
 from mdbackup.storage.storage import AbstractStorage
 
 
-class FTPStorage(AbstractStorage[Path]):
+class FTPStorage(AbstractStorage):
     def __init__(self, params: ProviderConfig):
         self.__log = logging.getLogger(f'{__name__}:FTPStorage')
         self.__conn = self._create_connection(params)
@@ -44,11 +44,11 @@ class FTPStorage(AbstractStorage[Path]):
                    passwd=params.get('password'),
                    acct=params.get('acct'))
 
-    def list_directory(self, path: Union[str, Path]) -> List[Path]:
+    def list_directory(self, path: Union[str, Path]) -> List[str]:
         self.__log.debug(f'Retrieving contents of directory {path}')
-        return [filename for (filename, _) in self.__conn.mlsd(self.__dir / path)][2:]
+        return [str(filename) for (filename, _) in self.__conn.mlsd(self.__dir / path)][2:]
 
-    def create_folder(self, name: str, parent: Union[Path, str] = None) -> Path:
+    def create_folder(self, name: str, parent: Union[Path, str] = None) -> str:
         path = self.__dir / parent
         self.__conn.cwd(str(path))
         if name not in self.list_directory(parent):
@@ -56,14 +56,28 @@ class FTPStorage(AbstractStorage[Path]):
             self.__conn.mkd(name)
         else:
             self.__log.debug(f'Folder "{path / name}"" already exists')
-        return path / name
+        return str(path / name)
 
     def upload(self, path: Path, parent: Union[Path, str] = None):
         dir_path = self.__dir / parent
         self.__conn.cwd(str(dir_path))
-        with open(path, 'rb') as file_to_upload:
+        with open(str(path), 'rb') as file_to_upload:
             self.__log.info(f'Uploading file {path} to {parent}')
             self.__conn.storbinary(f'STOR {path.name}', file_to_upload)
+
+    def delete(self, path: Union[Path, str]):
+        path = self.__dir / path
+        is_dir = False
+        self.__log.info(f'Deleting {path}')
+        for (name, properties) in self.__conn.mlsd(path=str(path)):
+            if name in ['.', '..']:
+                is_dir = True
+                continue
+            elif properties['type'] == 'file':
+                self.__conn.delete(str(path / name))
+            elif properties['type'] == 'dir':
+                self.delete(str(path / name))
+        self.__conn.rmd(str(path)) if is_dir else None
 
 
 class FTPSStorage(FTPStorage):

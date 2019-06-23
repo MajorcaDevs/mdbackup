@@ -1,7 +1,7 @@
 from typing import Optional
 
 from mdbackup.check_packages import check, check_b2sdk, check_boto3, check_magic, check_pydrive, check_paramiko
-from mdbackup.storage.storage import AbstractStorage, T
+from mdbackup.storage.storage import AbstractStorage
 
 
 @check('BackBlaze cloud storage', check_b2sdk, check_magic)
@@ -44,7 +44,7 @@ __impls = {
 }
 
 
-def create_storage_instance(params) -> Optional[AbstractStorage[T]]:
+def create_storage_instance(params) -> Optional[AbstractStorage]:
     try:
         impl = __impls[params.type.lower()]
     except KeyError:
