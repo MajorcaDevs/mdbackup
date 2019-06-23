@@ -41,19 +41,17 @@ def archive_folder(backup_path: Path, folder: Path, strategies: List[StrategyCal
     filename = folder.parts[-1] + '.tar'
     directory = folder.relative_to(backup_path)
 
-    if len(strategies) == 0:
-        end_cmd = f' > "{filename}"'
-    else:
-        for strategy in strategies:
-            cmd, ext = strategy()
-            filename += ext
-            end_cmd = f'| {cmd}'
+    end_cmd = f' > "{filename}"'
+    for strategy in strategies:
+        cmd, ext = strategy()
+        filename += ext
+        end_cmd = f'| {cmd}'
 
     logger.info(f'Compressing directory {folder} into {filename}')
     # Do the compression
     logger.debug(f'Executing command ["bash", "-c", \'tar -c "{str(directory)}" {end_cmd} > "{filename}"\']')
-    _exec = subprocess.run(['bash', '-c', f'tar -c "{str(directory)}" {end_cmd} > "{filename}"'],
-                           cwd=str(backup_path), check=True)
+    subprocess.run(['bash', '-c', f'tar -c "{str(directory)}" {end_cmd} > "{filename}"'],
+                   cwd=str(backup_path), check=True)
 
     return filename
 

@@ -27,7 +27,7 @@ from pydrive.drive import GoogleDrive, GoogleDriveFile
 from mdbackup.storage.storage import AbstractStorage
 
 
-class GDriveStorage(AbstractStorage[GoogleDriveFile]):
+class GDriveStorage(AbstractStorage):
 
     def __init__(self, params):
         """
@@ -98,7 +98,7 @@ class GDriveStorage(AbstractStorage[GoogleDriveFile]):
 
         return self._traverse(path)
 
-    def list_directory(self, path: Union[str, Path, GoogleDriveFile]) -> List[GoogleDriveFile]:
+    def list_directory(self, path: Union[str, Path]) -> List[str]:
         """
         Returns a list of of GoogleDriveFile for the folder in that path.
         The path must exist and must be a directory.
@@ -117,9 +117,10 @@ class GDriveStorage(AbstractStorage[GoogleDriveFile]):
         if drive_file.metadata['mimeType'] != 'application/vnd.google-apps.folder':
             raise NotADirectoryError(drive_file.metadata['mimeType'])
 
-        return self._drive.ListFile({'q': f"'{drive_file.metadata['id']}' in parents and trashed=false"}).GetList()
+        files = self._drive.ListFile({'q': f"'{drive_file.metadata['id']}' in parents and trashed=false"}).GetList()
+        return [str(Path(path, f.metadata['title'])) for f in files]
 
-    def create_folder(self, name: str, parent: Union[Path, str]=None) -> GoogleDriveFile:
+    def create_folder(self, name: str, parent: Union[Path, str] = None) -> str:
         """
         Creates a folder with name ``name`` in the root folder or in the
         folder specified in ``parent``. Returns the GoogleDriveFile instance
@@ -136,9 +137,9 @@ class GDriveStorage(AbstractStorage[GoogleDriveFile]):
         })
         self.__log.info(f'Creating folder {name} [parent "{parent_drive.metadata["title"]}" {parent_drive["id"]}]')
         dir1.Upload()
-        return dir1
+        return str(Path(parent, name))
 
-    def upload_file(self, file_path: Path, parent: GoogleDriveFile=None):
+    def upload_file(self, file_path: Path, parent: GoogleDriveFile = None):
         """
         Uploads a file to google drive, in the root folder or in the
         folder specified in ``parent``.
@@ -191,3 +192,12 @@ class GDriveStorage(AbstractStorage[GoogleDriveFile]):
                 self.upload(child_file, new_parent)
         elif path.is_file():
             self.upload_file(path, parent)
+
+    def delete(self, path: Union[Path, str, GoogleDriveFile]):
+        if isinstance(path, Path):
+            drive_file = self.get(path)
+        elif isinstance(path, str):
+            drive_file = self.get(Path(path))
+        else:
+            drive_file = path
+        drive_file.Trash()

@@ -17,21 +17,22 @@
 
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Union, List, Generic, TypeVar
+from typing import Union, List
 
 
-T = TypeVar('T')
-
-
-class AbstractStorage(ABC, Generic[T]):
+class AbstractStorage(ABC):
     @abstractmethod
-    def list_directory(self, path: Union[str, Path, T]) -> List[T]:
+    def list_directory(self, path: Union[str, Path]) -> List[str]:
         pass
 
     @abstractmethod
-    def create_folder(self, name: str, parent: Union[Path, str, T]=None) -> T:
+    def create_folder(self, name: str, parent: Union[Path, str] = None) -> str:
         pass
 
     @abstractmethod
-    def upload(self, path: Path, parent: Union[Path, str, T]=None):
+    def upload(self, path: Path, parent: Union[Path, str, Path] = None):
+        pass
+
+    @abstractmethod
+    def delete(self, path: Union[Path, str]):
         pass

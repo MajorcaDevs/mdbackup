@@ -16,6 +16,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import argparse
+import re
 from json.decoder import JSONDecodeError
 import logging
 from pathlib import Path
@@ -163,7 +164,7 @@ def main_upload_backup(logger: logging.Logger, config: Config, backup: Path):
                         run_hook('upload:error', prov_config.type, str(backup), str(e))
                         logger.exception(f'Could not upload file {item}: {e}')
 
-                run_hook('upload:after', prov_config.type, str(backup), backup_cloud_folder)
+                run_hook('upload:after', prov_config.type, str(backup), str(backup_cloud_folder))
                 del storage
             else:
                 # The provider is invalid, show error
@@ -189,6 +190,25 @@ def main_clean_up(logger: logging.Logger, config: Config):
         except OSError as e:
             logger.exception(f'Could not completely remove backup {old}')
             run_hook('oldBackup:error', str(old.absolute()), str(e))
+
+    regex = re.compile(r'\d{4}-\d{2}-\d{2}T\d{1,2}:\d{2}')
+    for prov_config in config.providers:
+        storage = create_storage_instance(prov_config)
+        if storage is None or prov_config.max_backups_kept is None:
+            continue
+
+        try:
+            logger.info(f'Starting cleanup for {prov_config.type} at {prov_config.backups_path}')
+            folders = [key for key in storage.list_directory('') if regex.match(str(key))]
+            folders.sort()
+            for old in folders[0:max(0, len(folders) - prov_config.max_backups_kept)]:
+                logger.warning(f'Removing old backup folder {old} of {prov_config.type}')
+                run_hook('oldBackup:storage:deleting', prov_config.type, prov_config.backups_path, str(old))
+                storage.delete(old)
+                run_hook('oldBackup:storage:deleted', prov_config.type, prov_config.backups_path, str(old))
+        except Exception as e:
+            logger.exception(e)
+            run_hook('oldBackup:storage:error', prov_config.type, prov_config.backups_path, str(e))
 
 
 def main():

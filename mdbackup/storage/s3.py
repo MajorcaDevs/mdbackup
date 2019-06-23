@@ -25,7 +25,7 @@ import magic
 from mdbackup.storage.storage import AbstractStorage
 
 
-class S3Storage(AbstractStorage[str]):
+class S3Storage(AbstractStorage):
 
     def __init__(self, config):
         self.__log = logging.getLogger(__name__)
@@ -40,22 +40,39 @@ class S3Storage(AbstractStorage[str]):
         self.__bucket: str = config['bucket']
         self.__storageclass: str = config.get('storageClass', 'STANDARD') 
         self.__pre = config.backups_path if not config.backups_path.endswith('/') else config.backups_path[:-1]
+        self.__pre = self.__pre if not self.__pre.startswith('/') else self.__pre[1:]
 
-    def list_directory(self, path: Union[str, Path, str]) -> List[str]:
+    def list_directory_recursive(self, path: Union[str, Path]) -> List[str]:
         path = path if isinstance(path, str) else str(path)
-        return [item['Key'] for item in self.__s3.list_objects_v2(Bucket=self.__bucket)['Contents']
-                if item['Key'].startswith(self.__pre + '/' + path)]
+        if path.startswith('/'):
+            path = path[1:]
+        full_path = f'{self.__pre}/{path}'
+        items = [key
+                 for key in [item['Key'].replace(f'{self.__pre}/', '')
+                             for item in self.__s3.list_objects_v2(Bucket=self.__bucket, Prefix=full_path)['Contents']]
+                 if key != '']
+        return items
 
-    def create_folder(self, name: str, parent: Union[Path, str, str]=None) -> str:
+    def list_directory(self, path: Union[str, Path]) -> List[str]:
+        items = self.list_directory_recursive(path)
+        rep_path = path + '/' if path != '' else path
+        items = [key for key in items
+                 if (len(key.replace(rep_path, '').split('/')) == 2 if key.endswith('/')
+                     else len(key.replace(rep_path, '').split('/')) == 1)]
+        return items
+
+    def create_folder(self, name: str, parent: Union[Path, str, str] = None) -> str:
+        parent = parent if parent is not None else ''
         key = f'{parent}/{name}/'
         if key.startswith('/'):
             key = key[1:]
+        key = f'{self.__pre}/{key}'
         self.__log.info(f'Creating folder {key}')
         ret = self.__s3.put_object(Key=key, Bucket=self.__bucket)
         self.__log.debug(ret)
-        return f'{parent}/{name}/'
+        return key.replace(f'{self.__pre}/', '')
 
-    def upload(self, path: Path, parent: Union[Path, str, str]=None):
+    def upload(self, path: Path, parent: Union[Path, str, str] = None):
         if isinstance(parent, Path):
             key = '/'.join(parent.absolute().parts + (path.name,))
         elif isinstance(parent, str):
@@ -67,12 +84,31 @@ class S3Storage(AbstractStorage[str]):
             key = path.name
         if key.startswith('/'):
             key = key[1:]
+        key = f'{self.__pre}/{key}'
         self.__log.info(f'Uploading file {key} (from {path})')
         ret = self.__s3.upload_file(str(path.absolute()),
                                     self.__bucket,
                                     key,
                                     ExtraArgs={
                                         'ContentType': magic.from_file(str(path.absolute()), mime=True),
-                                        'StorageClass' : self.__storageclass
+                                        'StorageClass': self.__storageclass
                                     })
         self.__log.debug(ret)
+
+    def delete(self, path: Union[Path, str]):
+        path = str(path)
+        if path.startswith('/'):
+            path = path[1:]
+        self.__log.info(f'Deleting {self.__pre}/{path}')
+        objects_to_delete = self.list_directory_recursive(path)[::-1]
+        while len(objects_to_delete) > 0:
+            ret = self.__s3.delete_objects(
+                Bucket=self.__bucket,
+                Delete={
+                    'Objects': [{'Key': f'{self.__pre}/{key}'} for key in objects_to_delete[:1000]],
+                    'Quiet': True,
+                }
+            )
+
+            self.__log.debug(ret)
+            objects_to_delete = objects_to_delete[1000:]
