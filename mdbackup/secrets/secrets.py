@@ -27,3 +27,6 @@ class AbstractSecretsBackend(ABC):
     @abstractmethod
     def get_provider(self, key: str) -> Dict[str, any]:
         pass
+
+    def __del__(self):
+        pass

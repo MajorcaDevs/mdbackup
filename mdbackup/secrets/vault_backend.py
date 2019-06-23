@@ -53,3 +53,8 @@ class VaultSecretsBackend(AbstractSecretsBackend):
 
     def get_provider(self, key: str) -> Dict[str, any]:
         return self.__kv_get(key)['data']
+
+    def __del__(self):
+        requests.post(f'{self._api}/v1/auth/token/revoke-self', headers={'X-Vault-Token': self._client_token},
+                      verify=self._cert)
+        self._client_token = None
