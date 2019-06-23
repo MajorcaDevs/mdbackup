@@ -1,5 +1,8 @@
 # Backups utility
 
+[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/MajorcaDevs/mdbackup.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/MajorcaDevs/mdbackup/context:python)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/MajorcaDevs/mdbackup.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/MajorcaDevs/mdbackup/alerts/)
+
 Small but customizable utility to create backups and store them in cloud storage providers.
 
 ## How to install
