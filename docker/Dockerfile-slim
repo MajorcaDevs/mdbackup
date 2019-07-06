@@ -1,4 +1,6 @@
-FROM python:3.7-slim
+ARG ARCH='amd64'
+
+FROM ${ARCH}/python:3.7-slim
 LABEL owner="MajorcaDevs"
 COPY ./mdbackup/ /mdbackup 
 COPY ./MANIFEST.in /mdbackup
