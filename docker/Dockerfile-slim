@@ -9,7 +9,7 @@ COPY ./setup.py /mdbackup
 WORKDIR mdbackup
 
 RUN mkdir /backups && apt update && \
-apt install rsync ssh tar xz-utils gcc make gpg gzip -y && \
+apt install rsync ssh tar xz-utils gcc make python3-dev gpg gzip -y && \
 pip install . && pip install python-magic boto3 b2sdk PyDrive requests==2.19.1 pyyaml paramiko urllib3==1.21.1 && \
-apt autoremove gcc make -y && apt autoremove -y && apt clean -y && rm -rf /var/cache/apt
+apt autoremove gcc make python3-dev -y && apt autoremove -y && apt clean -y && rm -rf /var/cache/apt
 
