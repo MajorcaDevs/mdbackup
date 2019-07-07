@@ -1,6 +1,6 @@
 FROM python:3.7-slim
 LABEL owner="MajorcaDevs"
-COPY ./mdbackup/ /mdbackup 
+COPY ./mdbackup/ /mdbackup/mdbackup
 COPY ./MANIFEST.in /mdbackup
 COPY ./README.md /mdbackup
 COPY ./setup.py /mdbackup
