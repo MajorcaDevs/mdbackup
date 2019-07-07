@@ -1,4 +1,7 @@
-FROM python:3.7-alpine
+ARG ARCH='amd64'
+
+FROM ${ARCH}/python:3.7-alpine
+
 LABEL owner="MajorcaDevs"
 COPY ./mdbackup/ /mdbackup/mdbackup
 COPY ./MANIFEST.in /mdbackup
