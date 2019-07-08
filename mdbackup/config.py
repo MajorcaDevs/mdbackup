@@ -23,7 +23,7 @@ from typing import Dict, List, Optional, Union, Any
 from mdbackup.utils import change_keys
 
 
-class ProviderConfig(object):
+class StorageConfig(object):
     def __init__(self, provider_dict: Dict[str, str]):
         self.__type = provider_dict['type']
         self.__backups_path = provider_dict['backupsPath']
@@ -35,14 +35,14 @@ class ProviderConfig(object):
     @property
     def type(self) -> str:
         """
-        :return: The cloud provider.
+        :return: The storage provider.
         """
         return self.__type
 
     @property
     def backups_path(self) -> str:
         """
-        :return: The path where the backups will be stored in the cloud
+        :return: The path where the backups will be stored in the storage provider.
         """
         return self.__backups_path
 
@@ -117,8 +117,8 @@ class Config(object):
         self.__log_level = logging.getLevelName(conf.get('logLevel', 'WARNING'))
         self.__max_backups_kept = conf.get('maxBackupsKept', 7)
         self.__env = conf.get('env', {})
-        self.__providers = [ProviderConfig(provider_dict) for provider_dict in conf.get('providers', [])]
-        self.__secrets = [SecretConfig(key, secret_dict.get('env'), secret_dict['config'], secret_dict.get('providers'))
+        self.__providers = [StorageConfig(provider_dict) for provider_dict in conf.get('storage', [])]
+        self.__secrets = [SecretConfig(key, secret_dict.get('env'), secret_dict['config'], secret_dict.get('storage'))
                           for key, secret_dict in conf.get('secrets', {}).items()]
         self.__hooks = conf.get('hooks', {})
         if 'compression' in conf:
@@ -183,7 +183,7 @@ class Config(object):
         return self.__env
 
     @property
-    def providers(self) -> List[ProviderConfig]:
+    def providers(self) -> List[StorageConfig]:
         """
         :return: The list of cloud providers where the backups will be uploaded
         """

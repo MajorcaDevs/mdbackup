@@ -20,12 +20,12 @@ import logging
 from pathlib import Path
 from typing import List, Union
 
-from mdbackup.config import ProviderConfig
+from mdbackup.config import StorageConfig
 from mdbackup.storage.storage import AbstractStorage
 
 
 class FTPStorage(AbstractStorage):
-    def __init__(self, params: ProviderConfig):
+    def __init__(self, params: StorageConfig):
         self.__log = logging.getLogger(f'{__name__}:FTPStorage')
         self.__conn = self._create_connection(params)
 
@@ -37,7 +37,7 @@ class FTPStorage(AbstractStorage):
             self.__log.debug('Closing connection')
             self.__conn.close()
 
-    def _create_connection(self, params: ProviderConfig):
+    def _create_connection(self, params: StorageConfig):
         self.__log.debug('Creating connection to FTP server ' + params['host'])
         return FTP(host=params['host'],
                    user=params.get('user'),
@@ -81,11 +81,11 @@ class FTPStorage(AbstractStorage):
 
 
 class FTPSStorage(FTPStorage):
-    def __init__(self, params: ProviderConfig):
+    def __init__(self, params: StorageConfig):
         super().__init__(params)
         self.__log = logging.getLogger(f'{__name__}:FTPSStorage')
 
-    def _create_connection(self, params: ProviderConfig):
+    def _create_connection(self, params: StorageConfig):
         self.__log.debug('Creating connection to FTPS server ' + params['host'])
         return FTP_TLS(host=params['host'],
                        user=params.get('user'),

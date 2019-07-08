@@ -31,7 +31,7 @@ from .archive import (
     get_cypher_strategy,
 )
 from .backup import do_backup, get_backup_folders_sorted
-from .config import Config, ProviderConfig
+from .config import Config, StorageConfig
 from .hooks import define_hook, run_hook
 from .storage import create_storage_instance
 
@@ -62,7 +62,7 @@ def main_do_backup(logger: logging.Logger, config: Config) -> Path:
                         value[o_key] = o_value
                 else:
                     value = secret_backend.get_provider(key)
-                provider = ProviderConfig(value)
+                provider = StorageConfig(value)
                 logger.debug(f'Provider type is {provider.type}')
                 config.providers.append(provider)
     except Exception as e:
@@ -85,7 +85,7 @@ def main_do_backup(logger: logging.Logger, config: Config) -> Path:
                          **secret_env)
     except Exception as e:
         logger.error(e)
-        run_hook('backup:error', str(config.backups_path / '.partial'), str(e))
+        run_hook('backup:error', str(config.backups_path / '.partial'), str(e), e.args[1] if len(e.args) > 2 else '')
         shutil.rmtree(str(config.backups_path / '.partial'))
         sys.exit(1)
 
@@ -179,6 +179,10 @@ def main_upload_backup(logger: logging.Logger, config: Config, backup: Path):
 def main_clean_up(logger: logging.Logger, config: Config):
     # Cleanup old backups
     max_backups = config.max_backups_kept
+    if max_backups == 0 or max_backups is None:
+        logger.debug('Ignoring local cleanup')
+        return
+
     backups_list = get_backup_folders_sorted(config.backups_path)
     logger.debug('List of folders available:\n{}'.format('\n'.join([str(b) for b in backups_list])))
     for old in backups_list[0:max(0, len(backups_list) - max_backups)]:
