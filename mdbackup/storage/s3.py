@@ -63,6 +63,7 @@ class S3Storage(AbstractStorage):
 
     def create_folder(self, name: str, parent: Union[Path, str, str] = None) -> str:
         parent = parent if parent is not None else ''
+        parent = parent[:-1] if parent.endswith('/') else parent
         key = f'{parent}/{name}/'
         if key.startswith('/'):
             key = key[1:]
