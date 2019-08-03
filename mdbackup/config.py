@@ -19,13 +19,13 @@ import json
 import logging
 from pathlib import Path
 from typing import Dict, List, Optional, Union, Any
-import yaml
-try:
-    from yaml import CLoader as Loader
-except ImportError:
-    from yaml import Loader
 
 from mdbackup.utils import change_keys
+
+try:
+    from yaml import CLoader as Loader, load as yaml_load
+except ImportError:
+    from yaml import Loader, load as yaml_load
 
 
 class StorageConfig(object):
@@ -117,7 +117,7 @@ class Config(object):
             if path.parts[-1].endswith('.json'):
                 parsed_config = json.load(config_file)
             elif path.parts[-1].endswith('.yml') or path.parts[-1].endswith('.yaml'):
-                parsed_config = yaml.load(config_file, Loader=Loader)
+                parsed_config = yaml_load(config_file, Loader=Loader)
             else:
                 raise NotImplementedError(f'Cannot read this type of config file: {path.parts[-1]}')
             self._parse_config(parsed_config)

@@ -20,13 +20,12 @@ from pathlib import Path
 from typing import Dict
 
 try:
-    import yaml
     try:
-        from yaml import CLoader as Loader
+        from yaml import CLoader as Loader, load as yaml_load
     except ImportError:
-        from yaml import Loader
+        from yaml import Loader, load as yaml_load
 except ImportError:
-    yaml = None
+    yaml_load = None
     Loader = None
 
 from mdbackup.secrets.secrets import AbstractSecretsBackend
@@ -54,5 +53,5 @@ class FileSecretsBackend(AbstractSecretsBackend):
         if key.endswith('.yaml') or key.endswith('.yml'):
             if yaml is None:
                 raise ImportError('In order to use yaml files, install pyyaml package: pip install pyyaml')
-            return yaml.load(contents, Loader=Loader)
+            return yaml_load(contents, Loader=Loader)
         return json.loads(contents)
