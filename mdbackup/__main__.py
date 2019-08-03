@@ -36,7 +36,7 @@ from .hooks import define_hook, run_hook
 from .storage import create_storage_instance
 
 
-def main_do_backup(logger: logging.Logger, config: Config) -> Path:
+def main_load_secrets(logger: logging.Logger, config: Config):
     # Prepare secret backends (if any) and its env getters (aka functions that gets the right value from the backend)
     try:
         secret_backends = [(get_secret_backend_implementation(secret.type, secret.config), secret)
@@ -71,6 +71,10 @@ def main_do_backup(logger: logging.Logger, config: Config) -> Path:
         for secret_backend, _ in secret_backends:
             del secret_backend
 
+    return secret_env
+
+
+def main_do_backup(logger: logging.Logger, config: Config, secret_env) -> Path:
     # Do backups
     try:
         cypher_items = config.cypher_params.items() if config.cypher_params is not None else []
@@ -262,14 +266,16 @@ def main():
 
     try:
         if args.backup_only:
-            backup = main_do_backup(logger, config)
+            secret_env = main_load_secrets(logger, config)
+            backup = main_do_backup(logger, config, secret_env)
             logger.info(f'Backup done: {backup.absolute()}')
         elif args.upload_current_only:
             main_upload_backup(logger, config, (config.backups_path / 'current').resolve())
         elif args.cleanup_only:
             main_clean_up(logger, config)
         else:
-            backup = main_do_backup(logger, config)
+            secret_env = main_load_secrets(logger, config)
+            backup = main_do_backup(logger, config, secret_env)
             main_upload_backup(logger, config, backup)
             main_clean_up(logger, config)
     except Exception as e:
