@@ -147,7 +147,7 @@ def main_upload_backup(logger: logging.Logger, config: Config, backup: Path):
                 # Create folder for this backup
                 try:
                     logger.info(f'Creating folder {backup_folder_name} in {prov_config.backups_path}')
-                    backup_cloud_folder = storage.create_folder(backup_folder_name, prov_config.backups_path)
+                    backup_cloud_folder = storage.create_folder(backup_folder_name)
                 except Exception as e:
                     # If we cannot create it, will continue to the next configured provider
                     run_hook('upload:error', prov_config.type, str(backup), str(e))
