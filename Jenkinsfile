@@ -42,8 +42,10 @@ pipeline {
         }
       }
 
-      script {
-        sh 'PYTHONPATH=$PWD python -m mdbackup --help'
+      steps {
+        script {
+          sh 'PYTHONPATH=$PWD python -m mdbackup --help'
+        }
       }
     }
 
@@ -275,24 +277,24 @@ pipeline {
           }
         }
       }
+    }
 
-      stage('Update manifest') {
-        when {
-          branch 'master'
-        }
+    stage('Update manifest') {
+      when {
+        branch 'master'
+      }
 
-        agent {
-          label 'docker-qemu'
-        }
+      agent {
+        label 'docker-qemu'
+      }
 
-        steps {
-          script {
-            sh 'docker manifest create majorcadevs/mdbackup:slim majorcadevs/mdbackup:amd64_slim majorcadevs/mdbackup:armv7_slim majorcadevs/mdbackup:armv8_slim'
-            sh 'docker manifest create majorcadevs/mdbackup:alpine majorcadevs/mdbackup:amd64_alpine majorcadevs/mdbackup:armv7_alpine majorcadevs/mdbackup:armv8_alpine'
-            docker.withRegistry('https://registry.hub.docker.com', 'bobthabuilda') {
-              sh 'docker manifest push -p majorcadevs/mdbackup:slim'
-              sh 'docker manifest push -p majorcadevs/mdbackup:alpine'
-            }
+      steps {
+        script {
+          sh 'docker manifest create majorcadevs/mdbackup:slim majorcadevs/mdbackup:amd64_slim majorcadevs/mdbackup:armv7_slim majorcadevs/mdbackup:armv8_slim'
+          sh 'docker manifest create majorcadevs/mdbackup:alpine majorcadevs/mdbackup:amd64_alpine majorcadevs/mdbackup:armv7_alpine majorcadevs/mdbackup:armv8_alpine'
+          docker.withRegistry('https://registry.hub.docker.com', 'bobthabuilda') {
+            sh 'docker manifest push -p majorcadevs/mdbackup:slim'
+            sh 'docker manifest push -p majorcadevs/mdbackup:alpine'
           }
         }
       }
