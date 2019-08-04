@@ -46,9 +46,9 @@ class FTPStorage(AbstractStorage):
 
     def list_directory(self, path: Union[str, Path]) -> List[str]:
         self.__log.debug(f'Retrieving contents of directory {path}')
-        return [str(filename) for (filename, _) in self.__conn.mlsd(self.__dir / path)][2:]
+        return [str(filename) for (filename, _) in self.__conn.mlsd(str(self.__dir / path))][2:]
 
-    def create_folder(self, name: str, parent: Union[Path, str] = None) -> str:
+    def create_folder(self, name: str, parent: Union[Path, str] = '.') -> str:
         path = self.__dir / parent
         self.__conn.cwd(str(path))
         if name not in self.list_directory(parent):
@@ -56,9 +56,9 @@ class FTPStorage(AbstractStorage):
             self.__conn.mkd(name)
         else:
             self.__log.debug(f'Folder "{path / name}"" already exists')
-        return str(path / name)
+        return str((path / name).relative_to(self.__dir))
 
-    def upload(self, path: Path, parent: Union[Path, str] = None):
+    def upload(self, path: Path, parent: Union[Path, str] = '.'):
         dir_path = self.__dir / parent
         self.__conn.cwd(str(dir_path))
         with open(str(path), 'rb') as file_to_upload:

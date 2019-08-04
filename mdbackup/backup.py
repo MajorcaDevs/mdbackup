@@ -35,7 +35,7 @@ def generate_backup_path(backups_folder: Path) -> Path:
     """
     now = datetime.utcnow()
     isostring = now.isoformat(timespec='minutes')
-    return Path(backups_folder, isostring)
+    return Path(backups_folder, isostring).resolve()
 
 
 def get_steps_scripts() -> List[Path]:

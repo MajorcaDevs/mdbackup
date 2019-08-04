@@ -74,10 +74,11 @@ class SFTPStorage(AbstractStorage):
         return self.__ssh.open_sftp()
 
     def list_directory(self, path: Union[str, Path]) -> List[str]:
+        path = self.__dir / path
         self.__log.debug(f'Retrieving contents of directory {path}')
-        return self.__conn.listdir(path)
+        return self.__conn.listdir(str(path))
 
-    def create_folder(self, name: str, parent: Union[Path, str] = None) -> str:
+    def create_folder(self, name: str, parent: Union[Path, str] = '.') -> str:
         path = self.__dir / parent
         self.__conn.chdir(str(path))
         if name not in self.list_directory(parent):
@@ -85,9 +86,9 @@ class SFTPStorage(AbstractStorage):
             self.__conn.mkdir(name)
         else:
             self.__log.debug(f'Folder "{path / name}"" already exists')
-        return str(path / name)
+        return str((path / name).relative_to(self.__dir))
 
-    def upload(self, path: Path, parent: Union[Path, str] = None):
+    def upload(self, path: Path, parent: Union[Path, str] = '.'):
         dir_path = self.__dir / parent
         self.__conn.chdir(str(dir_path))
         self.__log.info(f'Uploading file {path} to {parent}')
