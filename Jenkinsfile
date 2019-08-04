@@ -1,9 +1,5 @@
 @Library('jenkings') _
 
-def checkoutRepo() {
-  git url: 'https://github.com/MajorcaDevs/mdbackup/'
-}
-
 def buildImage(tag, arch, flavour) {
   imageName = "majorcadevs/mdbackup:${tag}"
   try {
@@ -28,12 +24,6 @@ pipeline {
   }
 
   stages {
-    /*stage('Preparation') {
-      steps {
-        checkoutRepo()
-      }
-    }*/
-
     stage('Test') {
       agent {
         docker {
