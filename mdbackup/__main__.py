@@ -270,6 +270,7 @@ def main():
             backup = main_do_backup(logger, config, secret_env)
             logger.info(f'Backup done: {backup.absolute()}')
         elif args.upload_current_only:
+            main_load_secrets(logger, config)
             main_upload_backup(logger, config, (config.backups_path / 'current').resolve())
         elif args.cleanup_only:
             main_clean_up(logger, config)
