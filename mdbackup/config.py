@@ -22,6 +22,11 @@ from typing import Dict, List, Optional, Union, Any
 
 from mdbackup.utils import change_keys
 
+try:
+    from yaml import CLoader as Loader, load as yaml_load
+except ImportError:
+    from yaml import Loader, load as yaml_load
+
 
 class StorageConfig(object):
     def __init__(self, provider_dict: Dict[str, str]):
@@ -109,7 +114,13 @@ class Config(object):
 
         self.__file = path
         with open(path) as config_file:
-            self._parse_config(json.load(config_file))
+            if path.parts[-1].endswith('.json'):
+                parsed_config = json.load(config_file)
+            elif path.parts[-1].endswith('.yml') or path.parts[-1].endswith('.yaml'):
+                parsed_config = yaml_load(config_file, Loader=Loader)
+            else:
+                raise NotImplementedError(f'Cannot read this type of config file: {path.parts[-1]}')
+            self._parse_config(parsed_config)
 
     def _parse_config(self, conf):
         self.__backups_path = Path(conf['backupsPath'])
