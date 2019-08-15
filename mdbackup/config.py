@@ -109,17 +109,31 @@ class Config(object):
             path = Path(path)
         if not path.exists():
             raise FileNotFoundError(f'"{path}" must exist')
-        if not path.is_file():
-            raise IsADirectoryError(f'"{path}" must be a file')
+        if not path.is_dir():
+            raise NotADirectoryError(f'"{path}" must be a directory')
 
-        self.__file = path
-        with open(path) as config_file:
-            if path.parts[-1].endswith('.json'):
+        self.config_folder = path
+        if (path / 'config.json').exists():
+            self.__file = path / 'config.json'
+            parse_method = 'json'
+        elif (path / 'config.yaml').exists():
+            self.__file = path / 'config.yaml'
+            parse_method = 'yaml'
+        elif (path / 'config.yml').exists():
+            self.__file = path / 'config.yml'
+            parse_method = 'yaml'
+        else:
+            raise FileNotFoundError(
+                'Expected a config file config.json, config.yaml or config.yml, but non of them was found'
+            )
+
+        with open(self.__file) as config_file:
+            if parse_method == 'json':
                 parsed_config = json.load(config_file)
-            elif path.parts[-1].endswith('.yml') or path.parts[-1].endswith('.yaml'):
+            elif parse_method == 'yaml':
                 parsed_config = yaml_load(config_file, Loader=Loader)
             else:
-                raise NotImplementedError(f'Cannot read this type of config file: {path.parts[-1]}')
+                raise NotImplementedError(f'Cannot read this type of config file: {self.__file.parts[-1]}')
             self._parse_config(parsed_config)
 
     def _parse_config(self, conf):
