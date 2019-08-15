@@ -160,17 +160,17 @@ class Config(object):
             self.__cypher_strategy = None
             self.__cypher_params = None
 
-        Config.__check_paths(self.__backups_path)
-        Config.__check_paths(self.__custom_utils_script)
+        Config.__check_paths('backupsPath', self.__backups_path)
+        Config.__check_paths('customUtilsScript', self.__custom_utils_script)
 
     @staticmethod
-    def __check_paths(path: Path):
+    def __check_paths(field: str, path: Optional[Path]):
         if path is None:
             return
         if not path.exists():
-            raise FileNotFoundError(f'"{path}" must exist')
+            raise FileNotFoundError(f'{field}: "{path}" must exist')
         if not path.is_dir():
-            raise NotADirectoryError(f'"{path}" must be a directory')
+            raise NotADirectoryError(f'{field}: "{path}" must be a directory')
 
     @property
     def backups_path(self) -> Path:
