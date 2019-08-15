@@ -38,7 +38,7 @@ class S3Storage(AbstractStorage):
         )
 
         self.__bucket: str = config['bucket']
-        self.__storageclass: str = config.get('storageClass', 'STANDARD') 
+        self.__storageclass: str = config.get('storageClass', 'STANDARD')
         self.__pre = config.backups_path if not config.backups_path.endswith('/') else config.backups_path[:-1]
         self.__pre = self.__pre if not self.__pre.startswith('/') else self.__pre[1:]
 
@@ -64,7 +64,8 @@ class S3Storage(AbstractStorage):
     def create_folder(self, name: str, parent: Union[Path, str, str] = None) -> str:
         parent = parent if parent is not None else ''
         parent = parent[:-1] if parent.endswith('/') else parent
-        key = f'{parent}/{name}/'
+        name = f'{name}/' if not name.endswith('/') else name
+        key = f'{parent}/{name}'
         if key.startswith('/'):
             key = key[1:]
         key = f'{self.__pre}/{key}'
@@ -106,10 +107,10 @@ class S3Storage(AbstractStorage):
             ret = self.__s3.delete_objects(
                 Bucket=self.__bucket,
                 Delete={
-                    'Objects': [{'Key': f'{self.__pre}/{key}'} for key in objects_to_delete[:1000]],
+                    'Objects': [{'Key': f'{self.__pre}/{key}'} for key in objects_to_delete],
                     'Quiet': True,
                 }
             )
 
             self.__log.debug(ret)
-            objects_to_delete = objects_to_delete[1000:]
+            objects_to_delete = self.list_directory_recursive(path)[::-1]
