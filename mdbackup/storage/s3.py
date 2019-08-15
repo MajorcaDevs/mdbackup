@@ -107,10 +107,10 @@ class S3Storage(AbstractStorage):
             ret = self.__s3.delete_objects(
                 Bucket=self.__bucket,
                 Delete={
-                    'Objects': [{'Key': f'{self.__pre}/{key}'} for key in objects_to_delete[:1000]],
+                    'Objects': [{'Key': f'{self.__pre}/{key}'} for key in objects_to_delete],
                     'Quiet': True,
                 }
             )
 
             self.__log.debug(ret)
-            objects_to_delete = objects_to_delete[1000:]
+            objects_to_delete = self.list_directory_recursive(path)[::-1]
