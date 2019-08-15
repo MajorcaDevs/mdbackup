@@ -92,7 +92,7 @@ This allows you to auto-complete with the elements available in the configuratio
 }
 ```
 
-The configuration file must be located in `config/config.json`. It is recommended to put inside `config` folder other configuration files (like API tokens) or use a secret provider directly.
+The configuration file must be located in the configuration folder and can be a json or yaml file. By default, the configuration folder is placed at `config` (based on the current working directory) but can be changed by using the argument `-c`.
 
 ## backupsPath
 
