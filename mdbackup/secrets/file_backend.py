@@ -51,7 +51,7 @@ class FileSecretsBackend(AbstractSecretsBackend):
     def get_provider(self, key: str) -> Dict[str, any]:
         contents = self.get_secret(key)
         if key.endswith('.yaml') or key.endswith('.yml'):
-            if yaml is None:
+            if yaml_load is None:
                 raise ImportError('In order to use yaml files, install pyyaml package: pip install pyyaml')
             return yaml_load(contents, Loader=Loader)
         return json.loads(contents)
