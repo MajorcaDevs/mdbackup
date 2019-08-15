@@ -265,6 +265,11 @@ def main():
     # Configure hooks
     [define_hook(name, script) for (name, script) in config.hooks.items()]
 
+    # Set default paths for file secret backends (I don't like this)
+    for s in config.secrets:
+        if s.type == 'file' and s.config.get('basePath') is None:
+            s.config['basePath'] = str(config.config_folder / 'secrets')
+
     try:
         if args.backup_only:
             secret_env = main_load_secrets(logger, config)
