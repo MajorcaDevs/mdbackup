@@ -80,6 +80,7 @@ def main_do_backup(logger: logging.Logger, config: Config, secret_env) -> Path:
         cypher_items = config.cypher_params.items() if config.cypher_params is not None else []
         cypher_env = {f'cypher_{key}': value for key, value in cypher_items}
         return do_backup(config.backups_path,
+                         config.config_folder,
                          config.custom_utils_script,
                          **config.env,
                          compression_strategy=config.compression_strategy,
@@ -224,8 +225,8 @@ def main():
                                                   'cloud storage providers'))
 
     parser.add_argument('-c', '--config',
-                        help='Path to configuration (default: config/config.json)',
-                        default='config/config.json')
+                        help='Path to configuration folder (default: config)',
+                        default='config')
     parser.add_argument('--backup-only',
                         help='Only does the backup actions',
                         action='store_true',
@@ -244,7 +245,7 @@ def main():
     # Check if configuration file exists and read it
     try:
         config = Config(args.config)
-    except (FileNotFoundError, IsADirectoryError, NotADirectoryError) as e:
+    except (FileNotFoundError, NotADirectoryError, NotImplementedError) as e:
         print(e.args[0])
         print('Check the paths and run again the utility')
         sys.exit(1)
@@ -263,6 +264,11 @@ def main():
 
     # Configure hooks
     [define_hook(name, script) for (name, script) in config.hooks.items()]
+
+    # Set default paths for file secret backends (I don't like this)
+    for s in config.secrets:
+        if s.type == 'file' and s.config.get('basePath') is None:
+            s.config['basePath'] = str(config.config_folder / 'secrets')
 
     try:
         if args.backup_only:

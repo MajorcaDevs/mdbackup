@@ -49,7 +49,7 @@ In order to get your first backup, the tool must be configured properly. To achi
 The tool needs three folders to work:
 
 - `config`: a folder where the configuration, and other files related to configuration, tokens or cookies are going to be stored.
-- `steps`: a folder where the backup logic is stored in form of bash scripts.
+- `config/steps`: a folder where the backup logic is stored in form of bash scripts.
 - \*put a full path here\*: the folder, placed in some folder, where the backups are going to be stored.
 
 The folder in where you are right now should have the following structure:
@@ -58,8 +58,8 @@ The folder in where you are right now should have the following structure:
     - ...
 - `config/`
     - `config.json`
-- `steps/`
-    - `01.sh`
+    - `steps/`
+        - `01.sh`
 - `mdbackup.whl`
 
 And the third folder, it does not matter where is placed, but it will be used soon to store backups. It can be a network storage, an external drive or a partition in some local drive. It is recommended to store them outside the root partition (`/`), if possible.
@@ -75,6 +75,8 @@ Did you notice the `config.json`? This file holds the [configuration](./configur
 ```
 
 > Note: you can download the [JSON Schema][2] and use it to validate the structure: `"$schema": "./config.schema.json",`. You can grab it from the latest release.
+
+> Note: you can also use `yaml` if you prefer
 
 This configuration is really basic and tells the tool where to place the backups, which log level to use (will be very verbose, but it is OK for now) and to inject no extra environment variables.
 

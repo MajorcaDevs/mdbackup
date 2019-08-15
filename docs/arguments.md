@@ -12,7 +12,7 @@ storage providers
 optional arguments:
   -h, --help            show this help message and exit
   -c CONFIG, --config CONFIG
-                        Path to configuration (default: config/config.json)
+                        Path to configuration folder (default: config)
   --backup-only         Only does the backup actions
   --upload-current-only
                         Only uploads the last backup
