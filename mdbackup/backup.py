@@ -38,14 +38,14 @@ def generate_backup_path(backups_folder: Path) -> Path:
     return Path(backups_folder, isostring).resolve()
 
 
-def get_steps_scripts() -> List[Path]:
+def get_steps_scripts(config_path: Path) -> List[Path]:
     """
     Gets the list of available steps scripts inside the relative
     path 'steps'.
     """
-    steps_dir = Path('steps')
+    steps_dir = config_path / 'steps'
     if not steps_dir.exists():
-        steps_dir.mkdir()
+        raise FileNotFoundError(f'The steps folder does not exist')
     scripts = [x for x in steps_dir.iterdir() if x.is_file() and x.stat().st_mode & 73]
     scripts.sort()
     return [script.absolute() for script in scripts]
@@ -113,7 +113,7 @@ source {me_irl}/utils.sh
         return Path(tmp.name)
 
 
-def do_backup(backups_folder: Path, custom_utils: str = None, **kwargs) -> Path:
+def do_backup(backups_folder: Path, config_path: Path, custom_utils: str = None, **kwargs) -> Path:
     """
     Looks for the step scripts, prepares the directory where the backups will
     be stored, run the scripts and saves the directory with the right name.
@@ -131,7 +131,7 @@ def do_backup(backups_folder: Path, custom_utils: str = None, **kwargs) -> Path:
     logger.info(f'Temporary backup folder is {tmp_backup}')
     tmp_backup.mkdir(exist_ok=True, parents=True)
     tmp_backup.chmod(0o755)
-    for step_script in get_steps_scripts():
+    for step_script in get_steps_scripts(config_path):
         logger.info(f'Running script {step_script}')
         tmp_path = generate_script(step_script, custom_utils)
         tmp_path.chmod(0o755)
