@@ -15,11 +15,19 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from paramiko import SSHClient, SFTPClient, PKey, RejectPolicy, AutoAddPolicy, WarningPolicy
 import logging
 from pathlib import Path
 import stat
 from typing import List, Union
+
+from paramiko import (
+    AutoAddPolicy,
+    PKey,
+    RejectPolicy,
+    SFTPClient,
+    SSHClient,
+    WarningPolicy,
+)
 
 from mdbackup.config import StorageConfig
 from mdbackup.storage.storage import AbstractStorage

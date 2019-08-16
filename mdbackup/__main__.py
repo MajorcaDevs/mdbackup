@@ -16,15 +16,14 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import argparse
-import re
 from json.decoder import JSONDecodeError
 import logging
 from pathlib import Path
+import re
 import shutil
 import sys
-from typing import Tuple, List
+from typing import Dict, List, Tuple
 
-from mdbackup.secrets import get_secret_backend_implementation
 from .archive import (
     archive_folder,
     get_compression_strategy,
@@ -33,6 +32,7 @@ from .archive import (
 from .backup import do_backup, get_backup_folders_sorted
 from .config import Config, StorageConfig
 from .hooks import define_hook, run_hook
+from .secrets import get_secret_backend_implementation
 from .storage import create_storage_instance
 
 
@@ -220,6 +220,16 @@ def main_clean_up(logger: logging.Logger, config: Config):
             run_hook('oldBackup:storage:error', prov_config.type, prov_config.backups_path, str(e))
 
 
+def configure_hooks(hooks: Dict[str, str]):
+    [define_hook(name, script) for (name, script) in hooks.items()]
+
+
+def configure_default_value_for_file_secrets(config: Config):
+    for s in config.secrets:
+        if s.type == 'file' and s.config.get('basePath') is None:
+            s.config['basePath'] = str(config.config_folder / 'secrets')
+
+
 def main():
     parser = argparse.ArgumentParser(description=('Small but customizable utility to create backups and store them in '
                                                   'cloud storage providers'))
@@ -263,12 +273,10 @@ def main():
     logger = logging.getLogger('mdbackup')
 
     # Configure hooks
-    [define_hook(name, script) for (name, script) in config.hooks.items()]
+    configure_hooks(config.hooks)
 
     # Set default paths for file secret backends (I don't like this)
-    for s in config.secrets:
-        if s.type == 'file' and s.config.get('basePath') is None:
-            s.config['basePath'] = str(config.config_folder / 'secrets')
+    configure_default_value_for_file_secrets(config)
 
     try:
         if args.backup_only:

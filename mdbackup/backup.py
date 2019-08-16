@@ -17,13 +17,13 @@
 
 from datetime import datetime
 import logging
+import os
 from pathlib import Path
 import re
-import os
 import subprocess
 from tempfile import NamedTemporaryFile
 from threading import Thread
-from typing import List, Dict, Union, Callable
+from typing import Callable, Dict, List, Union
 
 from .hooks import run_hook
 

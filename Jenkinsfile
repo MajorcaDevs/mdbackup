@@ -26,14 +26,15 @@ pipeline {
   stages {
     stage('Test') {
       agent {
-        docker {
+        dockerfile {
           label 'docker'
-          image 'majorcadevs/mdbackup:alpine'
+          filename 'docker/dev/Dockerfile'
         }
       }
 
       steps {
         script {
+          sh 'flake8 mdbackup'
           sh 'PYTHONPATH=$PWD python -m mdbackup --help'
         }
       }

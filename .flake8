@@ -1,0 +1,10 @@
+[flake8]
+max-line-length = 119
+
+max-complexity = 11
+
+per-file-ignores =
+    mdbackup/check_packages/__init__.py:F401
+
+application-import-names = mdbackup
+import-order-style = google

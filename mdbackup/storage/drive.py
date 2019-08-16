@@ -16,8 +16,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import logging
-from pathlib import Path
 import os
+from pathlib import Path
 from typing import List, Union
 
 import magic

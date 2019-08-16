@@ -17,7 +17,7 @@
 
 import logging
 from pathlib import Path
-from typing import Union, List
+from typing import List, Union
 
 import boto3
 import magic
@@ -93,7 +93,7 @@ class S3Storage(AbstractStorage):
                                     key,
                                     ExtraArgs={
                                         'ContentType': magic.from_file(str(path.absolute()), mime=True),
-                                        'StorageClass': self.__storageclass
+                                        'StorageClass': self.__storageclass,
                                     })
         self.__log.debug(ret)
 
@@ -109,7 +109,7 @@ class S3Storage(AbstractStorage):
                 Delete={
                     'Objects': [{'Key': f'{self.__pre}/{key}'} for key in objects_to_delete],
                     'Quiet': True,
-                }
+                },
             )
 
             self.__log.debug(ret)

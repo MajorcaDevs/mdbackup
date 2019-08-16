@@ -17,11 +17,10 @@
 
 import logging
 from pathlib import Path
-from typing import Union, List
+from typing import List, Union
 
-from b2sdk.api import B2Api, Bucket
 from b2sdk.account_info.in_memory import InMemoryAccountInfo
-
+from b2sdk.api import B2Api, Bucket
 import magic
 
 from mdbackup.storage.storage import AbstractStorage
