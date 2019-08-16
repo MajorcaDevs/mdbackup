@@ -28,7 +28,7 @@ pipeline {
       agent {
         docker {
           label 'docker'
-          image 'majorcadevs/mdbackup:alpine'
+          image 'python:alpine'
         }
       }
 
