@@ -19,7 +19,7 @@ import logging
 from pathlib import Path
 import subprocess
 from threading import Thread
-from typing import Optional, List, Dict
+from typing import Dict, List, Optional
 
 
 hooks_config: Dict[str, List[str]] = {}

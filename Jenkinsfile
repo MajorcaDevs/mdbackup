@@ -34,6 +34,8 @@ pipeline {
 
       steps {
         script {
+          sh 'pip install -r requirements.dev.txt'
+          sh 'flake8 mdbackup'
           sh 'PYTHONPATH=$PWD python -m mdbackup --help'
         }
       }

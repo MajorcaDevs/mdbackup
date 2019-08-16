@@ -1,6 +1,13 @@
 from typing import Optional
 
-from mdbackup.check_packages import check, check_b2sdk, check_boto3, check_magic, check_pydrive, check_paramiko
+from mdbackup.check_packages import (
+    check,
+    check_b2sdk,
+    check_boto3,
+    check_magic,
+    check_paramiko,
+    check_pydrive,
+)
 from mdbackup.storage.storage import AbstractStorage
 
 

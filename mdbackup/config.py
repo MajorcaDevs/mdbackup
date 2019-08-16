@@ -18,7 +18,7 @@
 import json
 import logging
 from pathlib import Path
-from typing import Dict, List, Optional, Union, Any
+from typing import Any, Dict, List, Optional, Union
 
 from mdbackup.utils import change_keys
 
@@ -124,7 +124,7 @@ class Config(object):
             parse_method = 'yaml'
         else:
             raise FileNotFoundError(
-                'Expected a config file config.json, config.yaml or config.yml, but non of them was found'
+                'Expected a config file config.json, config.yaml or config.yml, but non of them was found',
             )
 
         with open(self.__file) as config_file:

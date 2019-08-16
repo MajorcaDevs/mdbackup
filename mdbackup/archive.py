@@ -18,13 +18,13 @@
 import logging
 from pathlib import Path
 import subprocess
-from typing import List, Optional, Callable, Tuple, NewType
+from typing import Callable, List, NewType, Optional, Tuple
 
 
 StrategyCallable = NewType('StrategyCallable', Callable[[], Tuple[str, str]])
 
 
-def archive_folder(backup_path: Path, folder: Path, strategies: List[StrategyCallable]=None) -> str:
+def archive_folder(backup_path: Path, folder: Path, strategies: List[StrategyCallable] = None) -> str:
     """
     Given a folder of a backup, archives it into a ``tar`` file and, optionally, compresses the file using different
     strategies. By default, no compression is done.
