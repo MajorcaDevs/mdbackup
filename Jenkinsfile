@@ -26,15 +26,14 @@ pipeline {
   stages {
     stage('Test') {
       agent {
-        docker {
+        dockerfile {
           label 'docker'
-          image 'python:alpine'
+          filename 'docker/dev/Dockerfile'
         }
       }
 
       steps {
         script {
-          sh 'pip install --user -r requirements.dev.txt'
           sh 'flake8 mdbackup'
           sh 'PYTHONPATH=$PWD python -m mdbackup --help'
         }
