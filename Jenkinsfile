@@ -26,7 +26,7 @@ pipeline {
   stages {
     stage('Test') {
       agent {
-        dockerfile {
+        docker {
           label 'docker'
           image 'python:3.7-alpine'
         }
