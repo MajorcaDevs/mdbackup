@@ -43,6 +43,13 @@ pipeline {
           sh 'PYTHONPATH=$PWD python -m mdbackup --help'
         }
       }
+
+      post {
+        always {
+          junit 'tests/.report/**/*.xml'
+          cobertura coberturaReportFile: 'coverage_report.xml'
+        }
+      }
     }
 
     stage('Build images') {
@@ -294,13 +301,6 @@ pipeline {
           }
         }
       }
-    }
-  }
-
-  post {
-    always {
-      junit 'tests/.report/**/*.xml'
-      cobertura coberturaReportFile: 'coverage_report.xml'
     }
   }
 }
