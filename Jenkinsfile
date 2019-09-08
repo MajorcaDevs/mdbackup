@@ -28,7 +28,7 @@ pipeline {
       agent {
         docker {
           label 'docker'
-          image 'python:3.7-alpine'
+          image 'python:3.7-buster'
           args '-e HOME=$WORKSPACE -e PATH=$PATH:$WORKSPACE/.local/bin'
         }
       }
