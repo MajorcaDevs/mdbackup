@@ -54,7 +54,7 @@ class DirEntryTests(TestCase):
         self.assertIsNone(entry.stream)
 
     def test_from_real_path_of_an_invalid_file_type_should_raise_typeerror(self):
-        path = Path('/dev/stdout').resolve()
+        path = Path('/dev/urandom').resolve()
 
         with self.assertRaises(TypeError):
             DirEntry.from_real_path(path)
