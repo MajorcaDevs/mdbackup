@@ -34,7 +34,7 @@ pipeline {
 
       steps {
         script {
-          sh 'pip install -r docker/dev/requirements.dev.txt'
+          sh 'pip install --user -r docker/dev/requirements.dev.txt'
           sh 'flake8 mdbackup'
           sh 'flake8 tests'
           sh 'coverage run --source=mdbackup --branch -m unittest discover -s tests -p \'*tests*.py\''
