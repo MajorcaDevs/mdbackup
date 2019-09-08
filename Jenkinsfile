@@ -38,9 +38,8 @@ pipeline {
           sh 'pip install --user -r docker/dev/requirements.dev.txt'
           sh 'flake8 mdbackup'
           sh 'flake8 tests'
-          sh 'coverage run --source=mdbackup --branch -m unittest discover -s tests -p \'*tests*.py\''
+          sh 'coverage run --source=mdbackup --branch -m xmlrunner discover -s tests -p \'*tests*.py\' -o tests/.report'
           sh 'coverage xml -o coverage_report.xml'
-          cobertura coberturaReportFile: 'coverage_report.xml'
           sh 'PYTHONPATH=$PWD python -m mdbackup --help'
         }
       }
@@ -294,6 +293,13 @@ pipeline {
             sh 'docker manifest push -p majorcadevs/mdbackup:alpine'
           }
         }
+      }
+    }
+
+    post {
+      always {
+        junit 'tests/.report/**/*.xml'
+        cobertura coberturaReportFile: 'coverage_report.xml'
       }
     }
   }
