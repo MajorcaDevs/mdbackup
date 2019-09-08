@@ -13,3 +13,6 @@ config/*
 
 Pipfile
 __pycache__
+
+.coverage
+coverage_report.xml

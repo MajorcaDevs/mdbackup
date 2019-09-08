@@ -28,13 +28,18 @@ pipeline {
       agent {
         dockerfile {
           label 'docker'
-          filename 'docker/dev/Dockerfile'
+          image 'python:3.7-alpine'
         }
       }
 
       steps {
         script {
+          sh 'pip install -r docker/dev/requirements.dev.txt'
           sh 'flake8 mdbackup'
+          sh 'flake8 tests'
+          sh 'coverage run --source=mdbackup --branch -m unittest discover -s tests -p \'*tests*.py\''
+          sh 'coverage xml -o coverage_report.xml'
+          cobertura coberturaReportFile: 'coverage_report.xml'
           sh 'PYTHONPATH=$PWD python -m mdbackup --help'
         }
       }
