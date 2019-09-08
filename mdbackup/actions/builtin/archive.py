@@ -1,5 +1,4 @@
 import io
-import os
 import tarfile
 
 from mdbackup.actions.builtin._os_utils import _manual_pipe_boilerplate

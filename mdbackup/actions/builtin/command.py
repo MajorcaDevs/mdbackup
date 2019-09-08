@@ -44,11 +44,9 @@ def action_command(inp, params) -> subprocess.Popen:
         command = params.get('command')
         extra_env: dict = params.get('env')
 
-    if args is not None:
-        args = args
-    elif command is not None:
+    if command is not None:
         args = _parse_command(command)
-    else:
+    elif args is None:
         raise KeyError('no args nor command defined')
 
     env = os.environ.copy()
