@@ -29,7 +29,7 @@ pipeline {
         docker {
           label 'docker'
           image 'python:3.7-alpine'
-          args '-e HOME=$WORKSPACE'
+          args '-e HOME=$WORKSPACE -e PATH=$PATH:$WORKSPACE/.local/bin'
         }
       }
 
