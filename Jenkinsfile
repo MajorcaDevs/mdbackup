@@ -29,6 +29,7 @@ pipeline {
         docker {
           label 'docker'
           image 'python:3.7-alpine'
+          args '-v $PWD/.local:/.local -v $PWD/.cache:/.cache'
         }
       }
 
