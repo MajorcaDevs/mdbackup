@@ -295,12 +295,12 @@ pipeline {
         }
       }
     }
+  }
 
-    post {
-      always {
-        junit 'tests/.report/**/*.xml'
-        cobertura coberturaReportFile: 'coverage_report.xml'
-      }
+  post {
+    always {
+      junit 'tests/.report/**/*.xml'
+      cobertura coberturaReportFile: 'coverage_report.xml'
     }
   }
 }
