@@ -6,7 +6,28 @@ from threading import Thread
 import xattr
 
 # Portable way to access to these xattr function across linux, macOS, freebsd...
-xm = os if hasattr(os, 'listxattr') and hasattr(os, 'getxattr') and hasattr(os, 'setxattr') else xattr
+_python_has_xattr_lib = hasattr(os, 'listxattr') and hasattr(os, 'getxattr') and hasattr(os, 'setxattr')
+
+
+def _listxattr(path, symlink=True):
+    if _python_has_xattr_lib:
+        return os.listxattr(path, follow_symlinks=symlink)
+    else:
+        return xattr.listxattr(path, symlink=symlink)
+
+
+def _getxattr(path, attribute, symlink=True):
+    if _python_has_xattr_lib:
+        return os.getxattr(path, attribute, follow_symlinks=symlink)
+    else:
+        return xattr.getxattr(path, attribute, symlink=symlink)
+
+
+def _setxattr(path, attribute, value, flags=0, symlink=True):
+    if _python_has_xattr_lib:
+        return os.setxattr(path, attribute, value, flags=flags, follow_symlinks=symlink)
+    else:
+        return xattr.setxattr(path, attribute, value, options=flags, symlink=symlink)
 
 
 def _preserve_stats(entry_path: Path, stat: os.stat_result, xattrs: dict, mode):
@@ -26,19 +47,20 @@ def _preserve_stats(entry_path: Path, stat: os.stat_result, xattrs: dict, mode):
         logger.debug(f'utime {new_utime} {entry_path}')
         os.utime(entry_path, ns=new_utime, follow_symlinks=False)
     if (mode is True or 'xattr' in mode) and xattrs is not None:
-        existing_xattrs = xm.listxattr(entry_path, symlink=False)
+        existing_xattrs = _listxattr(entry_path, symlink=False)
         for xattr_key, xattr_value in xattrs.items():
-            xm.setxattr(
+            _setxattr(
                 entry_path,
                 xattr_key,
                 xattr_value,
-                xm.XATTR_REPLACE if xattr_key in existing_xattrs else xm.XATTR_CREATE,
+                os.XATTR_REPLACE if xattr_key in existing_xattrs else os.XATTR_CREATE,
+                symlink=False,
             )
 
 
 def _read_xattrs(path: Path) -> dict:
-    return {xattr_key: xm.getxattr(path, xattr_key, symlink=True)
-            for xattr_key in xm.listxattr(path, symlink=True)}
+    return {xattr_key: _getxattr(path, xattr_key, symlink=True)
+            for xattr_key in _listxattr(path, symlink=True)}
 
 
 def _manual_pipe_boilerplate(action, args=(), name='undefined'):

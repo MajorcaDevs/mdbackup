@@ -29,7 +29,11 @@ class DirEntry:
     def from_real_path(path: Path, root_path: Optional[Path] = None, **kwargs) -> 'DirEntry':
         stats = path.stat()
         rel_path = path.relative_to(root_path) if root_path is not None else path
-        xattrs = _read_xattrs(path)
+        try:
+            xattrs = _read_xattrs(path)
+        except (PermissionError, OSError):
+            # Extended attributes cannot be read for some good reason
+            xattrs = None
 
         if path.is_dir():
             return DirEntry('dir', rel_path, stats, real_path=path, xattrs=xattrs, **kwargs)
