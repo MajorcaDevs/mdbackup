@@ -2,6 +2,7 @@ import logging
 import os
 import shlex
 import subprocess
+from typing import List
 
 from mdbackup.actions.container import action, unaction
 
@@ -9,8 +10,8 @@ from mdbackup.actions.container import action, unaction
 _logger = logging.getLogger(__name__)
 
 
-def _parse_command(command: str) -> str:
-    return shlex.shlex(command, punctuation_chars=True, posix=True)
+def _parse_command(command: str) -> List[str]:
+    return list(shlex.shlex(command, punctuation_chars=True, posix=True))
 
 
 def reverse_action(func):
@@ -159,6 +160,7 @@ def action_docker(inp, params) -> subprocess.Popen:
         stdout, stderr = proc.communicate()
         if proc.returncode != 0:
             _logger.error(f'Image pull for {image} failed:\n{stderr.decode("utf-8")}')
+            raise ChildProcessError(f'Could not pull image {image}')
 
     args.append(image)
     if param_args is not None:

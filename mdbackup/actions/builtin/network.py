@@ -111,7 +111,7 @@ def action_asuswrt(_, params: dict):
     if res.status_code != 200:
         raise PermissionError(f'[{res.status_code}] Authentication failed: {res.text}')
 
-    headers['Referer'] = 'http://192.168.2.1/Advanced_SettingBackup_Content.asp'
+    headers['Referer'] = f'http://{host}/Advanced_SettingBackup_Content.asp'
     res = s.get(url, headers=headers, stream=True)
     if res.status_code != 200:
         raise requests.RequestException(f'Could not download backup {backup_type}', response=res)

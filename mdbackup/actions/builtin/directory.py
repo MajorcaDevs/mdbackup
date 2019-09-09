@@ -11,7 +11,8 @@ from mdbackup.actions.ds import DirEntry, DirEntryGenerator
 
 def _recurse_dir(path: Path, root_path: Path, resolve_symlinks: bool):
     if path.is_dir():
-        yield DirEntry.from_real_path(path, root_path)
+        if path != root_path:
+            yield DirEntry.from_real_path(path, root_path)
         for item in path.iterdir():
             yield from _recurse_dir(item, root_path, resolve_symlinks)
     elif path.is_symlink():
@@ -31,7 +32,6 @@ def _recurse_dir(path: Path, root_path: Path, resolve_symlinks: bool):
     elif path.is_file():
         yield DirEntry.from_real_path(path, root_path)
     # Ignore the rest of file types
-    # TODO check if . is included among the results
 
 
 @action('from-directory', output='directory')

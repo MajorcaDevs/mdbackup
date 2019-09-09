@@ -73,7 +73,6 @@ def action_mysqldump(_, params: dict):
         args.extend(['-u', user])
     if password is not None:
         params['env'] = {'MYSQL_PWD': password}
-        # args.append(f'-p{password}')
     if port is not None:
         args.extend(['--port', str(port)])
 

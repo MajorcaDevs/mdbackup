@@ -6,7 +6,7 @@
 
 **Output**: stream
 
-**Parameters**:
+**Parameters**
 
 Can be a `str` or an object. The string will be interpreted as a sh-like command, the object with the folliwing structure:
 
@@ -16,7 +16,7 @@ Can be a `str` or an object. The string will be interpreted as a sh-like command
 | `command` | `str` | sh-like command string to run | Yes |
 | `env` | `Dict[str, str]` | Additional environment variables to set when running the program | Yes |
 
-**Description**:
+**Description**
 
 Executes the command that produces an output, and may receive an input. The command can be defined by either using `args` or `command` parameter. If needed, the command can run with extra environment variables defined in the `env` parameter. The current working directory will be the backup path. The parameter can also be a string, in this case will be interpreted as `command` parameter.
 
@@ -51,7 +51,7 @@ Executes the command that produces an output, and may receive an input. The comm
 
 **Output**: stream
 
-**Parameters**:
+**Parameters**
 
 | Name | Type | Description | Optional |
 |------|------|-------------|----------|
@@ -69,7 +69,7 @@ Executes the command that produces an output, and may receive an input. The comm
 !!! Warning "Use of password in ssh"
     It is not recommended to use the password authentication method with ssh in scripts like this. If you need the password method, ensure the host (where `mdbackup` runs) has installed `sshpass`.
 
-**Description**:
+**Description**
 
 Executes the command through ssh, in another host, which must produce an output and it may receive some input. The command can be defined by either using `args` or `command` parameter. The current working directory will be the backup path.
 
@@ -95,7 +95,7 @@ Executes the command through ssh, in another host, which must produce an output 
 
 **Output**: stream
 
-**Parameters**:
+**Parameters**
 
 | Name | Type | Description | Optional |
 |------|------|-------------|----------|
@@ -110,7 +110,7 @@ Executes the command through ssh, in another host, which must produce an output 
 | `workdir` | `str` | Changes the WorkDir of the container | Yes |
 | `pull` | `bool` | Pulls the image before running the container (it can also be used to update the image) | Yes |
 
-**Description**:
+**Description**
 
 Executes the command inside a Docker container, in the same host, which must produce an output and it may receive some input. The command can be defined by either using `args` or `command` parameter. If needed, the command can run with extra environment variables defined in the `env` parameter. The `volumes` list uses the same syntax as in docker container run [-v argument][1]. If `pull` is set to true, then the image will be pulled always, and will stop all the pipeline until the image has been pulled.
 

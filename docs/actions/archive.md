@@ -6,9 +6,13 @@
 
 **Output**: stream
 
-**Parameters**: ignored (you can pass whatever you want 🙃)
+**Parameters**
 
-**Description**: Archives a directory into a `tar` file. Only files, symbolic links and directories are stored, the rest are ignored.
+ignored (you can pass whatever you want 🙃)
+
+**Description**
+
+Archives a directory into a `tar` file. Only files, symbolic links and directories are stored, the rest are ignored.
 
 !!! Example
     Compresses a folder using `tar` as archive.

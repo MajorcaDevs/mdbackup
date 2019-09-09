@@ -129,7 +129,6 @@ def are_compatible(id1: str, id2: str) -> Optional[str]:
         if action2.input != 'stream':
             return f'{id1} cannot be connected to {id2}: {id2} expected input is not a stream'
     else:
-        # if action1.output.startswith('directory'):
         if action2.input != 'directory':
             return f'{id1} cannot be connected to {id2}: {id2} expected input is not a directory'
 
