@@ -5,6 +5,7 @@ import subprocess
 from typing import List
 
 from mdbackup.actions.container import action, unaction
+from mdbackup.utils import raise_if_type_is_incorrect
 
 
 def _parse_command(command: str) -> List[str]:
@@ -38,11 +39,14 @@ def action_command(inp, params) -> subprocess.Popen:
     if isinstance(params, str):
         args = None
         command = params
-        env = None
+        extra_env: dict = None
     else:
         args = params.get('args')
         command = params.get('command')
         extra_env: dict = params.get('env')
+
+    raise_if_type_is_incorrect(args, list, 'args must be a list')
+    raise_if_type_is_incorrect(extra_env, dict, 'env must be a dictionary')
 
     if command is not None:
         args = _parse_command(command)
@@ -84,6 +88,14 @@ def action_ssh(inp, params) -> subprocess.Popen:
     param_args: list = params.get('args')
     param_command = params.get('command')
 
+    raise_if_type_is_incorrect(args, list, 'args must be a list')
+    raise_if_type_is_incorrect(password, str, 'password must be a string')
+    raise_if_type_is_incorrect(identity_file, str, 'identityFile must be a string')
+    raise_if_type_is_incorrect(user, str, 'user must be a string')
+    raise_if_type_is_incorrect(config_file, str, 'configFile must be a string')
+    raise_if_type_is_incorrect(port, int, 'port must be an int')
+    raise_if_type_is_incorrect(params['host'], str, 'host must be a string', required=True)
+
     if password is not None:
         logger.warning('Using sshpass to connect to a SSH server is highly discouraged')
         args.extend(['sshpass', '-e'])
@@ -109,7 +121,7 @@ def action_ssh(inp, params) -> subprocess.Popen:
         args.extend(['-l', user])
 
     if config_file is not None:
-        args.extend(['-F', params['configFile']])
+        args.extend(['-F', config_file])
 
     args.extend(['-x', params['host']])
     if param_args is not None:
@@ -138,15 +150,20 @@ def action_docker(inp, params) -> subprocess.Popen:
     pull = params.get('pull', False)
     image = params['image']
 
-    if not isinstance(volumes, list):
-        raise TypeError('volumes is not a list')
+    raise_if_type_is_incorrect(volumes, list, 'volumes is not a list')
+    raise_if_type_is_incorrect(env, (list, dict), 'env is not a list nor a dictionary')
+    raise_if_type_is_incorrect(args, list, 'args must be a list')
+    raise_if_type_is_incorrect(user, str, 'user must be a string')
+    raise_if_type_is_incorrect(group, str, 'group must be a string')
+    raise_if_type_is_incorrect(network, str, 'network must be a string')
+    raise_if_type_is_incorrect(workdir, str, 'workdir must be a string')
+    raise_if_type_is_incorrect(image, str, 'image must be a string', required=True)
+
     for volume in volumes:
         args.extend(['-v', volume])
 
     if isinstance(env, dict):
         env = map(lambda pair: f'{pair[0]}={pair[1]}', env.items())
-    elif not isinstance(env, list):
-        raise TypeError('env is not a list nor a dictionary')
     for env_var in env:
         args.extend(['-e', env_var])
 

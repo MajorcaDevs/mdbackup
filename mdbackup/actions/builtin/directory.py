@@ -7,6 +7,7 @@ from mdbackup.actions.builtin.command import action_command
 from mdbackup.actions.builtin.file import action_copy_file
 from mdbackup.actions.container import action
 from mdbackup.actions.ds import DirEntry, DirEntryGenerator
+from mdbackup.utils import raise_if_type_is_incorrect
 
 
 def _recurse_dir(path: Path, root_path: Path, resolve_symlinks: bool):
@@ -50,8 +51,10 @@ def action_read_physical_docker_volume(_, params: dict):
     if isinstance(params, str):
         params = {'volume': params}
     volume = params['volume']
-    proc = action_command(None, {'command': f'docker volume inspect "{volume}" --format {{{{.Mountpoint}}}}'})
 
+    raise_if_type_is_incorrect(volume, str, 'volume must be a string')
+
+    proc = action_command(None, {'command': f'docker volume inspect "{volume}" --format {{{{.Mountpoint}}}}'})
     path, error = proc.communicate(None)
     if proc.returncode != 0:
         error_dec = error.decode("utf-8")[:-1]
@@ -74,6 +77,8 @@ def action_write_dir(inp: DirEntryGenerator, params: dict):
     parent = backup_path / dest_path
     preserve_stats = params.get('preserveStats', 'utime')
     parent.mkdir(0o755, parents=params.get('parents', False), exist_ok=True)
+
+    raise_if_type_is_incorrect(preserve_stats, (str, bool), 'preserveStats must be a string or a boolean')
 
     logger.debug(f'Writing directory generator to {parent}')
     for entry in inp:

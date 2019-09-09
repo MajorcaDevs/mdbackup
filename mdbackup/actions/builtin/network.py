@@ -6,6 +6,7 @@ from mdbackup.actions.builtin._os_utils import _manual_pipe_boilerplate
 from mdbackup.actions.builtin.command import action_ssh
 from mdbackup.actions.builtin.file import action_read_file_from_ssh
 from mdbackup.actions.container import action
+from mdbackup.utils import raise_if_type_is_incorrect
 
 try:
     import requests
@@ -79,6 +80,10 @@ def action_asuswrt(_, params: dict):
     user = params['user']
     password = params['password']
     backup_type = params['backupType']
+
+    raise_if_type_is_incorrect(host, str, 'host must be a string')
+    raise_if_type_is_incorrect(user, str, 'user must be a string')
+    raise_if_type_is_incorrect(password, str, 'password must be a string')
 
     if requests is None:
         raise ModuleNotFoundError('requests must be installed in order to use this action')

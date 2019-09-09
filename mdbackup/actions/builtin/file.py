@@ -8,10 +8,12 @@ from mdbackup.actions.builtin._os_utils import _preserve_stats, _read_xattrs
 from mdbackup.actions.builtin.command import action_command
 from mdbackup.actions.container import action
 from mdbackup.actions.ds import InputDataStream
+from mdbackup.utils import raise_if_type_is_incorrect
 
 
 @action('from-file', output='stream:file')
 def action_read_file(_, params) -> io.FileIO:
+    raise_if_type_is_incorrect(params, (dict, str), 'parameters must be a dictionary or an object')
     return open(params['path'] if isinstance(params, dict) else str(params), 'rb', buffering=0)
 
 
@@ -27,6 +29,14 @@ def action_read_file_from_ssh(_, params):
     identity_file = params.get('identityFile')
     config_file = params.get('configFile')
     user = params.get('user')
+
+    raise_if_type_is_incorrect(args, list, 'args must be a list')
+    raise_if_type_is_incorrect(password, str, 'password must be a string')
+    raise_if_type_is_incorrect(identity_file, str, 'identityFile must be a string')
+    raise_if_type_is_incorrect(user, str, 'user must be a string')
+    raise_if_type_is_incorrect(config_file, str, 'configFile must be a string')
+    raise_if_type_is_incorrect(port, int, 'port must be an int')
+    raise_if_type_is_incorrect(params['host'], str, 'host must be a string', required=True)
 
     if password is not None:
         logger.warning('Using sshpass to connect to a SSH server is highly discouraged')
@@ -59,6 +69,7 @@ def _checks(params: dict) -> Path:
     _fp = params.get('path', params.get('to'))
     if _fp is None:
         raise KeyError('to')
+    raise_if_type_is_incorrect(_fp, (str, Path), 'to must be a string')
 
     file_path = Path(_fp)
     full_path = Path(params['_backup_path']) / file_path
@@ -68,7 +79,7 @@ def _checks(params: dict) -> Path:
         full_path.parent().mkdir(0o755, parents=True, exist_ok=True)
     else:
         if not full_path.parent.exists():
-            raise FileNotFoundError('Directory does not exist')
+            raise FileNotFoundError('Parent directory does not exist')
 
     return full_path
 
@@ -85,6 +96,7 @@ def action_write_file(inp: InputDataStream, params):
 
     file_object = open(full_path, 'wb', buffering=0)
     chunk_size = params.get('chunkSize', 1024 * 8)
+    raise_if_type_is_incorrect(chunk_size, int, 'chunkSize is not a string')
     data = inp.read(chunk_size)
     while data is not None and len(data) != 0:
         file_object.write(data)
@@ -101,6 +113,8 @@ def action_copy_file(_, params: dict):
     dest_path = _checks(params)
     in_path = Path(params['to'])
     preserve_stats = params.get('preserveStats', 'utime')
+
+    raise_if_type_is_incorrect(preserve_stats, (str, bool), 'preserveStats must be a string or a boolean')
 
     avoid_copy = False
     if params.get('_prev_backup_path') is not None and not params.get('forceCopy', False):
@@ -145,6 +159,8 @@ def action_clone_file(_, params: dict):
     orig_path = Path(params['from'])
     dest_path = _checks(params)
     preserve_stats = params.get('preserveStats', 'utime')
+
+    raise_if_type_is_incorrect(preserve_stats, (str, bool), 'preserveStats must be a string or a boolean')
 
     cow_failed = False
     if params.get('reflink', True):

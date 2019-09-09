@@ -47,7 +47,6 @@ def _preserve_stats(entry_path: Path, stat: os.stat_result, xattrs: dict, mode):
         logger.debug(f'utime {new_utime} {entry_path}')
         os.utime(entry_path, ns=new_utime, follow_symlinks=False)
     if (mode is True or 'xattr' in mode) and xattrs is not None:
-        existing_xattrs = _listxattr(entry_path, symlink=False)
         for xattr_key, xattr_value in xattrs.items():
             logger.debug(f'xattr {xattr_key}:{xattr_value} {entry_path}')
             _setxattr(

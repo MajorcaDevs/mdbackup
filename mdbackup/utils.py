@@ -27,3 +27,12 @@ def change_keys(d: Dict[str, any]) -> Dict[str, any]:
         else:
             new_dict[new_key] = value
     return new_dict
+
+
+def raise_if_type_is_incorrect(obj, types, message, required=False):
+    if required and obj is None:
+        raise TypeError(message)
+    elif not required and obj is None:
+        return
+    if not isinstance(obj, types):
+        raise TypeError(message)

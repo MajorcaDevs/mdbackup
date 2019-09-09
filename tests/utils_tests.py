@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from mdbackup.utils import change_keys, snakeify
+from mdbackup.utils import change_keys, raise_if_type_is_incorrect, snakeify
 
 
 class SnakeifyTests(TestCase):
@@ -68,3 +68,31 @@ class ChangeKeysTests(TestCase):
         res = change_keys(dictionary)
 
         self.assertDictEqual(expected_dictionary, res)
+
+
+class RaiseIfTypeIsIncorrectTests(TestCase):
+    def test_should_not_raise_if_type_is_correct(self):
+        obj = 'string'
+        typ = str
+
+        raise_if_type_is_incorrect(obj, typ, 'obj must be a string')
+
+    def test_should_not_raise_if_object_is_none_but_not_required(self):
+        obj = None
+        typ = str
+
+        raise_if_type_is_incorrect(obj, typ, 'obj must be a string')
+
+    def test_should_raise_if_type_is_incorrect(self):
+        obj = b'string?'
+        typ = str
+
+        with self.assertRaisesRegex(TypeError, 'obj must be a string'):
+            raise_if_type_is_incorrect(obj, typ, 'obj must be a string')
+
+    def test_should_raise_if_object_is_none_and_required(self):
+        obj = None
+        typ = str
+
+        with self.assertRaisesRegex(TypeError, 'obj must be a string'):
+            raise_if_type_is_incorrect(obj, typ, 'obj must be a string', required=True)

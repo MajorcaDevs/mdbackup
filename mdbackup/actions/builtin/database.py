@@ -3,6 +3,7 @@ from pathlib import Path
 
 from mdbackup.actions.builtin.command import action_command, action_docker
 from mdbackup.actions.container import action
+from mdbackup.utils import raise_if_type_is_incorrect
 
 
 def action_psql_command(_, params: dict):
@@ -15,6 +16,7 @@ def action_psql_command(_, params: dict):
         params['image'] = params.get('image', 'postgres:alpine')
         return action_docker(None, params)
     elif run_as is not None:
+        raise_if_type_is_incorrect(run_as, str, 'runAs must be a string')
         params['args'] = ['sudo', '-u', run_as] + params['args']
         return action_command(None, params)
     else:
@@ -29,6 +31,12 @@ def action_pgdump(_, params: dict):
     pg_port = params.get('port')
     database = params['database']
     args = ['pg_dump', '-w']
+
+    raise_if_type_is_incorrect(pg_user, str, 'user must be a string')
+    raise_if_type_is_incorrect(pg_pass, str, 'password must be a string')
+    raise_if_type_is_incorrect(pg_host, str, 'host must be a string')
+    raise_if_type_is_incorrect(pg_port, int, 'port must be an int')
+    raise_if_type_is_incorrect(database, str, 'database must be a string')
 
     if pg_host is not None:
         url = f'postgresql://{pg_user}'
@@ -68,6 +76,12 @@ def action_mysqldump(_, params: dict):
     database = params['database']
     port = params.get('port')
 
+    raise_if_type_is_incorrect(user, str, 'user must be a string')
+    raise_if_type_is_incorrect(password, str, 'password must be a string')
+    raise_if_type_is_incorrect(host, str, 'host must be a string')
+    raise_if_type_is_incorrect(port, int, 'port must be an int')
+    raise_if_type_is_incorrect(database, str, 'database must be a string')
+
     args = ['mysqldump', '-h', host]
     if user is not None:
         args.extend(['-u', user])
@@ -104,6 +118,14 @@ def action_influxdb_backup(_, params: dict):
     start = params.get('start')
     end = params.get('end')
     backup_path = Path(params['_backup_path'])
+
+    raise_if_type_is_incorrect(to, (str, Path), 'to must be a string')
+    raise_if_type_is_incorrect(host, str, 'host must be a string')
+    raise_if_type_is_incorrect(database, str, 'database must be a string')
+    raise_if_type_is_incorrect(retention, str, 'retention must be an int')
+    raise_if_type_is_incorrect(shard, (str, int), 'shard must be a string')
+    raise_if_type_is_incorrect(start, str, 'start must be a string')
+    raise_if_type_is_incorrect(end, str, 'end must be a string')
 
     args = ['influxd', 'backup', '-portable']
     if host is not None:
