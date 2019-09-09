@@ -72,6 +72,7 @@ def action_write_dir(inp: DirEntryGenerator, params: dict):
     backup_path = Path(params['_backup_path'])
     dest_path = Path(params['path'])
     parent = backup_path / dest_path
+    preserve_stats = params.get('preserveStats', 'utime')
     parent.mkdir(0o755, parents=params.get('parents', False), exist_ok=True)
 
     logger.debug(f'Writing directory generator to {parent}')
@@ -97,9 +98,9 @@ def action_write_dir(inp: DirEntryGenerator, params: dict):
                 'preserveStats': False,
             })
 
-        if params.get('preserveStats', 'utime'):
+        if preserve_stats:
             logger.debug(f'Modifying stats of file {entry_path} to match the originals')
-            _preserve_stats(entry_path, entry.stats, entry.xargs, params['preserveStats'])
+            _preserve_stats(entry_path, entry.stats, entry.xattrs, preserve_stats)
 
 
 @action('copy-directory')

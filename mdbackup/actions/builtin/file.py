@@ -17,6 +17,7 @@ def action_read_file(_, params) -> io.FileIO:
 
 @action('from-file-ssh', output='stream:process')
 def action_read_file_from_ssh(_, params):
+    logger = logging.getLogger(__name__).getChild('action_read_file_from_ssh')
     args = []
     env = {}
 
@@ -28,6 +29,7 @@ def action_read_file_from_ssh(_, params):
     user = params.get('user')
 
     if password is not None:
+        logger.warning('Using sshpass to connect to a SSH server is highly discouraged')
         args.extend(['sshpass', '-e'])
         env = {'SSHPASS': password}
 
@@ -40,10 +42,10 @@ def action_read_file_from_ssh(_, params):
         args.extend(['-o', 'UserKnownHostsFile=/dev/null', '-o', 'StrictHostKeyChecking=no'])
 
     if identity_file is not None:
-        args.extend('-i', identity_file)
+        args.extend(['-i', identity_file])
 
     if config_file is not None:
-        args.extend('-F', config_file)
+        args.extend(['-F', config_file])
 
     args.append(f"{params['host']}:{params['path']}")
     if user is not None:
@@ -98,6 +100,7 @@ def action_copy_file(_, params: dict):
     orig_stat = orig_path.stat() if orig_path is not None else params['_stat']
     dest_path = _checks(params)
     in_path = Path(params['to'])
+    preserve_stats = params.get('preserveStats', 'utime')
 
     avoid_copy = False
     if params.get('_prev_backup_path') is not None and not params.get('forceCopy', False):
@@ -131,9 +134,9 @@ def action_copy_file(_, params: dict):
             },
         )
 
-    if params.get('preserveStats', 'utime') and orig_path is not None:
+    if preserve_stats and orig_path is not None:
         xattrs = _read_xattrs(orig_path)
-        _preserve_stats(dest_path, orig_stat, xattrs, params['preserveStats'])
+        _preserve_stats(dest_path, orig_stat, xattrs, preserve_stats)
 
 
 @action('clone-file')
@@ -141,6 +144,7 @@ def action_clone_file(_, params: dict):
     logger = logging.getLogger(__name__).getChild('action_clone_file')
     orig_path = Path(params['from'])
     dest_path = _checks(params)
+    preserve_stats = params.get('preserveStats', 'utime')
 
     cow_failed = False
     if params.get('reflink', True):
@@ -158,6 +162,10 @@ def action_clone_file(_, params: dict):
                 cow_failed = True
             os.close(src_fd)
             os.close(dst_fd)
+
+            if preserve_stats:
+                xattrs = _read_xattrs(orig_path)
+                _preserve_stats(dest_path, orig_path.stat(), xattrs, preserve_stats)
         else:
             cow_failed = True
 
@@ -165,7 +173,3 @@ def action_clone_file(_, params: dict):
         # Do a hard-link clone (fallback if CoW fails)
         logger.debug(f'Creating hardlink from {orig_path} to {dest_path}')
         os.link(str(orig_path), str(dest_path))
-
-    if params.get('preserveStats', 'utime'):
-        xattrs = _read_xattrs(orig_path)
-        _preserve_stats(dest_path, orig_path.stat(), xattrs, params['preserveStats'])

@@ -16,7 +16,7 @@ def action_encrypt_opengpg(inp: InputDataStream, params) -> subprocess.Popen:
         args.extend(['--passphrase', passphrase])
     for recipient in recipients:
         args.extend(['-r', recipient])
-    if len(recipient) == 0:
+    if len(recipients) == 0:
         args.append('--symmetric')
     if algorithm is not None:
         args.extend(['--cipher-algo', algorithm])

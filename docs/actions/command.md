@@ -69,6 +69,8 @@ Executes the command that produces an output, and may receive an input. The comm
 !!! Warning "Use of password in ssh"
     It is not recommended to use the password authentication method with ssh in scripts like this. If you need the password method, ensure the host (where `mdbackup` runs) has installed `sshpass`.
 
+    A properly authentication using ssh is made by configuring an `ssh-agent` before running `mdbackup` with the keys preloaded so the tool can run without issues.
+
 **Description**
 
 Executes the command through ssh, in another host, which must produce an output and it may receive some input. The command can be defined by either using `args` or `command` parameter. The current working directory will be the backup path.

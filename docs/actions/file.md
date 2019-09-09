@@ -48,6 +48,8 @@ Initial action that opens a file to be read from the next actions. The user runn
 !!! Warning "Use of password in ssh"
     It is not recommended to use the password authentication method with ssh in scripts like this. If you need the password method, ensure the host (where `mdbackup` runs) has installed `sshpass`.
 
+    A properly authentication using ssh is made by configuring an `ssh-agent` before running `mdbackup` with the keys preloaded so the tool can run without issues.
+
 **Description**
 
 Reads a file from the remote server using `scp`, and the output can be used in other actions as if it were a regular file in the same machine.
@@ -148,7 +150,7 @@ Copies a file to the backup folder. It is an optimized version in which the prev
 | `from` | `str` | Path to the file to be copied | No |
 | `to` | `str` | Path to where the file will be copied inside the backup folder | No |
 | `mkdirParents` | `bool` | If the path contains some folders and this parameter is set to `true`, then will create the folders | Yes |
-| `preserveStats` | `Union[bool, str]` | Preserve some or all of the stats of the entry (see [this](../directory#to-directory)) | Yes |
+| `preserveStats` | `Union[bool, str]` | Preserve some or all of the stats of the entry (see [this](../directory#to-directory)) (only for `reflink`) | Yes |
 | `reflink` | `bool` | If set to `true` it will try to make copy of the original file using *Copy on Write* (if the file system supports this) | Yes |
 
 **Description**

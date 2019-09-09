@@ -7,15 +7,13 @@ from typing import List
 from mdbackup.actions.container import action, unaction
 
 
-_logger = logging.getLogger(__name__)
-
-
 def _parse_command(command: str) -> List[str]:
     return list(shlex.shlex(command, punctuation_chars=True, posix=True))
 
 
 def reverse_action(func):
     def impl(inp, params: dict):
+        logger = logging.getLogger(__name__).getChild(func.__name__ + '_reversed')
         new_params = params.copy()
         args = params['reverse'].get('args')
         command = params['reverse'].get('command')
@@ -25,7 +23,7 @@ def reverse_action(func):
             new_params['command'] = command
         else:
             raise KeyError('no reverse args nor command defined')
-        _logger.debug('Next command is run reversed')
+        logger.debug('Next command is run reversed')
         return func(inp, params)
 
     return impl
@@ -33,6 +31,7 @@ def reverse_action(func):
 
 @action('command', input='stream', output='stream:process')
 def action_command(inp, params) -> subprocess.Popen:
+    logger = logging.getLogger(__name__).getChild('action_command')
     if inp is None:
         inp = subprocess.PIPE
 
@@ -57,7 +56,7 @@ def action_command(inp, params) -> subprocess.Popen:
 
     str_args = " ".join((f'"{s}"' if ' ' in s else s for s in args))
     str_env = ", ".join((f"{key}={value}" for key, value in (extra_env if extra_env is not None else {}).items()))
-    _logger.debug(f'Running command {str_args} with environment {str_env}')
+    logger.debug(f'Running command {str_args} with environment {str_env}')
     return subprocess.Popen(
         args=args,
         stdin=inp,
@@ -71,6 +70,7 @@ def action_command(inp, params) -> subprocess.Popen:
 
 @action('ssh', input='stream', output='stream:process')
 def action_ssh(inp, params) -> subprocess.Popen:
+    logger = logging.getLogger(__name__).getChild('action_ssh')
     args = []
     env = {}
 
@@ -85,6 +85,7 @@ def action_ssh(inp, params) -> subprocess.Popen:
     param_command = params.get('command')
 
     if password is not None:
+        logger.warning('Using sshpass to connect to a SSH server is highly discouraged')
         args.extend(['sshpass', '-e'])
         env = {'SSHPASS': password}
 
@@ -102,13 +103,13 @@ def action_ssh(inp, params) -> subprocess.Popen:
         args.append('-a')
 
     if identity_file is not None:
-        args.extend('-i', identity_file)
+        args.extend(['-i', identity_file])
 
     if user is not None:
-        args.extend('-l', user)
+        args.extend(['-l', user])
 
     if config_file is not None:
-        args.extend('-F', params['configFile'])
+        args.extend(['-F', params['configFile']])
 
     args.extend(['-x', params['host']])
     if param_args is not None:
@@ -123,6 +124,7 @@ def action_ssh(inp, params) -> subprocess.Popen:
 
 @action('docker', input='stream', output='stream:process')
 def action_docker(inp, params) -> subprocess.Popen:
+    logger = logging.getLogger(__name__).getChild('action_docker')
     args = ['docker', 'container', 'run', '--rm', '-i']
 
     volumes: list = params.get('volumes', [])
@@ -136,16 +138,20 @@ def action_docker(inp, params) -> subprocess.Popen:
     pull = params.get('pull', False)
     image = params['image']
 
+    if not isinstance(volumes, list):
+        raise TypeError('volumes is not a list')
     for volume in volumes:
         args.extend(['-v', volume])
 
     if isinstance(env, dict):
         env = map(lambda pair: f'{pair[0]}={pair[1]}', env.items())
+    elif not isinstance(env, list):
+        raise TypeError('env is not a list nor a dictionary')
     for env_var in env:
         args.extend(['-e', env_var])
 
     if user is not None:
-        args.extend('-u', user)
+        args.extend(['-u', user])
         if group is not None:
             args[-1] = f'{args[-1]}:{group}'
 
@@ -155,11 +161,11 @@ def action_docker(inp, params) -> subprocess.Popen:
         args.extend(['-w', workdir])
 
     if pull is not None:
-        _logger.info(f'Pulling image {image}...')
+        logger.info(f'Pulling image {image}...')
         proc = action_command(None, {'command': f'docker image pull -q "{image}"'})
         stdout, stderr = proc.communicate()
         if proc.returncode != 0:
-            _logger.error(f'Image pull for {image} failed:\n{stderr.decode("utf-8")}')
+            logger.error(f'Image pull for {image} failed:\n{stderr.decode("utf-8")}')
             raise ChildProcessError(f'Could not pull image {image}')
 
     args.append(image)

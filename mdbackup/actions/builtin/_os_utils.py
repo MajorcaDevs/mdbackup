@@ -49,11 +49,11 @@ def _preserve_stats(entry_path: Path, stat: os.stat_result, xattrs: dict, mode):
     if (mode is True or 'xattr' in mode) and xattrs is not None:
         existing_xattrs = _listxattr(entry_path, symlink=False)
         for xattr_key, xattr_value in xattrs.items():
+            logger.debug(f'xattr {xattr_key}:{xattr_value} {entry_path}')
             _setxattr(
                 entry_path,
                 xattr_key,
                 xattr_value,
-                os.XATTR_REPLACE if xattr_key in existing_xattrs else os.XATTR_CREATE,
                 symlink=False,
             )
 

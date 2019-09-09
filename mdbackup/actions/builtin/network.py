@@ -75,7 +75,7 @@ def action_mikrotik(_, params: dict):
 @action('asuswrt', output='stream:file')
 def action_asuswrt(_, params: dict):
     logger = logging.getLogger(__name__).getChild('action_asuswrt')
-    host = params['host']
+    host = params.get('host', 'router.asus.com')
     user = params['user']
     password = params['password']
     backup_type = params['backupType']
