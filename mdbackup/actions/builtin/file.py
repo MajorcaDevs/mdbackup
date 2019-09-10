@@ -168,16 +168,20 @@ def action_clone_file(_, params: dict):
             # Do a Copy on Write clone if possible (only on Linux)
             # https://stackoverflow.com/questions/52766388/how-can-i-use-the-copy-on-write-of-a-btrfs-from-c-code
             # https://github.com/coreutils/coreutils/blob/master/src/copy.c#L370
+            if not dest_path.exists():
+                dest_path.touch(orig_path.stat().st_mode)
             src_fd = os.open(orig_path, flags=os.O_RDONLY)
-            dst_fd = os.open(dest_path, dest_path.stat().st_mode, os.O_WRONLY | os.O_TRUNC)
+            dst_fd = os.open(dest_path, flags=os.O_WRONLY | os.O_TRUNC)
             try:
                 logger.debug(f'Copying using CoW from {orig_path} to {dest_path}')
-                fcntl.ioctl(dst_fd, fcntl.FICLONE, src_fd)
+                fcntl.ioctl(dst_fd, 1074041865, src_fd)  # FICLONE but hardcoded
             except OSError:
-                logger.debug('Could not copy using CoW')
+                logger.debug('Could not copy using CoW', exc_info=1)
                 cow_failed = True
             os.close(src_fd)
             os.close(dst_fd)
+            if cow_failed:
+                os.unlink(dest_path)
 
             if preserve_stats:
                 xattrs = _read_xattrs(orig_path)

@@ -141,9 +141,14 @@ def action_influxdb_backup(_, params: dict):
     if end is not None:
         args.extend(['-end', end])
 
-    args.append(backup_path / to)
+    if params.get('docker', False):
+        args.append('/data')
+        params['volumes'] = params.get('volumes', []) + [str((backup_path / to).resolve()) + ':/data']
+    else:
+        args.append(str(backup_path / to))
+    params['args'] = args
 
-    (backup_path / to).mkdir(0o755, parents=True, exit_ok=True)
+    (backup_path / to).mkdir(0o755, parents=True, exist_ok=True)
     proc = action_influxd_command(_, params)
     stdout, stderr = proc.communicate()
     proc.wait()

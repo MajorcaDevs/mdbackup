@@ -54,7 +54,7 @@ def action_read_physical_docker_volume(_, params: dict):
 
     raise_if_type_is_incorrect(volume, str, 'volume must be a string')
 
-    proc = action_command(None, {'command': f'docker volume inspect "{volume}" --format {{{{.Mountpoint}}}}'})
+    proc = action_command(None, {'command': f'docker volume inspect "{volume}" --format "{{{{.Mountpoint}}}}"'})
     path, error = proc.communicate(None)
     if proc.returncode != 0:
         error_dec = error.decode("utf-8")[:-1]

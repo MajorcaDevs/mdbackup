@@ -177,10 +177,10 @@ def action_docker(inp, params) -> subprocess.Popen:
     if workdir is not None:
         args.extend(['-w', workdir])
 
-    if pull is not None:
+    if pull:
         logger.info(f'Pulling image {image}...')
         proc = action_command(None, {'command': f'docker image pull -q "{image}"'})
-        stdout, stderr = proc.communicate()
+        _, stderr = proc.communicate()
         if proc.returncode != 0:
             logger.error(f'Image pull for {image} failed:\n{stderr.decode("utf-8")}')
             raise ChildProcessError(f'Could not pull image {image}')
@@ -191,7 +191,7 @@ def action_docker(inp, params) -> subprocess.Popen:
     elif param_command:
         args.extend(_parse_command(param_command))
     else:
-        return KeyError('no args nor command defined')
+        raise KeyError('no args nor command defined')
 
     return action_command(inp, {'args': args})
 
