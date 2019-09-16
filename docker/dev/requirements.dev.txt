@@ -2,4 +2,7 @@ flake8
 flake8-import-order
 pep8-naming
 flake8-commas
+coverage
+unittest-xml-reporting
 pyyaml
+xattr

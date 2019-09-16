@@ -24,11 +24,12 @@ setuptools.setup(
     ],
     entry_points={
         'console_scripts': [
-            'mdbackup = mdbackup.__main__:main'
-        ]
+            'mdbackup = mdbackup.__main__:main',
+        ],
     },
     include_package_data=True,
     install_requires=[
-        'pyyaml'
-    ]
+        'pyyaml',
+        'xattr',
+    ],
 )
