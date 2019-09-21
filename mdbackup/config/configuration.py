@@ -20,77 +20,14 @@ import logging
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
+from mdbackup.config.secret import SecretConfig
+from mdbackup.config.storage import StorageConfig
 from mdbackup.utils import change_keys
 
 try:
     from yaml import CLoader as Loader, load as yaml_load
 except ImportError:
     from yaml import Loader, load as yaml_load
-
-
-class StorageConfig(object):
-    def __init__(self, provider_dict: Dict[str, str]):
-        self.__type = provider_dict['type']
-        self.__backups_path = provider_dict['backupsPath']
-        self.__max_backups_kept = provider_dict.get('maxBackupsKept', None)
-        self.__extra = {key: value
-                        for key, value in provider_dict.items()
-                        if key not in ('type', 'backupsPath', 'maxBackupsKept')}
-
-    @property
-    def type(self) -> str:
-        """
-        :return: The storage provider.
-        """
-        return self.__type
-
-    @property
-    def backups_path(self) -> str:
-        """
-        :return: The path where the backups will be stored in the storage provider.
-        """
-        return self.__backups_path
-
-    @property
-    def max_backups_kept(self) -> Optional[int]:
-        """
-        :return: The maximum number of backups to keep in this provider. If the value is None, no cleanup must be done.
-        """
-        return self.__max_backups_kept
-
-    def __contains__(self, item: str):
-        return item in self.__extra
-
-    def __getitem__(self, key: str):
-        return self.__extra[key]
-
-    def get(self, key: str, default=None):
-        return self.__extra.get(key, default)
-
-
-class SecretConfig(object):
-    def __init__(self, secret_type: str, secret_env: Optional[Dict[str, str]], secret_config: Dict[str, any],
-                 secret_storage: Optional[List[str]]):
-        self.__type = secret_type
-        self.__config = secret_config
-        self.__env = secret_env if secret_env is not None else {}
-        self.__storage = secret_storage if secret_storage is not None else []
-
-    @property
-    def type(self) -> str:
-        return self.__type
-
-    @property
-    def config(self) -> Dict[str, any]:
-        return self.__config
-
-    @property
-    def env(self) -> Dict[str, str]:
-        return self.__env
-
-    @property
-    def storage(self) -> List[Union[str, Dict[str, str]]]:
-        return self.__storage
 
 
 class Config(object):
@@ -134,7 +71,8 @@ class Config(object):
                 parsed_config = yaml_load(config_file, Loader=Loader)
             else:
                 raise NotImplementedError(f'Cannot read this type of config file: {self.__file.parts[-1]}')
-            self._parse_config(parsed_config)
+
+        self._parse_config(parsed_config)
 
     def _parse_config(self, conf):
         self.__backups_path = Path(conf['backupsPath'])
