@@ -32,19 +32,11 @@ from .archive import (
 from .backup import do_backup, get_backup_folders_sorted
 from .config import Config, StorageConfig
 from .hooks import define_hook, run_hook
-from .secrets import get_secret_backend_implementation
 from .storage import create_storage_instance
 
 
 def main_load_secrets(logger: logging.Logger, config: Config):
-    # Prepare secret backends (if any) and its env getters (aka functions that gets the right value from the backend)
     try:
-        secret_backends = [(get_secret_backend_implementation(secret.type, secret.config), secret)
-                           for secret in config.secrets]
-    except ImportError as e:
-        # Log not-found module and exit
-        logger.exception(e.args[0], e.args[1])
-        sys.exit(4)
 
     try:
         secret_env = {}
@@ -67,11 +59,8 @@ def main_load_secrets(logger: logging.Logger, config: Config):
                 config.providers.append(provider)
     except Exception as e:
         raise e
-    finally:
-        for secret_backend, _ in secret_backends:
-            del secret_backend
 
-    return secret_env
+    return {}
 
 
 def main_do_backup(logger: logging.Logger, config: Config, secret_env) -> Path:
@@ -295,6 +284,8 @@ def main():
             main_clean_up(logger, config)
     except Exception as e:
         logger.exception(e)
+    finally:
+        del config
 
 
 if __name__ == '__main__':
