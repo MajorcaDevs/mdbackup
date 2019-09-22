@@ -218,8 +218,11 @@ def configure_hooks(hooks: Dict[str, str]):
 
 def configure_default_value_for_file_secrets(config: Config):
     for s in config.secrets:
-        if s.type == 'file' and s.config.get('basePath') is None:
+        if s.type == 'file':
+            if s.config.get('basePath') is None:
             s.config['basePath'] = str(config.config_folder / 'secrets')
+            elif not Path(s.config['basePath']).is_absolute():
+                s.config['basePath'] = str(config.config_folder / s.config['basePath'])
 
 
 def main():
