@@ -85,6 +85,27 @@ The actions are defined with one item in the list by action, and to identify the
 ```
 
 
+## Referring to secrets in `env` sections
+
+Every time a variable has a string starting with `#`, those will be treated as secret references. When the task is going to run, the references are resolved with the real values of the secrets. The reference refers to a key path that can be found in a `envDefs` of any of the secret backends. Examples are better:
+
+Imagine that the following secret backend config is set with this `envDefs`:
+
+```yaml
+...
+    envDefs:
+      postgres:
+        user: 'secret/databases/postgres/pg-charizard-01#username'
+        password: 'secret/databases/postgres/pg-charizard-01#password'
+      encrypt-passphrase: 'secret/backups/vm-do-charizard-01/passphrase#passphrase'
+...
+```
+
+So to refer to the user of postgres, this string will be used `#postgres.user`, as well as the password `#postgres.password`. For the passphrase, `#encrypt-passphrase` will be used.
+
+This way, secrets are referred from the tasks using a key, and changing the path in the `envDefs`, will be changed in all the tasks that references the secret.
+
+
 ## Examples
 
 ??? Example "Simple file backup"
