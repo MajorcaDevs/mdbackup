@@ -81,8 +81,10 @@ class Config(object):
         self.__max_backups_kept = conf.get('maxBackupsKept', 7)
         self.__env = conf.get('env', {})
         self.__providers = [StorageConfig(provider_dict) for provider_dict in conf.get('storage', [])]
-        self.__secrets = [SecretConfig(key, secret_dict.get('env'), secret_dict['config'], secret_dict.get('storage'))
-                          for key, secret_dict in conf.get('secrets', {}).items()]
+        self.__secrets = [
+            SecretConfig(key, secret_dict.get('envDefs'), secret_dict['config'], secret_dict.get('storage'))
+            for key, secret_dict in conf.get('secrets', {}).items()
+        ]
         self.__hooks = conf.get('hooks', {})
         if 'compression' in conf:
             self.__compression_level = conf['compression'].get('level', 5)
