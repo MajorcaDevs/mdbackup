@@ -292,8 +292,6 @@ def main():
             main_clean_up(logger, config)
     except Exception as e:
         logger.exception(e)
-    finally:
-        del config
 
 
 if __name__ == '__main__':
