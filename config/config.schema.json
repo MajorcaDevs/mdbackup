@@ -19,16 +19,19 @@
       ],
       "pattern": "^(.*)$"
     },
-    "customUtilsScript": {
-      "$id": "#/properties/customUtilsScript",
-      "type": "string",
-      "title": "If defined, this file will be included in the execution of all the step scripts",
-      "default": "",
-      "examples": [
-        "my.utils.sh",
-        "/opt/backups/custom.utils.sh"
-      ],
-      "pattern": "^(.*)\\.sh$"
+    "actionsModules": {
+      "$id": "#/properties/actionsModules",
+      "type": "array",
+      "title": "If defined, will load custom actions from the list of modules#functionToCall",
+      "default": [],
+      "items": {
+        "type": "string",
+        "examples": [
+          "my.actions#actions_loader",
+          "mdbackup.ext_actions#register_actions"
+        ],
+        "pattern": ".+#[a-zA-Z_][a-zA-Z0-9_]+"
+      }
     },
     "logLevel": {
       "$id": "#/properties/logLevel",
@@ -50,124 +53,8 @@
     "env": {
       "$id": "#/properties/env",
       "type": "object",
-      "title": "Environment variables that will be passed to the scripts, includes predefined configurations available for configuring scripts",
-      "properties": {
-        "docker": {
-          "$id": "#/properties/env/properties/docker",
-          "type": "string",
-          "title": "If set, will use docker instead of native apps in some utilities",
-          "default": "",
-          "examples": [
-            "true"
-          ],
-          "pattern": "^(.*)$"
-        },
-        "pgnetwork": {
-          "$id": "#/properties/env/properties/pgnetwork",
-          "type": "string",
-          "title": "[Docker] Defines which network will use to connect to the database",
-          "default": "host",
-          "examples": [
-            "host",
-            "databases_net"
-          ],
-          "pattern": "^(.*)$"
-        },
-        "pgimage": {
-          "$id": "#/properties/env/properties/pgimage",
-          "type": "string",
-          "title": "[Docker] Defines which image will use to run the container",
-          "default": "postgres",
-          "examples": [
-            "postgres",
-            "postgres:alpine",
-            "timescale/timescaledb:latest-pg10"
-          ],
-          "pattern": "^(.*)$"
-        },
-        "pghost": {
-          "$id": "#/properties/env/properties/pghost",
-          "type": "string",
-          "title": "The host of the database",
-          "default": "localhost",
-          "examples": [
-            "127.0.0.1"
-          ],
-          "pattern": "^(.*)$"
-        },
-        "pguser": {
-          "$id": "#/properties/env/properties/pguser",
-          "type": "string",
-          "title": "The user to connect in the database (must exist)",
-          "default": "postgres",
-          "examples": [
-            "postgres"
-          ],
-          "pattern": "^(.*)$"
-        },
-        "pgpassword": {
-          "$id": "#/properties/env/properties/pgpassword",
-          "type": "string",
-          "title": "If set, will use this as password for connecting to the database",
-          "default": "",
-          "examples": [
-            ""
-          ],
-          "pattern": "^(.*)$"
-        },
-        "mysqlnetwork": {
-          "$id": "#/properties/env/properties/mysqlnetwork",
-          "type": "string",
-          "title": "[Docker] Defines which network will use to connect to the database",
-          "default": "host",
-          "examples": [
-            "host",
-            "databases-net"
-          ],
-          "pattern": "^(.*)$"
-        },
-        "mysqlimage": {
-          "$id": "#/properties/env/properties/mysqlimage",
-          "type": "string",
-          "title": "[Docker] Defines which image will use to run the container",
-          "default": "mariadb",
-          "examples": [
-            "mysql",
-            "mariadb"
-          ],
-          "pattern": "^(.*)$"
-        },
-        "mysqlhost": {
-          "$id": "#/properties/env/properties/mysqlhost",
-          "type": "string",
-          "title": "The host of the database",
-          "default": "localhost",
-          "examples": [
-            "127.0.0.1"
-          ],
-          "pattern": "^(.*)$"
-        },
-        "mysqluser": {
-          "$id": "#/properties/env/properties/mysqluser",
-          "type": "string",
-          "title": "The username to connect to the database",
-          "default": "",
-          "examples": [
-            "root"
-          ],
-          "pattern": "^(.*)$"
-        },
-        "mysqlpassword": {
-          "$id": "#/properties/env/properties/mysqlpassword",
-          "type": "string",
-          "title": "If defined, sets the password which will be used to connect to the database",
-          "default": "",
-          "examples": [
-            ""
-          ],
-          "pattern": "^(.*)$"
-        }
-      },
+      "title": "Environment variables that will be passed to the actions",
+      "properties": {},
       "required": []
     },
     "secrets": {
@@ -180,14 +67,13 @@
           "type": "object",
           "title": "File secrets backend",
           "required": [
-            "env",
             "config"
           ],
           "properties": {
-            "env": {
-              "$id": "#/properties/secrets/properties/file/properties/env",
+            "envDefs": {
+              "$id": "#/properties/secrets/properties/file/properties/envDefs",
               "type": "object",
-              "title": "Every property inside the object will be filled with the contents of the file"
+              "title": "To resolve a secret defined in an env section, uses one of these definitions for it to be resolved"
             },
             "config": {
               "$id": "#/properties/secrets/properties/file/properties/config",
@@ -233,10 +119,10 @@
             "config"
           ],
           "properties": {
-            "env": {
-              "$id": "#/properties/secrets/properties/vault/properties/env",
+            "envDefs": {
+              "$id": "#/properties/secrets/properties/vault/properties/envDefs",
               "type": "object",
-              "title": "Every property inside the object will be filled with the contents of the Vault secret"
+              "title": "To resolve a secret defined in an env section, uses one of these definitions for it to be resolved"
             },
             "config": {
               "$id": "#/properties/secrets/properties/vault/properties/config",
@@ -300,7 +186,7 @@
     "compression": {
       "$id": "#/properties/compression",
       "type": ["object", "null"],
-      "title": "Configures the compression of things",
+      "title": "Configures the compression of things when uploading to a storage provider",
       "required": [
         "strategy"
       ],
@@ -327,7 +213,7 @@
     "cypher": {
       "$id": "#/properties/cypher",
       "type": ["object", "null"],
-      "title": "Configures the cypher strategy to use",
+      "title": "Configures the cypher strategy to use when uploading to a storage provider",
       "required": [
         "strategy"
       ],
@@ -449,6 +335,36 @@
           "$id": "#/properties/hooks/properties/backup:error",
           "type": "string",
           "title": "Run the script when the backup has failed for some reason"
+        },
+        "backup:tasks:before": {
+          "$id": "#/properties/hooks/properties/backup:tasks:before",
+          "type": "string",
+          "title": "Run the script when the backup tasks definition is going to be run"
+        },
+        "backup:tasks:after": {
+          "$id": "#/properties/hooks/properties/backup:tasks:after",
+          "type": "string",
+          "title": "Run the script when the backup tasks definition has been run"
+        },
+        "backup:tasks:error": {
+          "$id": "#/properties/hooks/properties/backup:tasks:error",
+          "type": "string",
+          "title": "Run the script when the backup tasks definition run has failed for some reason"
+        },
+        "backup:tasks:task:before": {
+          "$id": "#/properties/hooks/properties/backup:tasks:task:before",
+          "type": "string",
+          "title": "Run the script when the backup task is going to be run"
+        },
+        "backup:tasks:task:after": {
+          "$id": "#/properties/hooks/properties/backup:tasks:task:after",
+          "type": "string",
+          "title": "Run the script when the backup task has been run"
+        },
+        "backup:tasks:task:error": {
+          "$id": "#/properties/hooks/properties/backup:tasks:task:error",
+          "type": "string",
+          "title": "Run the script when the backup task run has failed for some reason"
         },
         "upload:before": {
           "$id": "#/properties/hooks/properties/upload:before",
