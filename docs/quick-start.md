@@ -49,7 +49,7 @@ In order to get your first backup, the tool must be configured properly. To achi
 The tool needs three folders to work:
 
 - `config`: a folder where the configuration, and other files related to configuration, tokens or cookies are going to be stored.
-- `config/steps`: a folder where the backup logic is stored in form of bash scripts.
+- `config/tasks`: a folder where the backup logic is stored in form of yaml or json files.
 - \*put a full path here\*: the folder, placed in some folder, where the backups are going to be stored.
 
 The folder in where you are right now should have the following structure:
@@ -58,8 +58,8 @@ The folder in where you are right now should have the following structure:
     - ...
 - `config/`
     - `config.json`
-    - `steps/`
-        - `01.sh`
+    - `tasks/`
+        - `01.yaml`
 - `mdbackup.whl`
 
 And the third folder, it does not matter where is placed, but it will be used soon to store backups. It can be a network storage, an external drive or a partition in some local drive. It is recommended to store them outside the root partition (`/`), if possible.
@@ -74,65 +74,156 @@ Did you notice the `config.json`? This file holds the [configuration](./configur
 }
 ```
 
-> Note: you can download the [JSON Schema][2] and use it to validate the structure: `"$schema": "./config.schema.json",`. You can grab it from the latest release.
+!!! Note
+    You can download the [JSON Schema][2] and use it to validate the structure: `"$schema": "./config.schema.json",`. You can grab it from the latest release.
 
-> Note: you can also use `yaml` if you prefer
+!!! Note "yaml is an option"
+    You can also use `yaml` for configuration and tasks file, if you prefer.
 
 This configuration is really basic and tells the tool where to place the backups, which log level to use (will be very verbose, but it is OK for now) and to inject no extra environment variables.
 
-Now we need to define the logic to create backups. We called it `steps`. A step is just a bash script (without the shebang `!#`) that do some actions to copy/backup any data, files or folders to the backup folder (referring "backup folder" to the folder where the current backup is going to be stored). The tool defines some [predefined functions](./steps/index.md#function-utilities) that are useful to make most common backup operations. Some of them requires to have installed extra CLIs or to have installed Docker. But if these functions are not used, no errors will arise.
+Now we need to define the logic to create backups. We use the term [tasks](../tasks) to refer a group of [actions](../actions) that will run in order to backup something. Tasks can be grouped in a tasks definition file and stored in a json or yaml file inside the `config/tasks` folder. An action is just something that accepts an input and some parameters and transforms the input to something else, but it can be also something that writes the input to a file or a folder, or a source of data that does not receive any input and writes data as output.
 
-The steps are executed following the natural order (alphanumeric order) of the names of the files. For example, `01.sh` will run before `02.sh`. It can be as many scripts as desired, or just one. It does not matter. So now we will give some contents to `01.sh` (the file shown in the tree).
+The steps are executed following the natural order (alphanumeric order) of the names of the files. For example, `01.json` will run before `02.json`. It can be as many files as desired, or just one. It does not matter. So now we will give some contents to `01.yaml` (the file shown in the tree).
 
-```sh
-backup-folder "/home/YourUser" home  #macOS users, use "/Users/YourUser"
+```yaml tab="YAML syntax"
+name: 'test'
+tasks:
+  - name: Backup home
+    actions:
+      - from-directory: /home/user  #macOS users, use "/Users/YourUser"
+      - to-directory:
+          path: home
 ```
 
-This step will copy your home directory and all its contents into the backup folder using `rsync`. With one line, you will get a full backup of a folder! You can use any other folder you want just to try, this is an example. Check that the script has execution permissions for the `user`, and possible for `all`: `chmod ua+x ./steps/01.sh`.
+```json tab="JSON syntax"
+{
+  "name": "test",
+  "tasks": [
+    {
+      "name": "Backup home",
+      "actions": [
+        { "from-directory": "/home/user" },
+        {
+          "to-directory": {
+            "path": "home"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
 
-Now try running the tool: `mdbackup`. If everything is well configured, you will have a new folder in the backups folder with the date and time of now and with your folder copied. Well, try now to make a backup again. If the folder being copied is large enough, you will notice that this time, the backup took less time than the first time. This is because the mode in which `rsync` runs checks which files have been modified and just copies these ones. The rest of unmodified files are hard-linked from the latest backup. It's an "incremental" backup!
+This task will copy your home directory and all its contents into the backup folder. You can use any other folder you want just to try, this is an example.
+
+Now try running the tool: `mdbackup`. If everything is well configured, you will have a new folder in the backups folder with the date and time of now and with your folder copied. Well, try now to make a backup again. If the folder being copied is large enough, you will notice that this time, the backup took less time than the first time. This is because the action `to-directory` takes into account the previous backup and will try to do an incremental backup: if the file to copy already exists in the previous backup and has not been modified since the last time, then it will do a `hard-link` instead of a copy. This trick only works for some of the actions, check their documentation to know what are the ones doing this.
 
 Note that `current` folder is always present and is a soft link to the latest backup. So it's easy to access to the latest backup from the file explorer or from the command line :)
 
 Now you have backups of whatever you want! Just configure the tool and write the right scripts to fit your needs.
 
-> Note: it is possible that you will need to run the tool as root to access some system folders. Remember that the virtual environment is not inherited when using `sudo`. Make your own script, or checkout one of [the contrib folder][3].
+!!! Warning "SuperUser rights may be needed"
+    It is possible that you will need to run the tool as root to access some system folders. Remember that the virtual environment is not inherited when using `sudo`. Make your own script, or checkout one of [the contrib folder][3].
 
 ## Injecting environment variables
 
-Some of the [steps](./steps/index.md#function-utilities) have as parameters some environment variables. These can be defined in the `env` section of the json. The object must be a simple Key/Value structure. Complex structures (like objects or arrays) are not allowed.
+[Actions](../actions) receive parameters to be able to do their job. These parameters can be defined previously in `env` sections either in the config file, in the tasks definition file or inside a task. The value of a variable can refer to a secret, which is identified by using a `#` hashtag at the begining of the string. Secrets won't be covered in the quick start, but is good to know :)
 
-Let's try to make a backup from a postgres database with the predefined function. Also these variables can be used natively with some postgres tools because they also understand them. For this example, `pg_dump` must be installed on the system.
+Let's try to make a backup from a postgres database with the predefined action. For this example, `pg_dump` must be installed on the system.
 
-First, the `env` must be changed to add the new settings:
+Time to add a new tasks file called `02.yaml` with the following contents:
 
-```js
+```yaml tab="YAML syntax"
+name: PostgreSQL example
+env:
+  host: localhost
+  user: postgres
+  password: WonderfulPassword123
+tasks:
+  - name: Postgres task example
+    actions:
+      - postgres-database:
+          database: test1
+      - to-file:
+          path: test1.sql
+  - name: Postgres task example 2
+    actions:
+      - postgres-database:
+          database: test2
+      - to-file:
+          path: test2.sql
+```
+
+```json tab="JSON syntax"
 {
-  "...": "...",
+  "name": "PostgreSQL example",
   "env": {
-    "pghost": "localhost",
-    "pguser": "postgres",
-    "pgpassword": "WonderfulPassword123"
-  }
+    "host": "localhost",
+    "user": "postgres",
+    "password": "WonderfulPassword123"
+  },
+  "tasks": [
+    {
+      "name": "Postgres task example",
+      "actions": [
+        {
+          "postgres-database": {
+            "database": "test1"
+          }
+        },
+        {
+          "to-file": {
+            "path": "test1.sql"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Postgres task example 2",
+      "actions": [
+        {
+          "postgres-database": {
+            "database": "test2"
+          }
+        },
+        {
+          "to-file": {
+            "path": "test2.sql"
+          }
+        }
+      ]
+    }
+  ]
 }
 ```
 
-Then, we will add a new step script called `02.sh` with the following contents:
+The tool will read the environment variables, and inject them in the actions parameters.
 
-```sh
-backup-postgres-database "databasename"
-```
+If everything went well, you now will have a `test1.sql` and `test2.sql` files in the backup folder.
 
-The tool will read the environment variables, and inject them in the scripts environment when they are running. The key are transformed to be upper case, so you don't need to.
-
-If everything went well, you now will have a `databasename.sql` file in the backup folder.
+!!! Info "YAML is better for tasks"
+    Check the YAML and JSON syntax in the examples for the tasks... We think that YAML is better for writing tasks, lesser to write and easier to understand.
 
 
 ## Compression
 
-What if your postgres backup takes some MB and if the file were compressed, will be a few KBs? Or what if you want to upload to a cloud storage and you want to save some bytes if possible when uploading them? *(That's an spoiler, yes)*
+What if your postgres backup takes some MB and you think "what if the file were compressed, will be a few KBs?" You can add a compress action in the middle of the actions to compress the output. See the example:
 
-The tool, with the help of `tar`, `xz` and `gzip` commands, can compress whatever you want. And some of the predefined functions takes advantage of this and compress for you some of the files. The configuration for this is simple:
+```yaml
+...
+    actions:
+      - postgres-database:
+          database: test1
+      - compress-gzip: {}  #Compress using `gzip` (the command)
+      - to-file:
+          path: test1.sql.gz
+...
+```
+
+The [`compress-gzip`](../actions/compress#compress-gzip) action receives data as input and compresses it using `gzip` command. And that's how you compress some data.
+
+In addition, when uploading folders to a storage provider, they automatically are archived into a `tar` file. If you want to save some bits, you can also compress them by adding the following configuration in the configuration file:
 
 ```json
 {
@@ -144,12 +235,10 @@ The tool, with the help of `tar`, `xz` and `gzip` commands, can compress whateve
 }
 ```
 
-With this simple configuration, the `backup-postgres-database` and many more will output a compressed file. You can even take advantage of this by using the helper function [`compress-encrypt`](./steps/#compress-encrypt) that will run a command that must output the data to `stdout` and will compress (and encrypt [oh no, another spoiler]) it using the configuration.
-
 
 ## Encrypt
 
-You already know that you can encrypt, but you don't know how yet. You need **OpenGPG 2** in order to cypher files. And as well as the compression, will be used automatically by some functions, and in the upload to storage providers.
+You need **OpenGPG 2** in order to cypher files. And as well as the compression, will be used automatically to upload to storage providers.
 
 Most Linux distributions have installed `gpg` tools, but you must check the version. On macOS, install [GPGTools][4].
 
@@ -166,9 +255,38 @@ There's two ways to encrypt data, in this guide will be using the passphrase. He
 }
 ```
 
-> Note: the algorithm changes between distributions. Check the available in `gpg --version`. In this guide we will be using AES256.
+But, if instead what you want is to encrypt a file in a task, there is an action for you:
 
-Now the `backup-postgres-database` will be compressed and encrypted using a passphrase and `gpg`, and any of the functions that uses [`compress-encrypt`](./steps/#compress-encrypt).
+```yaml
+...
+    actions:
+      - postgres-database:
+          database: test1
+      - encrypt-gpg:
+          passphrase: AVeryPowerfulPassw0rd:)
+      - to-file:
+          path: test1.sql.asc
+...
+```
+
+The [`encrypt-gpg`](../actions/encrypt#encrypt-gpg) action will use `gpg` to encrypt the input data. You may even compress and encrypt the data in a task (preferible in this order):
+
+```yaml
+...
+    actions:
+      - postgres-database:
+          database: test1
+      - compress-gzip: {}
+      - encrypt-gpg:
+          passphrase: AVeryPowerfulPassw0rd:)
+      - to-file:
+          path: test1.sql.asc
+...
+```
+
+
+!!! Note
+    The algorithm changes between distributions. Check the available in `gpg --version`. In this guide we will be using AES256.
 
 
 ## Upload to the cloud
@@ -204,7 +322,7 @@ This will upload the files to the FTP server `ftp.local`, in the folder `/backup
 
 There's more to learn about the tool, but this is a rather good introduction to it. Take a look to the other sections of this documentation to learn and discover new stuff of the tool.
 
-Concerned about too much hardcoded credentials in the configuration file? Check out the [Secret backends](./secrets).
+Concerned about too much hardcoded credentials in the configuration file? Check out the [Secret backends](../secrets).
 
 
  [1]: https://brew.sh
