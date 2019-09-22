@@ -76,7 +76,7 @@ class Config(object):
 
     def _parse_config(self, conf):
         self.__backups_path = Path(conf['backupsPath'])
-        self.__custom_utils_script = Path(conf['customUtilsScript']) if 'customUtilsScript' in conf else None
+        self.__actions_modules = conf.get('actionsModules', [])
         self.__log_level = logging.getLevelName(conf.get('logLevel', 'WARNING'))
         self.__max_backups_kept = conf.get('maxBackupsKept', 7)
         self.__env = conf.get('env', {})
@@ -99,7 +99,6 @@ class Config(object):
             self.__cypher_params = None
 
         Config.__check_paths('backupsPath', self.__backups_path)
-        Config.__check_paths('customUtilsScript', self.__custom_utils_script)
 
     @staticmethod
     def __check_paths(field: str, path: Optional[Path]):
@@ -122,11 +121,11 @@ class Config(object):
         return self.__backups_path
 
     @property
-    def custom_utils_script(self) -> Optional[Path]:
+    def actions_modules(self) -> List[str]:
         """
-        :return: If defined, this file will be included when the steps are going to run.
+        :return: Defines a list of python modules that contains extra action implementations
         """
-        return self.__custom_utils_script
+        return self.__actions_modules
 
     @property
     def log_level(self) -> int:

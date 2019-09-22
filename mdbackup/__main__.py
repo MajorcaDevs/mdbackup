@@ -24,6 +24,8 @@ import shutil
 import sys
 from typing import Dict, List, Tuple
 
+from .actions.builtin._register import register
+from .actions.container import register_actions_from_module
 from .archive import (
     archive_folder,
     get_compression_strategy,
@@ -37,15 +39,8 @@ from .storage import create_storage_instance
 
 def main_load_secrets(logger: logging.Logger, config: Config):
     try:
-
-    try:
-        secret_env = {}
-        for secret_backend, secret in secret_backends:
-            for key, secret_key in secret.env.items():
-                logger.debug(f'Getting env secret {key} from {secret.type}:{secret_key}')
-                secret_env[key] = secret_backend.get_secret(secret_key)
-
-        for secret_backend, secret in secret_backends:
+        for secret in config.secrets:
+            secret_backend = secret.backend
             for key in secret.storage:
                 logger.debug(f'Getting storage provider secret from {secret.type}:{key}')
                 if isinstance(key, dict):
@@ -63,20 +58,28 @@ def main_load_secrets(logger: logging.Logger, config: Config):
     return {}
 
 
+def main_register_actions(logger: logging.Logger, config: Config):
+    # Register builtin actions
+    register()
+    # Register external actions
+    for module in config.actions_modules:
+        try:
+            register_actions_from_module(module)
+        except ValueError as e:
+            raise Exception(f'{module}: {" ".join(e.args)}')
+
+
 def main_do_backup(logger: logging.Logger, config: Config, secret_env) -> Path:
     # Do backups
     try:
-        cypher_items = config.cypher_params.items() if config.cypher_params is not None else []
-        cypher_env = {f'cypher_{key}': value for key, value in cypher_items}
         return do_backup(config.backups_path,
                          config.config_folder,
-                         config.custom_utils_script,
+                         config.actions_modules,
+                         env={
                          **config.env,
-                         compression_strategy=config.compression_strategy,
-                         compression_level=config.compression_level,
-                         cypher_strategy=config.cypher_strategy,
-                         **cypher_env,
-                         **secret_env)
+                            **secret_env,
+                         },
+                         secrets=config.secrets)
     except Exception as e:
         logger.error(e)
         run_hook('backup:error', str(config.backups_path / '.partial'), str(e), e.args[1] if len(e.args) > 2 else '')
@@ -269,6 +272,7 @@ def main():
 
     try:
         if args.backup_only:
+            main_register_actions(logger, config)
             secret_env = main_load_secrets(logger, config)
             backup = main_do_backup(logger, config, secret_env)
             logger.info(f'Backup done: {backup.absolute()}')
@@ -278,6 +282,7 @@ def main():
         elif args.cleanup_only:
             main_clean_up(logger, config)
         else:
+            main_register_actions(logger, config)
             secret_env = main_load_secrets(logger, config)
             backup = main_do_backup(logger, config, secret_env)
             main_upload_backup(logger, config, backup)
