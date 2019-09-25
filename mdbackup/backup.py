@@ -20,12 +20,12 @@ import logging
 import os
 from pathlib import Path
 import re
-import subprocess
-from tempfile import NamedTemporaryFile
-from threading import Thread
-from typing import Callable, Dict, List, Union
+from typing import List
 
+from .actions.runner import run_task_actions
+from .config import SecretConfig
 from .hooks import run_hook
+from .tasks.tasks import Tasks
 
 
 def generate_backup_path(backups_folder: Path) -> Path:
@@ -38,112 +38,155 @@ def generate_backup_path(backups_folder: Path) -> Path:
     return Path(backups_folder, isostring).resolve()
 
 
-def get_steps_scripts(config_path: Path) -> List[Path]:
+def get_tasks_definitions(config_path: Path) -> List[Path]:
     """
-    Gets the list of available steps scripts inside the relative
-    path 'steps'.
+    Gets the list of available tasks definitions files inside the 'tasks' folder.
     """
-    steps_dir = config_path / 'steps'
-    if not steps_dir.exists():
-        raise FileNotFoundError(f'The steps folder does not exist')
-    scripts = [x for x in steps_dir.iterdir() if x.is_file() and x.stat().st_mode & 73]
-    scripts.sort()
-    return [script.absolute() for script in scripts]
+    defs_dir = config_path / 'tasks'
+    if not defs_dir.exists():
+        raise FileNotFoundError(f'The tasks folder does not exist')
+    definitions = [x for x in defs_dir.iterdir() if x.is_file() and x.name.split('.')[-1] in ('json', 'yaml', 'yml')]
+    definitions.sort()
+    return [script.absolute() for script in definitions]
 
 
-def run_step(step: Path, cwd: Path, env: Dict[str, Union[str, int, float, Callable[[], str]]]) -> int:
-    """
-    Runs this step, with the current working directory defined in ``cwd``
-    and, optionally, extra environment variables defined in ``env``.
-    Returns the completed subprocess object.
-    """
-    logger = logging.getLogger(__name__)
-    full_env = dict(os.environ)
-    for key, value in env.items():
-        if value is not None:
-            if callable(value):
-                full_env[key.upper()] = value()
-            else:
-                full_env[key.upper()] = str(value)
+def run_tasks(tasks: Tasks, backup_path: Path, prev_backup_path: Path, env: dict, secrets: List[SecretConfig]):
+    logger = logging.getLogger(__name__).getChild('run_tasks')
+    if tasks.inside_folder is not None:
+        logger.info(f'Tasks {tasks.name} will store files in {tasks.inside_folder}')
+        backup_path = backup_path / tasks.inside_folder
+        prev_backup_path = prev_backup_path / tasks.inside_folder if prev_backup_path is not None else None
+        backup_path.mkdir(exist_ok=True, parents=True)
+        backup_path.chmod(0o755)
 
-    process = subprocess.Popen([str(step)],
-                               stderr=subprocess.PIPE,
-                               stdout=subprocess.PIPE,
-                               cwd=str(cwd),
-                               env=full_env,
-                               bufsize=1)
-    # Print stderr lines in a thread
-    stderr_thread = Thread(target=lambda: [logger.error(err_line[:-1].decode('UTF-8')) for err_line in process.stderr])
-    stderr_thread.start()
-    # Read every line (from stdout) into the logger
-    for line in process.stdout:
-        if line.startswith(b'DEBUG: '):
-            logger.debug(line[7:-1].decode('UTF-8'))
+    for task in tasks.tasks:
+        resolved_env = resolve_secrets({**env, **task.env}, secrets)
+        run_hook(f'backup:tasks:{tasks.name}:task:{task.name}:before', str(backup_path), tasks.name, task.name)
+
+        try:
+            for it in task.actions:
+                key, value = next(iter(it.items()))
+                if isinstance(value, dict):
+                    new_value = {
+                        **resolved_env,
+                        **value,
+                        '_backup_path': backup_path,
+                        '_prev_backup_path': prev_backup_path,
+                    }
+                    new_value = resolve_secrets(new_value, secrets)
+                    it[key] = new_value
+
+            run_task_actions(task.name, task.actions)
+        except Exception as e:
+            logger.exception(f'Task {task.name} failed')
+            run_hook(f'backup:tasks:{tasks.name}:task:{task.name}:error',
+                     ', '.join(e.args),
+                     str(backup_path),
+                     tasks.name,
+                     task.name)
+            if task.stop_on_fail:
+                raise e
+
+        run_hook(f'backup:tasks:{tasks.name}:task:{task.name}:after', str(backup_path), tasks.name, task.name)
+
+
+def resolve_secret(key_parts: List[str], secret: SecretConfig):
+    """
+    Given a key in parts and a secret configuration, tries to resolve the secret
+    from the backend using the configured alias in the ``env`` section of the
+    secret backend configuration. If no secret alias is found, then it will
+    return None.
+    """
+    if len(key_parts) == 0:
+        return
+
+    value = secret.env
+    while len(key_parts) > 0:
+        key_part = key_parts.pop(0)
+        if isinstance(value, dict) and key_part in value:
+            value = value[key_part]
         else:
-            logger.info(line[:-1].decode('UTF-8'))
-    # Join thread and wait to wait process (same as join, but in processes)
-    stderr_thread.join()
-    return process.wait()
+            return
+
+    return secret.backend.get_secret(value)
 
 
-def generate_script(step_script: Path, custom_utils: str = None) -> Path:
+def resolve_secrets(env: dict, secrets: List[SecretConfig]) -> dict:
     """
-    Given the original step script path, and an optional custom utils script,
-    will generate a script that will run in sh, with the app's utils script
-    and the custom utils (if defined). Returns the path to the temporary script.
+    Given a environment dict, tries to resolve all secrets found and returns a
+    copy of the dict with secrets resolved.
     """
-    logger = logging.getLogger(__name__)
-    me_irl = os.path.dirname(os.path.realpath(__file__))
-    with NamedTemporaryFile(delete=False) as tmp:
-        tmp.write(b'#!/usr/bin/env bash\n')
-        tmp.write(f'source {me_irl}/utils.sh\n'.encode('utf-8'))
-        if custom_utils is not None:
-            tmp.write(f'source {custom_utils}\n'.encode('utf-8'))
-        tmp.write(b'\n')
-        with open(step_script, 'r') as script_file:
-            script_file_contents = script_file.read()
-            logger.debug(f'''Generating temporary script {tmp.name}
-#!/usr/bin/env bash
-source {me_irl}/utils.sh
-{"source " + custom_utils if custom_utils is not None else ""}
+    logger = logging.getLogger(__name__).getChild('resolve_secrets')
+    new_env = {}
+    for key, value in env.items():
+        if isinstance(value, str):
+            if value.startswith('#'):
+                logger.debug(f'Trying to resolve env {key} with secret alias {value}')
+                for secret in secrets:
+                    new_value = resolve_secret(value[1:].split('.'), secret)
+                    if new_value is not None:
+                        logger.debug(f'Env {key} resolved using {secret.type}')
+                        new_env[key] = new_value
+                        break
 
-{script_file_contents}''')
-            tmp.write(script_file_contents.encode('utf-8'))
+                if new_value is None:
+                    logger.warn(f'Env {key} with secret alias {value} cannot be resolved')
+                    new_env[key] = value
+            else:
+                new_env[key] = value
+        elif isinstance(value, dict):
+            new_env[key] = resolve_secrets(value, secrets)
+        else:
+            new_env[key] = value
 
-        return Path(tmp.name)
+    return new_env
 
 
-def do_backup(backups_folder: Path, config_path: Path, custom_utils: str = None, **kwargs) -> Path:
+def do_backup(backups_folder: Path,
+              config_path: Path,
+              action_modules: List[str] = [],
+              env: dict = {},
+              secrets: List[SecretConfig] = []) -> Path:
     """
-    Looks for the step scripts, prepares the directory where the backups will
-    be stored, run the scripts and saves the directory with the right name.
+    Looks for the tasks defs, prepares the directory where the backups will
+    be stored, run the tasks and saves the directory with the right name.
     Returns the created directory with the backups. You must define where to
-    store the backups in ``backups_folder``. The ``custom_utils`` allows you
-    to define an extra utilities script that will be injected in every step
-    script. The ``kwargs`` are environment variables that will be defined in
-    the steps execution.
+    store the backups in ``backups_folder``. The ``action_modules`` allows
+    you to load external modules that contain extra actions. The ``env`` are
+    environment variables that will be defined in the tasks execution. Finally,
+    the ``secrets`` parameter declares a list of secret backends from where
+    secrets will be extracted when requested from ``env`` sections.
     """
-    logger = logging.getLogger(__name__)
+    logger = logging.getLogger(__name__).getChild('do_backup')
     tmp_backup = Path(backups_folder, '.partial')
+    prev_backup = backups_folder / 'current'
+    prev_backup = prev_backup.resolve() if prev_backup.exists() else None
+    resolved_env = resolve_secrets(env, secrets)
 
     run_hook('backup:before', str(tmp_backup))
 
     logger.info(f'Temporary backup folder is {tmp_backup}')
     tmp_backup.mkdir(exist_ok=True, parents=True)
     tmp_backup.chmod(0o755)
-    for step_script in get_steps_scripts(config_path):
-        logger.info(f'Running script {step_script}')
-        tmp_path = generate_script(step_script, custom_utils)
-        tmp_path.chmod(0o755)
+    for tasks_definition in get_tasks_definitions(config_path):
+        try:
+            logger.debug(f'Loading tasks definition file {tasks_definition}')
+            tasks = Tasks(tasks_definition)
+        except KeyError:
+            logger.error(f'Could not parse {tasks_definition}')
+            raise
 
-        run_hook(f'backup:step:{step_script.name}:before', str(tmp_backup))
-        return_code = run_step(tmp_path, tmp_backup, kwargs)
-        if return_code != 0:
-            logger.error(f'Script returned {return_code}')
-            run_hook(f'backup:step:{step_script.name}:error', str(tmp_backup), str(return_code))
-            raise Exception(f'The step {step_script} failed, backup will stop', step_script.name)
-        tmp_path.unlink()
-        run_hook(f'backup:step:{step_script.name}:after', str(tmp_backup))
+        logger.info(f'Preparing to run tasks of {tasks.name}')
+        run_hook(f'backup:tasks:{tasks.name}:before', str(tmp_backup), tasks.name)
+        try:
+            resolved_tasks_env = resolve_secrets({**resolved_env, **tasks.env}, secrets)
+            run_tasks(tasks, tmp_backup, prev_backup, resolved_tasks_env, secrets)
+        except Exception as e:
+            logger.error(f'One of the tasks of {tasks.name} failed')
+            run_hook(f'backup:tasks:{tasks.name}:error', str(tmp_backup), ', '.join(e.args), tasks.name)
+            raise Exception(f'One of the tasks of {tasks.name} failed, backup will stop', tasks.name)
+
+        run_hook(f'backup:tasks:{tasks.name}:after', str(tmp_backup), tasks.name)
 
     backup = generate_backup_path(backups_folder)
     logger.info(f'Moving {tmp_backup} to {backup}')

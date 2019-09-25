@@ -59,7 +59,6 @@ nav:
   - Home: 'README.md'
   - Quick start: 'quick-start.md'
   - Configuration: 'configuration.md'
-  - Steps: 'steps/index.md'
   - Actions:
     - Actions overview: 'actions/index.md'
     - Builtin actions:
@@ -71,6 +70,7 @@ nav:
       - Encrypt: 'actions/encrypt.md'
       - File: 'actions/file.md'
       - Network: 'actions/network.md'
+  - Tasks: 'tasks.md'
   - Storage providers:
     - Overview: 'storage/index.md'
     - Google Drive: 'storage/gdrive.md'

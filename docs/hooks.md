@@ -26,30 +26,70 @@ The output of the script is redirected to the logger using the `DEBUG` level. If
     2. Exception message.
     3. (Optional) Step name.
 
-## backup:step:${step_name}:before
+## backup:tasks:${tasks_name}:before
 
-> Note: `${step_name}` must be the filename of the step. i.e.: `01 - web.sh` is a filename and step name.
-
-- **When**: Before starting running the step script.
+- **When**: Before starting running all tasks in a tasks definition file.
 - **Parameters**:
     1. The folder where the backups are going to be stored during the process (will end with `.partial`).
+    2. The name of the tasks definition.
 
-## backup:step:${step_name}:after
+!!! Note
+    `${tasks_name}` must be the name of the tasks definition, defined in the `name` section of the file.
 
-> Note: `${step_name}` must be the filename of the step. i.e.: `01 - web.sh` is a filename and step name.
+## backup:tasks:${tasks_name}:after
 
-- **When**: After running the step script.
+- **When**: After running all tasks in a tasks definition file.
 - **Parameters**:
     1. The folder where the backups are going to be stored during the process (will end with `.partial`).
+    2. The name of the tasks definition.
 
-## backup:step:${step_name}:error
+!!! Note
+    `${tasks_name}` must be the name of the tasks definition, defined in the `name` section of the file.
 
-> Note: `${step_name}` must be the filename of the step. i.e.: `01 - web.sh` is a filename and step name.
+## backup:tasks:${tasks_name}:error
 
-- **When**: After running the step script but the script failed to run.
+- **When**: When one of the tasks failed running and stops the tasks run.
 - **Parameters**:
-    1. The folder where the backups are going to be stored during the process (will end with `.partial`).
-    2. The exception message.
+    1. The exception message.
+    2. The folder where the backups are going to be stored during the process (will end with `.partial`).
+    3. The name of the tasks definition.
+
+!!! Note
+    `${tasks_name}` must be the name of the tasks definition, defined in the `name` section of the file.
+
+## backup:tasks:${tasks_name}:task:${task_name}:before
+
+- **When**: Before running a task.
+- **Parameters**:
+    1. The folder where the backups are going to be stored during the process.
+    2. The name of the tasks definition.
+    3. The name of the task.
+
+!!! Note
+    `${tasks_name}` must be the name of the tasks definition, defined in the `name` section of the file. The `${task_name}` must be the name of the task, defined in the `name` section of the task.
+
+## backup:tasks:${tasks_name}:task:${task_name}:after
+
+- **When**: After running a task.
+- **Parameters**:
+    1. The folder where the backups are going to be stored during the process.
+    2. The name of the tasks definition.
+    3. The name of the task.
+
+!!! Note
+    `${tasks_name}` must be the name of the tasks definition, defined in the `name` section of the file. The `${task_name}` must be the name of the task, defined in the `name` section of the task.
+
+## backup:tasks:${tasks_name}:task:${task_name}:error
+
+- **When**: When a task run has failed, even with `stopOnFail` is set to false.
+- **Parameters**:
+    1. The error message.
+    2. The folder where the backups are going to be stored during the process.
+    3. The name of the tasks definition.
+    4. The name of the task.
+
+!!! Note
+    `${tasks_name}` must be the name of the tasks definition, defined in the `name` section of the file. The `${task_name}` must be the name of the task, defined in the `name` section of the task.
 
 ## upload:before
 

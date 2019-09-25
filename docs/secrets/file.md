@@ -6,14 +6,17 @@ Every environment variable to inject, will be read from the file specified as va
 
 For cloud storage providers, the backend will read json or yaml files, which must have the configuration for a backend. They must use the same structure shown in the [storage providers](../storage/index.md) section of the example json. If an object is used instead of a string, then the path must be in the `key` attribute and the rest of the object is treated as an extension to the configuration that will be loaded from the file. So it is possible to use same credentials between different configurations, but to define specific parameters for each.
 
- > To be able to read `yaml` files, you must install `pyyaml`: `pip install pyyaml`
+!!! Note
+    If the `basePath` is not defined, then it will use `${configFolder}/secrets` as default value. If the `basePath` is a relative path, then it will be relative to the `configFolder`.
 
 ## Configuration schema
 
 ```json
 {
-  "env": {
-    "pgpassword": "/path/to/pg-password",
+  "envDefs": {
+    "pg": {
+      "password": "/path/to/pg-password",
+    },
     "mysqlpassword": "mysql-password"
   },
   "config": {

@@ -24,6 +24,8 @@ import shutil
 import sys
 from typing import Dict, List, Tuple
 
+from .actions.builtin._register import register
+from .actions.container import register_actions_from_module
 from .archive import (
     archive_folder,
     get_compression_strategy,
@@ -32,28 +34,13 @@ from .archive import (
 from .backup import do_backup, get_backup_folders_sorted
 from .config import Config, StorageConfig
 from .hooks import define_hook, run_hook
-from .secrets import get_secret_backend_implementation
 from .storage import create_storage_instance
 
 
 def main_load_secrets(logger: logging.Logger, config: Config):
-    # Prepare secret backends (if any) and its env getters (aka functions that gets the right value from the backend)
     try:
-        secret_backends = [(get_secret_backend_implementation(secret.type, secret.config), secret)
-                           for secret in config.secrets]
-    except ImportError as e:
-        # Log not-found module and exit
-        logger.exception(e.args[0], e.args[1])
-        sys.exit(4)
-
-    try:
-        secret_env = {}
-        for secret_backend, secret in secret_backends:
-            for key, secret_key in secret.env.items():
-                logger.debug(f'Getting env secret {key} from {secret.type}:{secret_key}')
-                secret_env[key] = secret_backend.get_secret(secret_key)
-
-        for secret_backend, secret in secret_backends:
+        for secret in config.secrets:
+            secret_backend = secret.backend
             for key in secret.storage:
                 logger.debug(f'Getting storage provider secret from {secret.type}:{key}')
                 if isinstance(key, dict):
@@ -67,27 +54,32 @@ def main_load_secrets(logger: logging.Logger, config: Config):
                 config.providers.append(provider)
     except Exception as e:
         raise e
-    finally:
-        for secret_backend, _ in secret_backends:
-            del secret_backend
 
-    return secret_env
+    return {}
+
+
+def main_register_actions(logger: logging.Logger, config: Config):
+    # Register builtin actions
+    register()
+    # Register external actions
+    for module in config.actions_modules:
+        try:
+            register_actions_from_module(module)
+        except ValueError as e:
+            raise Exception(f'{module}: {" ".join(e.args)}')
 
 
 def main_do_backup(logger: logging.Logger, config: Config, secret_env) -> Path:
     # Do backups
     try:
-        cypher_items = config.cypher_params.items() if config.cypher_params is not None else []
-        cypher_env = {f'cypher_{key}': value for key, value in cypher_items}
         return do_backup(config.backups_path,
                          config.config_folder,
-                         config.custom_utils_script,
-                         **config.env,
-                         compression_strategy=config.compression_strategy,
-                         compression_level=config.compression_level,
-                         cypher_strategy=config.cypher_strategy,
-                         **cypher_env,
-                         **secret_env)
+                         config.actions_modules,
+                         env={
+                            **config.env,
+                            **secret_env,
+                         },
+                         secrets=config.secrets)
     except Exception as e:
         logger.error(e)
         run_hook('backup:error', str(config.backups_path / '.partial'), str(e), e.args[1] if len(e.args) > 2 else '')
@@ -226,8 +218,11 @@ def configure_hooks(hooks: Dict[str, str]):
 
 def configure_default_value_for_file_secrets(config: Config):
     for s in config.secrets:
-        if s.type == 'file' and s.config.get('basePath') is None:
-            s.config['basePath'] = str(config.config_folder / 'secrets')
+        if s.type == 'file':
+            if s.config.get('basePath') is None:
+                s.config['basePath'] = str(config.config_folder / 'secrets')
+            elif not Path(s.config['basePath']).is_absolute():
+                s.config['basePath'] = str(config.config_folder / s.config['basePath'])
 
 
 def main():
@@ -280,6 +275,7 @@ def main():
 
     try:
         if args.backup_only:
+            main_register_actions(logger, config)
             secret_env = main_load_secrets(logger, config)
             backup = main_do_backup(logger, config, secret_env)
             logger.info(f'Backup done: {backup.absolute()}')
@@ -289,6 +285,7 @@ def main():
         elif args.cleanup_only:
             main_clean_up(logger, config)
         else:
+            main_register_actions(logger, config)
             secret_env = main_load_secrets(logger, config)
             backup = main_do_backup(logger, config, secret_env)
             main_upload_backup(logger, config, backup)
