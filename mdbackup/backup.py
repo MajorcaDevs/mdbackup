@@ -159,8 +159,8 @@ def do_backup(backups_folder: Path,
     """
     logger = logging.getLogger(__name__).getChild('do_backup')
     tmp_backup = Path(backups_folder, '.partial')
-    prev_backup = get_backup_folders_sorted(backups_folder)
-    prev_backup = prev_backup[-1] if len(prev_backup) > 0 else None
+    prev_backup = backups_folder / 'current'
+    prev_backup = prev_backup.resolve() if prev_backup.exists() else None
     resolved_env = resolve_secrets(env, secrets)
 
     run_hook('backup:before', str(tmp_backup))
