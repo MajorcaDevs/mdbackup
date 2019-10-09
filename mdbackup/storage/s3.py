@@ -40,15 +40,21 @@ class S3Storage(AbstractStorage):
         self.__bucket: str = config['bucket']
         self.__storageclass: str = config.get('storageClass', 'STANDARD')
         self.__pre = config.backups_path if not config.backups_path.endswith('/') else config.backups_path[:-1]
-        self.__pre = self.__pre if not self.__pre.startswith('/') else self.__pre[1:]
+        self.__pre = self.__pre.lstrip('/') if self.__pre is not None else ''
+
+    def __ok_key(self, path: Union[str, Path]):
+        path = str(path).lstrip('/')
+
+        if self.__pre != '':
+            path = f'{self.__pre}/{path}'
+
+        path = path.rstrip('/')
+        return path
 
     def list_directory_recursive(self, path: Union[str, Path]) -> List[str]:
-        path = path if isinstance(path, str) else str(path)
-        if path.startswith('/'):
-            path = path[1:]
-        full_path = f'{self.__pre}/{path}'
+        full_path = self.__ok_key(path)
         items = [key
-                 for key in [item['Key'].replace(f'{self.__pre}/', '')
+                 for key in [item['Key'][len(self.__pre):].lstrip('/')
                              for item in self.__s3.list_objects_v2(Bucket=self.__bucket, Prefix=full_path)['Contents']]
                  if key != '']
         return items
@@ -62,17 +68,12 @@ class S3Storage(AbstractStorage):
         return items
 
     def create_folder(self, name: str, parent: Union[Path, str, str] = None) -> str:
-        parent = parent if parent is not None else ''
-        parent = parent[:-1] if parent.endswith('/') else parent
-        name = f'{name}/' if not name.endswith('/') else name
-        key = f'{parent}/{name}'
-        if key.startswith('/'):
-            key = key[1:]
-        key = f'{self.__pre}/{key}'
+        parent = parent.strip('/') if parent is not None else ''
+        key = self.__ok_key(f'{parent}/{name}') + '/'
         self.__log.info(f'Creating folder {key}')
         ret = self.__s3.put_object(Key=key, Bucket=self.__bucket)
         self.__log.debug(ret)
-        return key.replace(f'{self.__pre}/', '')
+        return key[len(self.__pre):].lstrip('/')
 
     def upload(self, path: Path, parent: Union[Path, str, str] = None):
         if isinstance(parent, Path):
@@ -84,9 +85,7 @@ class S3Storage(AbstractStorage):
                 key = f'{parent}/{path.name}'
         else:
             key = path.name
-        if key.startswith('/'):
-            key = key[1:]
-        key = f'{self.__pre}/{key}'
+        key = self.__ok_key(key)
         self.__log.info(f'Uploading file {key} (from {path})')
         ret = self.__s3.upload_file(str(path.absolute()),
                                     self.__bucket,
@@ -98,16 +97,14 @@ class S3Storage(AbstractStorage):
         self.__log.debug(ret)
 
     def delete(self, path: Union[Path, str]):
-        path = str(path)
-        if path.startswith('/'):
-            path = path[1:]
+        path = self.__ok_key(path)
         self.__log.info(f'Deleting {self.__pre}/{path}')
         objects_to_delete = self.list_directory_recursive(path)[::-1]
         while len(objects_to_delete) > 0:
             ret = self.__s3.delete_objects(
                 Bucket=self.__bucket,
                 Delete={
-                    'Objects': [{'Key': f'{self.__pre}/{key}'} for key in objects_to_delete],
+                    'Objects': [{'Key': self.__ok_key(key)} for key in objects_to_delete],
                     'Quiet': True,
                 },
             )
