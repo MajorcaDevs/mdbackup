@@ -35,8 +35,13 @@ pipeline {
           GIT_TAG = sh(script: 'git tag -l --contains HEAD', returnStdout: true).trim()
           if(GIT_TAG == '') {
             GIT_TAG = null
+            echo 'No tag detected'
           } else {
             IS_DRAFT = GIT_TAG.matches('v?\\d+\\.\\d+\\.\\d+-.+')
+            echo "Tag detected: ${GIT_TAG} - is draft? ${IS_DRAFT}"
+            if(env.BRANCH_NAME.matches('master|dev')) {
+              echo 'A release will be published'
+            }
           }
         }
       }
