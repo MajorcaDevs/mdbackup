@@ -38,10 +38,16 @@ def _preserve_stats(entry_path: Path, stat: os.stat_result, xattrs: dict, mode):
     new_utime = stat.st_atime_ns, stat.st_mtime_ns
 
     if mode is True or 'chmod' in mode:
-        logger.debug(f'chmod {new_mode} {entry_path}')
-        os.lchmod(entry_path, new_mode)
+        if hasattr(os, 'lchmod'):
+            logger.debug(f'lchmod {new_mode} {entry_path}')
+            os.lchmod(entry_path, new_mode)
+        elif not entry_path.is_symlink():
+            logger.debug(f'chmod {new_mode} {entry_path}')
+            os.chmod(entry_path, new_mode)
+        else:
+            logger.warn(f'Current platform has no lchmod implemented: symlink {entry_path} will loose the perms')
     if mode is True or 'chown' in mode:
-        logger.debug(f'chown {new_uid}:{new_gid} {entry_path}')
+        logger.debug(f'lchown {new_uid}:{new_gid} {entry_path}')
         os.lchown(entry_path, new_uid, new_gid)
     if mode is True or 'utime' in mode:
         logger.debug(f'utime {new_utime} {entry_path}')
