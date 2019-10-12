@@ -20,12 +20,16 @@ import logging
 import os
 from pathlib import Path
 import re
-from typing import List
+from typing import Dict, List, Tuple
 
 from .actions.runner import run_task_actions
 from .config import SecretConfig
 from .hooks import run_hook
 from .tasks.tasks import Tasks
+from .utils import write_data_file
+
+
+MANIFEST_VERSION = 1
 
 
 def generate_backup_path(backups_folder: Path) -> Path:
@@ -50,33 +54,44 @@ def get_tasks_definitions(config_path: Path) -> List[Path]:
     return [script.absolute() for script in definitions]
 
 
-def run_tasks(tasks: Tasks, backup_path: Path, prev_backup_path: Path, env: dict, secrets: List[SecretConfig]):
+def run_tasks(
+    tasks: Tasks,
+    backup_path: Path,
+    prev_backup_path: Path,
+    env: dict,
+    secrets: List[SecretConfig],
+) -> Dict[str, Path]:
     logger = logging.getLogger(__name__).getChild('run_tasks')
+    final_backup_path = backup_path
     if tasks.inside_folder is not None:
         logger.info(f'Tasks {tasks.name} will store files in {tasks.inside_folder}')
-        backup_path = backup_path / tasks.inside_folder
+        final_backup_path = backup_path / tasks.inside_folder
         prev_backup_path = prev_backup_path / tasks.inside_folder if prev_backup_path is not None else None
-        backup_path.mkdir(exist_ok=True, parents=True)
-        backup_path.chmod(0o755)
+        final_backup_path.mkdir(exist_ok=True, parents=True)
+        final_backup_path.chmod(0o755)
 
+    tasks_results: Dict[str, Path] = {}
     for task in tasks.tasks:
         resolved_env = resolve_secrets({**env, **task.env}, secrets)
-        run_hook(f'backup:tasks:{tasks.name}:task:{task.name}:before', str(backup_path), tasks.name, task.name)
+        run_hook(f'backup:tasks:{tasks.name}:task:{task.name}:before', str(final_backup_path), tasks.name, task.name)
 
         try:
+            actions = []
             for it in task.actions:
                 key, value = next(iter(it.items()))
                 if isinstance(value, dict):
                     new_value = {
                         **resolved_env,
                         **value,
-                        '_backup_path': backup_path,
+                        '_backup_path': final_backup_path,
                         '_prev_backup_path': prev_backup_path,
                     }
                     new_value = resolve_secrets(new_value, secrets)
-                    it[key] = new_value
+                    actions.append({key: new_value})
+                else:
+                    actions.append({key: value})
 
-            run_task_actions(task.name, task.actions)
+            tasks_results[task.name] = run_task_actions(task.name, actions).relative_to(backup_path)
         except Exception as e:
             logger.exception(f'Task {task.name} failed')
             run_hook(f'backup:tasks:{tasks.name}:task:{task.name}:error',
@@ -88,6 +103,8 @@ def run_tasks(tasks: Tasks, backup_path: Path, prev_backup_path: Path, env: dict
                 raise e
 
         run_hook(f'backup:tasks:{tasks.name}:task:{task.name}:after', str(backup_path), tasks.name, task.name)
+
+    return tasks_results
 
 
 def resolve_secret(key_parts: List[str], secret: SecretConfig):
@@ -142,6 +159,31 @@ def resolve_secrets(env: dict, secrets: List[SecretConfig]) -> dict:
     return new_env
 
 
+def create_backup_manifest(backup_path: Path, results: Dict[str, Tuple[Tasks, Dict[str, Path]]]):
+    logger = logging.getLogger(__name__).getChild('create_backup_manifest')
+    manifest_dict = {
+        'version': MANIFEST_VERSION,
+        'createdAt': datetime.utcnow().isoformat(),
+        'tasksDefinitions': {},
+    }
+
+    for tasks_def_name, (tasks, tasks_results) in results.items():
+        manifest_dict['tasksDefinitions'][tasks_def_name] = {
+            'env': tasks.env,
+            'inside': tasks.inside_folder,
+            'tasks': [{
+                'name': task.name,
+                'env': task.env,
+                'actions': task.actions,
+                'result': tasks_results[task.name],
+            } for task in tasks.tasks],
+        }
+
+    manifest_path = backup_path / '.manifest.yaml'
+    logger.debug(f'Writing manifest at {manifest_path}')
+    write_data_file(manifest_path, manifest_dict)
+
+
 def do_backup(backups_folder: Path,
               config_path: Path,
               action_modules: List[str] = [],
@@ -168,6 +210,7 @@ def do_backup(backups_folder: Path,
     logger.info(f'Temporary backup folder is {tmp_backup}')
     tmp_backup.mkdir(exist_ok=True, parents=True)
     tmp_backup.chmod(0o755)
+    tasks_definitions_results: Dict[str, Tuple[Tasks, Dict[str, Path]]] = {}
     for tasks_definition in get_tasks_definitions(config_path):
         try:
             logger.debug(f'Loading tasks definition file {tasks_definition}')
@@ -180,7 +223,8 @@ def do_backup(backups_folder: Path,
         run_hook(f'backup:tasks:{tasks.name}:before', str(tmp_backup), tasks.name)
         try:
             resolved_tasks_env = resolve_secrets({**resolved_env, **tasks.env}, secrets)
-            run_tasks(tasks, tmp_backup, prev_backup, resolved_tasks_env, secrets)
+            result = run_tasks(tasks, tmp_backup, prev_backup, resolved_tasks_env, secrets)
+            tasks_definitions_results[tasks.file_name] = (tasks, result)
         except Exception as e:
             logger.error(f'One of the tasks of {tasks.name} failed')
             run_hook(f'backup:tasks:{tasks.name}:error', str(tmp_backup), ', '.join(e.args), tasks.name)
@@ -191,6 +235,9 @@ def do_backup(backups_folder: Path,
     backup = generate_backup_path(backups_folder)
     logger.info(f'Moving {tmp_backup} to {backup}')
     tmp_backup.rename(backup)
+
+    logger.info(f'Creating manifest of backup {backup}')
+    create_backup_manifest(backup, tasks_definitions_results)
 
     current_backup = Path(backups_folder, 'current')
     if current_backup.is_symlink():
