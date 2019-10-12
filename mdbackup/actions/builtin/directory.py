@@ -107,6 +107,8 @@ def action_write_dir(inp: DirEntryGenerator, params: dict):
             logger.debug(f'Modifying stats of file {entry_path} to match the originals')
             _preserve_stats(entry_path, entry.stats, entry.xattrs, preserve_stats)
 
+    return parent
+
 
 @action('copy-directory')
 def action_copy_directory(_, params: dict):

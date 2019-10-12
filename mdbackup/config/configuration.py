@@ -15,19 +15,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import json
 import logging
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
 from mdbackup.config.secret import SecretConfig
 from mdbackup.config.storage import StorageConfig
-from mdbackup.utils import change_keys
-
-try:
-    from yaml import CLoader as Loader, load as yaml_load
-except ImportError:
-    from yaml import Loader, load as yaml_load
+from mdbackup.utils import change_keys, read_data_file
 
 
 class Config(object):
@@ -52,25 +46,18 @@ class Config(object):
         self.config_folder = path
         if (path / 'config.json').exists():
             self.__file = path / 'config.json'
-            parse_method = 'json'
         elif (path / 'config.yaml').exists():
             self.__file = path / 'config.yaml'
-            parse_method = 'yaml'
         elif (path / 'config.yml').exists():
             self.__file = path / 'config.yml'
-            parse_method = 'yaml'
         else:
             raise FileNotFoundError(
                 'Expected a config file config.json, config.yaml or config.yml, but non of them was found',
             )
 
-        with open(self.__file) as config_file:
-            if parse_method == 'json':
-                parsed_config = json.load(config_file)
-            elif parse_method == 'yaml':
-                parsed_config = yaml_load(config_file, Loader=Loader)
-            else:
-                raise NotImplementedError(f'Cannot read this type of config file: {self.__file.parts[-1]}')
+        parsed_config = read_data_file(self.__file)
+        if parsed_config is None:
+            raise NotImplementedError(f'Cannot read this type of config file: {self.__file.parts[-1]}')
 
         self._parse_config(parsed_config)
 

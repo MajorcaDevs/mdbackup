@@ -1,8 +1,9 @@
 import io
 import logging
+from pathlib import Path
 import subprocess
 import types
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 from mdbackup.actions.container import are_compatible, get_action, is_final
 from mdbackup.actions.ds import OutputDataStream
@@ -88,7 +89,7 @@ def _cleanup(things_to_dipose: List[Tuple[OutputDataStream, str]], has_raised: b
         raise RuntimeError('\n\n'.join((f'{action}:\n{lines}' for action, lines in failed)), failed)
 
 
-def run_task_actions(task_name: str, actions: List[Dict[str, Any]]):
+def run_task_actions(task_name: str, actions: List[Dict[str, Any]]) -> Optional[Path]:
     if len(actions) == 0:
         logger.warning(f'Task {task_name} has no actions')
         return
@@ -111,7 +112,10 @@ def run_task_actions(task_name: str, actions: List[Dict[str, Any]]):
 
         action, params, action_key = _get_action_from_definition(actions[-1])
         logger.info(f'Running final action {action_key} and waiting for the whole process to end')
-        action(prev_input, params)
+        result = action(prev_input, params)
+        if result is None or not isinstance(result, Path):
+            raise ValueError(f'Action {action_key} does not return the path of its output (return value must be Path)')
+        return result
     except Exception as e:
         has_raised = True
         logger.exception('An action raised an exception')

@@ -1,4 +1,10 @@
+import json
 from typing import Dict
+
+try:
+    from yaml import CLoader as Loader, CDumper as Dumper, load as yaml_load, dump as yaml_dump
+except ImportError:
+    from yaml import Loader, Dumper, load as yaml_load, dump as yaml_dump
 
 
 def snakeify(camel_case: str) -> str:
@@ -36,3 +42,23 @@ def raise_if_type_is_incorrect(obj, types, message, required=False):
         return
     if not isinstance(obj, types):
         raise TypeError(message)
+
+
+def read_data_file(path):
+    with open(path, 'r') as data_file:
+        if path.name.endswith('.json'):
+            return json.load(data_file)
+        elif path.name.endswith('.yaml') or path.name.endswith('.yml'):
+            return yaml_load(data_file, Loader=Loader)
+        else:
+            return None
+
+
+def write_data_file(path, data):
+    with open(path, 'w') as data_file:
+        if path.name.endswith('.json'):
+            json.dump(data, data_file)
+        elif path.name.endswith('.yaml') or path.name.endswith('.yml'):
+            yaml_dump(data, data_file, Dumper=Dumper)
+        else:
+            raise NotImplementedError(f'Write data to {path.name} is not implemented')

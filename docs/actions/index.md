@@ -33,7 +33,7 @@ There is a list of builtin actions that can be used to create the tasks pipeline
 
 ## Implementing actions
 
-In python, an action (and *unaction*) is just a function that receives two arguments and returns something. An initial action will receive `None` and the parameters as arguments and should return a data stream or a `DirEntry` iterator. A transformer action will receive a data stream or a `DirEntry` iterator (depending on the expected input) and the parameters as arguments and will return a data stream or a `DirEntry` iterator. A final action will receive a data stream or a `DirEntry` iterator and must not return anything. An action can use another action internally to make a composition of actions.
+In python, an action (and *unaction*) is just a function that receives two arguments and returns something. An initial action will receive `None` and the parameters as arguments and should return a data stream or a `DirEntry` iterator. A transformer action will receive a data stream or a `DirEntry` iterator (depending on the expected input) and the parameters as arguments and will return a data stream or a `DirEntry` iterator. A final action will receive a data stream or a `DirEntry` iterator and must return the relative path of the file or folder that the action has created. An action can use another action internally to make a composition of actions.
 
 !!! Info "`DirEntry`"
     Is a data structure used internally to represent a entry of a folder. The object is defined like this:
@@ -94,6 +94,8 @@ A symlink will have the `link_content` attribute set with the contents of the sy
             file_object.write(data)
             data = inp.read(chunk_size)
         file_object.close()
+
+        return full_path
     ```
 
 

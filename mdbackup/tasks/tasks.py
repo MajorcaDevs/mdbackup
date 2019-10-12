@@ -1,13 +1,8 @@
-import json
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
 from mdbackup.tasks.task import Task
-
-try:
-    from yaml import CLoader as Loader, load as yaml_load
-except ImportError:
-    from yaml import Loader, load as yaml_load
+from mdbackup.utils import read_data_file
 
 
 class Tasks:
@@ -19,14 +14,12 @@ class Tasks:
         if not path.is_file():
             raise IsADirectoryError(f'"{path}" must be a file')
 
-        with open(path) as tasks_file:
-            if path.name.endswith('.json'):
-                parsed_tasks = json.load(tasks_file)
-            elif path.name.endswith('.yaml') or path.name.endswith('.yml'):
-                parsed_tasks = yaml_load(tasks_file, Loader=Loader)
-            else:
-                raise NotImplementedError(f'Cannot read this type of config file: {self.__file.parts[-1]}')
+        parsed_tasks = read_data_file(path)
+        if parsed_tasks is None:
+            raise NotImplementedError(f'Cannot read this type of config file: {self.__file.parts[-1]}')
 
+        self.__path = path
+        self.__file_name = Path(path).name
         self.__parse(parsed_tasks, path)
 
     def __parse(self, tasks: Dict[str, Any], path: Path):
@@ -41,6 +34,15 @@ class Tasks:
             except KeyError as e:
                 task_name = task.get('name', f'#{i}')
                 raise KeyError(f'{e.args[0]} - on task {task_name}')
+
+        task_names = list(map(lambda task: task.name, self.__tasks))
+        for task_name in task_names:
+            if task_names.count(task_name) > 1:
+                raise ValueError(f'Task name "{task_name}" is repeated, tasks cannot have duplicated names')
+
+    @property
+    def file_name(self) -> str:
+        return self.__file_name
 
     @property
     def name(self) -> str:

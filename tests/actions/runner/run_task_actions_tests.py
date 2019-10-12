@@ -1,4 +1,5 @@
 from io import FileIO
+from pathlib import Path
 from subprocess import Popen
 from unittest.mock import MagicMock, Mock
 
@@ -24,7 +25,8 @@ def _register_actions(this=None):
     else:
         register_action('initial', lambda _1, _2: None, output='stream')
         register_action('middle', lambda _1, _2: None, expected_input='stream', output='stream')
-    register_action('final', lambda _1, _2: None, expected_input='stream')
+    register_action('final', lambda _1, _2: Path('final-file'), expected_input='stream')
+    register_action('final-with-no-path', lambda _1, _2: None, expected_input='stream')
     register_action('ifailure', _failure_impl, output='stream')
     register_action('ffailure', _failure_impl, expected_input='stream')
     register_action('bad', lambda _1, _2: [], output='stream')
@@ -73,6 +75,20 @@ class RunTaskActionsWithOneActionTests(TestCaseWithoutLogs):
         actions = [{'nope': None}]
 
         with self.assertRaises(KeyError):
+            run_task_actions('test', actions)
+
+    def test_run_actions_should_return_path(self):
+        actions = [{'final': 1}]
+
+        result = run_task_actions('test', actions)
+
+        self.assertIsNotNone(result)
+        self.assertEqual(result, Path('final-file'))
+
+    def test_run_actions_with_final_action_not_returning_path_should_fail(self):
+        actions = [{'final-with-no-path': 1}]
+
+        with self.assertRaises(ValueError):
             run_task_actions('test', actions)
 
 
