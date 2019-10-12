@@ -57,8 +57,8 @@ def read_data_file(path):
 def write_data_file(path, data):
     with open(path, 'w') as data_file:
         if path.name.endswith('.json'):
-            return json.dump(data, data_file)
+            json.dump(data, data_file)
         elif path.name.endswith('.yaml') or path.name.endswith('.yml'):
-            return yaml_dump(data, data_file, Dumper=Dumper)
+            yaml_dump(data, data_file, Dumper=Dumper)
         else:
-            return None
+            raise NotImplementedError(f'Write data to {path.name} is not implemented')
