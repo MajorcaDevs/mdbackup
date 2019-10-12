@@ -10,7 +10,10 @@ def buildImage(tag, arch, flavour) {
 
 def pushImage(img, tag) {
   docker.withRegistry('https://registry.hub.docker.com', 'bobthabuilda') {
-    img.push(tag)
+    img.push("${GIT_TAG}-${tag}")
+    if(env.BRANCH_NAME == 'master') {
+      img.push(tag)
+    }
   }
 }
 
@@ -21,9 +24,24 @@ pipeline {
 
   environment {
     CI = 'true'
+    GIT_TAG = ''
+    IS_DRAFT = false
   }
 
   stages {
+    stage('Get git tag') {
+      steps {
+        script {
+          GIT_TAG = sh(script: 'git tag -l --contains HEAD', returnStdout: true).trim()
+          if(GIT_TAG == '') {
+            GIT_TAG = null
+          } else {
+            IS_DRAFT = GIT_TAG.matches('v?\\d+\\.\\d+\\.\\d+-.+')
+          }
+        }
+      }
+    }
+
     stage('Test') {
       agent {
         docker {
@@ -52,9 +70,33 @@ pipeline {
       }
     }
 
+    stage('Build wheel') {
+      when {
+        branch 'master|dev'
+      }
+
+      agent {
+        docker {
+          label 'docker'
+          image 'python:3.7-buster'
+          args '-e HOME=$WORKSPACE -e PATH=$PATH:$WORKSPACE/.local/bin'
+        }
+      }
+
+      steps {
+        script {
+          sh 'python setup.py bdist_wheel'
+          archiveArtifacts artifacts: 'dist/mdbackup-*.whl', fingerprint: true
+        }
+      }
+    }
+
     stage('Build images') {
       when {
-        branch 'master'
+        branch 'master|dev'
+        expression {
+          GIT_TAG != null && GIT_TAG != ''
+        }
       }
 
       parallel {
@@ -284,7 +326,10 @@ pipeline {
 
     stage('Update manifest') {
       when {
-        branch 'master'
+        branch 'master|dev'
+        expression {
+          GIT_TAG != null && GIT_TAG != ''
+        }
       }
 
       agent {
@@ -293,12 +338,51 @@ pipeline {
 
       steps {
         script {
-          sh 'docker manifest create majorcadevs/mdbackup:slim majorcadevs/mdbackup:amd64_slim majorcadevs/mdbackup:armv7_slim majorcadevs/mdbackup:armv8_slim'
-          sh 'docker manifest create majorcadevs/mdbackup:alpine majorcadevs/mdbackup:amd64_alpine majorcadevs/mdbackup:armv7_alpine majorcadevs/mdbackup:armv8_alpine'
-          docker.withRegistry('https://registry.hub.docker.com', 'bobthabuilda') {
-            sh 'docker manifest push -p majorcadevs/mdbackup:slim'
-            sh 'docker manifest push -p majorcadevs/mdbackup:alpine'
+          if(env.BRANCH_NAME == 'master') {
+            sh 'docker manifest create majorcadevs/mdbackup:slim majorcadevs/mdbackup:amd64_slim majorcadevs/mdbackup:armv7_slim majorcadevs/mdbackup:armv8_slim'
+            sh 'docker manifest create majorcadevs/mdbackup:alpine majorcadevs/mdbackup:amd64_alpine majorcadevs/mdbackup:armv7_alpine majorcadevs/mdbackup:armv8_alpine'
           }
+          sh "docker manifest create majorcadevs/mdbackup:${GIT_TAG}-slim majorcadevs/mdbackup:${GIT_TAG}-amd64_slim majorcadevs/mdbackup:${GIT_TAG}-armv7_slim majorcadevs/mdbackup:${GIT_TAG}-armv8_slim"
+          sh "docker manifest create majorcadevs/mdbackup:${GIT_TAG}-alpine majorcadevs/mdbackup:${GIT_TAG}-amd64_alpine majorcadevs/mdbackup:${GIT_TAG}-armv7_alpine majorcadevs/mdbackup:${GIT_TAG}-armv8_alpine"
+          docker.withRegistry('https://registry.hub.docker.com', 'bobthabuilda') {
+            if(env.BRANCH_NAME == 'master') {
+              sh 'docker manifest push -p majorcadevs/mdbackup:slim'
+              sh 'docker manifest push -p majorcadevs/mdbackup:alpine'
+            }
+            sh "docker manifest push -p majorcadevs/mdbackup:${GIT_TAG}-slim"
+            sh "docker manifest push -p majorcadevs/mdbackup:${GIT_TAG}-alpine"
+          }
+        }
+      }
+    }
+
+    stage('Create release') {
+      when {
+        branch 'master|dev'
+        expression {
+          GIT_TAG != null && GIT_TAG != ''
+        }
+      }
+
+      agent {
+        label 'majorcadevs'
+      }
+
+      steps {
+        script {
+          unarchive mapping: ['dist/*.whl': '.']
+          def file = sh(script: 'ls *.whl', returnStdout: true).trim()
+          githubRelease(
+            'amgxv-github-token',
+            'majorcadevs/mdbackup',
+            "${GIT_TAG}",
+            "Release ${GIT_TAG}",
+            "TBD",
+            [
+              [file, 'application/octet-stream'],
+            ],
+            draft: IS_DRAFT
+          )
         }
       }
     }
