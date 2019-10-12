@@ -103,6 +103,8 @@ def action_write_file(inp: InputDataStream, params):
         data = inp.read(chunk_size)
     file_object.close()
 
+    return full_path
+
 
 @action('copy-file')
 def action_copy_file(_, params: dict):
@@ -152,6 +154,8 @@ def action_copy_file(_, params: dict):
         xattrs = _read_xattrs(orig_path)
         _preserve_stats(dest_path, orig_stat, xattrs, preserve_stats)
 
+    return dest_path
+
 
 @action('clone-file')
 def action_clone_file(_, params: dict):
@@ -193,3 +197,5 @@ def action_clone_file(_, params: dict):
         # Do a hard-link clone (fallback if CoW fails)
         logger.debug(f'Creating hardlink from {orig_path} to {dest_path}')
         os.link(str(orig_path), str(dest_path))
+
+    return dest_path
