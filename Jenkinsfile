@@ -77,7 +77,9 @@ pipeline {
 
     stage('Build wheel') {
       when {
-        branch 'master|dev'
+        expression {
+          BRANCH_NAME ==~ /master|dev/
+        }
       }
 
       agent {
@@ -98,9 +100,8 @@ pipeline {
 
     stage('Build images') {
       when {
-        branch 'master|dev'
         expression {
-          GIT_TAG != null && GIT_TAG != ''
+          GIT_TAG != null && GIT_TAG != '' && BRANCH_NAME ==~ /master|dev/
         }
       }
 
@@ -331,9 +332,8 @@ pipeline {
 
     stage('Update manifest') {
       when {
-        branch 'master|dev'
         expression {
-          GIT_TAG != null && GIT_TAG != ''
+          GIT_TAG != null && GIT_TAG != '' && BRANCH_NAME ==~ /master|dev/
         }
       }
 
@@ -363,9 +363,8 @@ pipeline {
 
     stage('Create release') {
       when {
-        branch 'master|dev'
         expression {
-          GIT_TAG != null && GIT_TAG != ''
+          GIT_TAG != null && GIT_TAG != '' && BRANCH_NAME ==~ /master|dev/
         }
       }
 
