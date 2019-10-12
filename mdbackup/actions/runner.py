@@ -9,7 +9,6 @@ from mdbackup.actions.ds import OutputDataStream
 
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.DEBUG)
 
 
 def _get_action_key_from_definition(action_def: dict):
