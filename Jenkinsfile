@@ -93,7 +93,9 @@ pipeline {
       steps {
         script {
           sh 'python setup.py bdist_wheel'
-          archiveArtifacts artifacts: 'dist/mdbackup-*.whl', fingerprint: true
+          dir('dist') {
+            archiveArtifacts artifacts: 'mdbackup-*.whl', fingerprint: true
+          }
         }
       }
     }
@@ -115,16 +117,10 @@ pipeline {
             img = ''
             arch = 'amd64'
             flavour = 'alpine'
-            tag = 'amd64_alpine'
+            tag = 'amd64-alpine'
           }
 
           stages {
-            stage('Checkout') {
-              steps {
-                checkoutRepo()
-              }
-            }
-
             stage('Build image') {
               steps {
                 script {
@@ -152,16 +148,10 @@ pipeline {
             img = ''
             arch = 'amd64'
             flavour = 'slim'
-            tag = 'amd64_slim'
+            tag = 'amd64-slim'
           }
 
           stages {
-            stage('Checkout') {
-              steps {
-                checkoutRepo()
-              }
-            }
-
             stage('Build image') {
               steps {
                 script {
@@ -189,16 +179,10 @@ pipeline {
             img = ''
             arch = 'arm64v8'
             flavour = 'alpine'
-            tag = 'armv8_alpine'
+            tag = 'armv8-alpine'
           }
 
           stages {
-            stage('Checkout') {
-              steps {
-                checkoutRepo()
-              }
-            }
-
             stage('Build image') {
               steps {
                 script {
@@ -226,16 +210,10 @@ pipeline {
             img = ''
             arch = 'arm64v8'
             flavour = 'slim'
-            tag = 'armv8_slim'
+            tag = 'armv8-slim'
           }
 
           stages {
-            stage('Checkout') {
-              steps {
-                checkoutRepo()
-              }
-            }
-
             stage('Build image') {
               steps {
                 script {
@@ -263,16 +241,10 @@ pipeline {
             img = ''
             arch = 'arm32v7'
             flavour = 'alpine'
-            tag = 'armv7_alpine'
+            tag = 'armv7-alpine'
           }
 
           stages {
-            stage('Checkout') {
-              steps {
-                checkoutRepo()
-              }
-            }
-
             stage('Build image') {
               steps {
                 script {
@@ -300,16 +272,10 @@ pipeline {
             img = ''
             arch = 'arm32v7'
             flavour = 'slim'
-            tag = 'armv7_slim'
+            tag = 'armv7-slim'
           }
 
           stages {
-            stage('Checkout') {
-              steps {
-                checkoutRepo()
-              }
-            }
-
             stage('Build image') {
               steps {
                 script {
@@ -344,11 +310,11 @@ pipeline {
       steps {
         script {
           if(env.BRANCH_NAME == 'master') {
-            sh 'docker manifest create majorcadevs/mdbackup:slim majorcadevs/mdbackup:amd64_slim majorcadevs/mdbackup:armv7_slim majorcadevs/mdbackup:armv8_slim'
-            sh 'docker manifest create majorcadevs/mdbackup:alpine majorcadevs/mdbackup:amd64_alpine majorcadevs/mdbackup:armv7_alpine majorcadevs/mdbackup:armv8_alpine'
+            sh 'docker manifest create majorcadevs/mdbackup:slim majorcadevs/mdbackup:amd64-slim majorcadevs/mdbackup:armv7-slim majorcadevs/mdbackup:armv8-slim'
+            sh 'docker manifest create majorcadevs/mdbackup:alpine majorcadevs/mdbackup:amd64-alpine majorcadevs/mdbackup:armv7-alpine majorcadevs/mdbackup:armv8-alpine'
           }
-          sh "docker manifest create majorcadevs/mdbackup:${GIT_TAG}-slim majorcadevs/mdbackup:${GIT_TAG}-amd64_slim majorcadevs/mdbackup:${GIT_TAG}-armv7_slim majorcadevs/mdbackup:${GIT_TAG}-armv8_slim"
-          sh "docker manifest create majorcadevs/mdbackup:${GIT_TAG}-alpine majorcadevs/mdbackup:${GIT_TAG}-amd64_alpine majorcadevs/mdbackup:${GIT_TAG}-armv7_alpine majorcadevs/mdbackup:${GIT_TAG}-armv8_alpine"
+          sh "docker manifest create majorcadevs/mdbackup:${GIT_TAG}-slim majorcadevs/mdbackup:${GIT_TAG}-amd64-slim majorcadevs/mdbackup:${GIT_TAG}-armv7-slim majorcadevs/mdbackup:${GIT_TAG}-armv8-slim"
+          sh "docker manifest create majorcadevs/mdbackup:${GIT_TAG}-alpine majorcadevs/mdbackup:${GIT_TAG}-amd64-alpine majorcadevs/mdbackup:${GIT_TAG}-armv7-alpine majorcadevs/mdbackup:${GIT_TAG}-armv8-alpine"
           docker.withRegistry('https://registry.hub.docker.com', 'bobthabuilda') {
             if(env.BRANCH_NAME == 'master') {
               sh 'docker manifest push -p majorcadevs/mdbackup:slim'
