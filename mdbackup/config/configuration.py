@@ -112,8 +112,7 @@ class Config(object):
             raise NotADirectoryError(f'{field}: "{path}" must be a directory')
 
     def __del__(self):
-        for secret in self.__secrets:
-            del secret.backend
+        pass
 
     @property
     def backups_path(self) -> Path:
