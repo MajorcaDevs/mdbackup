@@ -59,6 +59,7 @@ pipeline {
       steps {
         script {
           sh 'pip install --user -r docker/dev/requirements.dev.txt'
+          sh 'pip install --user -r docker/requirements.txt'
           sh 'flake8 mdbackup'
           sh 'flake8 tests'
           sh 'coverage run --source=mdbackup --branch -m xmlrunner discover -s tests -p \'*tests*.py\' -o tests/.report'
