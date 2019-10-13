@@ -16,7 +16,7 @@ def pushImage(arch, flavour) {
   docker.withRegistry('https://registry.hub.docker.com', 'bobthabuilda') {
     def imageName = generateImageName(arch, flavour)
     def img = docker.image(imageName)
-    img.push("${GIT_TAG}-${tag}-${flavour}")
+    img.push("${GIT_TAG}-${arch}-${flavour}")
   }
 }
 
