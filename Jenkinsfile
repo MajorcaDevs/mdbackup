@@ -51,6 +51,7 @@ pipeline {
     }
 
     stage('Test') {
+      when { branch 'master' } //TODO
       agent {
         docker {
           label 'docker'
@@ -316,7 +317,7 @@ pipeline {
               sh 'env'
               sh 'docker info'
               sh 'ls $DOCKER_CONFIG'
-              sh 'cat $DOCKER_CONFIG/**/*'
+              sh 'cat $DOCKER_CONFIG/config.json'
               sh "docker manifest create majorcadevs/mdbackup:${GIT_TAG}-${flavour} ${imgs}"
               sh "docker manifest push -p majorcadevs/mdbackup:${GIT_TAG}-${flavour}"
               if(env.BRANCH_NAME == 'master') {
