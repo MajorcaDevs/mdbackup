@@ -133,7 +133,7 @@ pipeline {
     stage('Build images') {
       when {
         expression {
-          GIT_TAG != null && GIT_TAG != '' && BRANCH_NAME ==~ /master|dev|feature\/suicidio/ #TODO
+          GIT_TAG != null && GIT_TAG != '' && BRANCH_NAME ==~ /master|dev|feature\/suicidio/
         }
       }
 
@@ -323,7 +323,7 @@ pipeline {
     stage('Update manifest') {
       when {
         expression {
-          GIT_TAG != null && GIT_TAG != '' && BRANCH_NAME ==~ /master|dev|feature\/suicidio/ #TODO
+          GIT_TAG != null && GIT_TAG != '' && BRANCH_NAME ==~ /master|dev|feature\/suicidio/
         }
       }
 
@@ -365,7 +365,7 @@ pipeline {
     stage('Create release') {
       when {
         expression {
-          GIT_TAG != null && GIT_TAG != '' && BRANCH_NAME ==~ /master|dev|feature\/suicidio/ #TODO
+          GIT_TAG != null && GIT_TAG != '' && BRANCH_NAME ==~ /master|dev|feature\/suicidio/
         }
       }
 
