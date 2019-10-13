@@ -344,13 +344,13 @@ pipeline {
           githubRelease(
             'amgxv-github-token',
             'majorcadevs/mdbackup',
-            "${GIT_TAG}",
-            "Release ${GIT_TAG}",
-            "TBD",
+            "${GIT_TAG}".toString(),
+            "Release ${GIT_TAG}".toString(),
+            'TBD',
             [
               [file, 'application/octet-stream'],
             ],
-            IS_DRAFT
+            new Boolean(IS_DRAFT)
           )
         }
       }
