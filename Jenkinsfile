@@ -292,7 +292,7 @@ pipeline {
     stage('Update manifest') {
       when {
         expression {
-          GIT_TAG != null && GIT_TAG != '' && BRANCH_NAME ==~ /master|dev|feature\/suicidio/ //TODO
+          GIT_TAG != null && GIT_TAG != '' && BRANCH_NAME ==~ /master|dev/
         }
       }
 
@@ -313,11 +313,7 @@ pipeline {
           }
 
           images.each { flavour, imgs ->
-            docker.withRegistry(/*'https://registry.hub.docker.com'*/'', 'bobthabuilda') {
-              sh 'env'
-              sh 'docker info'
-              sh 'ls $DOCKER_CONFIG'
-              sh 'cat $DOCKER_CONFIG/config.json'
+            docker.withRegistry('', 'bobthabuilda') {
               sh "docker manifest create majorcadevs/mdbackup:${GIT_TAG}-${flavour} ${imgs}"
               sh "docker manifest push -p majorcadevs/mdbackup:${GIT_TAG}-${flavour}"
               if(env.BRANCH_NAME == 'master') {
@@ -325,13 +321,6 @@ pipeline {
                 sh "docker manifest push -p majorcadevs/mdbackup:${flavour}"
               }
             }
-
-            /*flavours.each { flavour ->
-              sh "docker manifest push -p majorcadevs/mdbackup:${GIT_TAG}-${flavour}"
-              if(env.BRANCH_NAME == 'master') {
-                sh "docker manifest push -p majorcadevs/mdbackup:${flavour}"
-              }
-            }*/
           }
         }
       }
@@ -350,7 +339,7 @@ pipeline {
 
       steps {
         script {
-          unarchive mapping: ['dist/*.whl': '.']
+          unarchive mapping: ['*.whl': '.']
           def file = sh(script: 'ls *.whl', returnStdout: true).trim()
           githubRelease(
             'amgxv-github-token',
