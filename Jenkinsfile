@@ -107,7 +107,7 @@ pipeline {
     stage('Build images') {
       when {
         expression {
-          GIT_TAG != null && GIT_TAG != '' && BRANCH_NAME ==~ /master|dev|feature\/suicidio/ //TODO
+          GIT_TAG != null && GIT_TAG != '' && BRANCH_NAME ==~ /master|dev/
         }
       }
 
@@ -311,20 +311,22 @@ pipeline {
               .join(' ')
           }
 
-          images.each { flavour, imgs ->
-            sh "docker manifest create majorcadevs/mdbackup:${GIT_TAG}-${flavour} ${imgs}"
-            if(env.BRANCH_NAME == 'master') {
-              sh "docker manifest create majorcadevs/mdbackup:${flavour} ${imgs}"
-            }
-          }
-
           docker.withRegistry('https://registry.hub.docker.com', 'bobthabuilda') {
-            flavours.each { flavour ->
+            images.each { flavour, imgs ->
+              sh "docker manifest create majorcadevs/mdbackup:${GIT_TAG}-${flavour} ${imgs}"
+              sh "docker manifest push -p majorcadevs/mdbackup:${GIT_TAG}-${flavour}"
+              if(env.BRANCH_NAME == 'master') {
+                sh "docker manifest create majorcadevs/mdbackup:${flavour} ${imgs}"
+                sh "docker manifest push -p majorcadevs/mdbackup:${flavour}"
+              }
+            }
+
+            /*flavours.each { flavour ->
               sh "docker manifest push -p majorcadevs/mdbackup:${GIT_TAG}-${flavour}"
               if(env.BRANCH_NAME == 'master') {
                 sh "docker manifest push -p majorcadevs/mdbackup:${flavour}"
               }
-            }
+            }*/
           }
         }
       }
