@@ -20,32 +20,6 @@ def pushImage(arch, flavour) {
   }
 }
 
-def dockerImageStage(arch, flavour) {
-  return stage("${arch}-${flavour}") {
-    agent {
-      label 'docker-qemu'
-    }
-
-    stages {
-      stage('Build image') {
-        steps {
-          script {
-            buildImage(arch, flavour)
-          }
-        }
-      }
-
-      stage('Push image') {
-        steps {
-          script {
-            pushImage(arch, flavour)
-          }
-        }
-      }
-    }
-  }
-}
-
 pipeline {
   agent {
     label '!docker-qemu'
@@ -138,13 +112,7 @@ pipeline {
       }
 
       parallel {
-        dockerImageStage('amd64', 'alpine')
-        dockerImageStage('amd64', 'slim')
-        dockerImageStage('armv8', 'alpine')
-        dockerImageStage('armv8', 'slim')
-        dockerImageStage('armv7', 'alpine')
-        dockerImageStage('armv7', 'slim')
-        /*stage('amd64-alpine') {
+        stage('amd64-alpine') {
           agent {
             label 'docker-qemu'
           }
@@ -316,7 +284,7 @@ pipeline {
               }
             }
           }
-        }*/
+        }
       }
     }
 
