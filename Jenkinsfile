@@ -350,7 +350,7 @@ pipeline {
             [
               [file, 'application/octet-stream'],
             ],
-            draft: IS_DRAFT
+            IS_DRAFT
           )
         }
       }
