@@ -315,7 +315,8 @@ pipeline {
             docker.withRegistry('https://registry.hub.docker.com', 'bobthabuilda') {
               sh 'env'
               sh 'docker info'
-              sh 'cat $DOCKER_CONFIG'
+              sh 'ls $DOCKER_CONFIG'
+              sh 'cat $DOCKER_CONFIG/**/*'
               sh "docker manifest create majorcadevs/mdbackup:${GIT_TAG}-${flavour} ${imgs}"
               sh "docker manifest push -p majorcadevs/mdbackup:${GIT_TAG}-${flavour}"
               if(env.BRANCH_NAME == 'master') {
