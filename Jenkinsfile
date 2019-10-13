@@ -1,19 +1,22 @@
 @Library('jenkings') _
 
-def buildImage(tag, arch, flavour) {
-  imageName = "majorcadevs/mdbackup:${tag}"
+def generateImageName(arch, flavour) {
+  return "majorcadevs/mdbackup:${GIT_TAG}-${arch}-${flavour}"
+}
+
+def buildImage(arch, flavour) {
+  def imageName = generateImageName(arch, flavour)
   try {
     docker.image(imageName).pull()
   } catch(e) {}
-  return docker.build(imageName, "--pull --build-arg ARCH=${arch} -f docker/Dockerfile-${flavour} .")
+  docker.build(imageName, "--pull --build-arg ARCH=${arch} -f docker/Dockerfile-${flavour} .")
 }
 
-def pushImage(img, tag) {
+def pushImage(arch, flavour) {
   docker.withRegistry('https://registry.hub.docker.com', 'bobthabuilda') {
-    img.push("${GIT_TAG}-${tag}")
-    if(env.BRANCH_NAME == 'master') {
-      img.push(tag)
-    }
+    def imageName = generateImageName(arch, flavour)
+    def img = docker.image(imageName)
+    img.push("${GIT_TAG}-${arch}-${flavour}")
   }
 }
 
@@ -115,17 +118,15 @@ pipeline {
           }
 
           environment {
-            img = ''
             arch = 'amd64'
             flavour = 'alpine'
-            tag = 'amd64-alpine'
           }
 
           stages {
             stage('Build image') {
               steps {
                 script {
-                  img = buildImage(tag, arch, flavour)
+                  buildImage(arch, flavour)
                 }
               }
             }
@@ -133,7 +134,7 @@ pipeline {
             stage('Push image') {
               steps {
                 script {
-                  pushImage(img, tag)
+                  pushImage(arch, flavour)
                 }
               }
             }
@@ -146,17 +147,15 @@ pipeline {
           }
 
           environment {
-            img = ''
             arch = 'amd64'
             flavour = 'slim'
-            tag = 'amd64-slim'
           }
 
           stages {
             stage('Build image') {
               steps {
                 script {
-                  img = buildImage(tag, arch, flavour)
+                  buildImage(arch, flavour)
                 }
               }
             }
@@ -164,7 +163,7 @@ pipeline {
             stage('Push image') {
               steps {
                 script {
-                  pushImage(img, tag)
+                  pushImage(arch, flavour)
                 }
               }
             }
@@ -177,17 +176,15 @@ pipeline {
           }
 
           environment {
-            img = ''
             arch = 'arm64v8'
             flavour = 'alpine'
-            tag = 'armv8-alpine'
           }
 
           stages {
             stage('Build image') {
               steps {
                 script {
-                  img = buildImage(tag, arch, flavour)
+                  buildImage(arch, flavour)
                 }
               }
             }
@@ -195,7 +192,7 @@ pipeline {
             stage('Push image') {
               steps {
                 script {
-                  pushImage(img, tag)
+                  pushImage(arch, flavour)
                 }
               }
             }
@@ -208,17 +205,15 @@ pipeline {
           }
 
           environment {
-            img = ''
             arch = 'arm64v8'
             flavour = 'slim'
-            tag = 'armv8-slim'
           }
 
           stages {
             stage('Build image') {
               steps {
                 script {
-                  img = buildImage(tag, arch, flavour)
+                  buildImage(arch, flavour)
                 }
               }
             }
@@ -226,7 +221,7 @@ pipeline {
             stage('Push image') {
               steps {
                 script {
-                  pushImage(img, tag)
+                  pushImage(arch, flavour)
                 }
               }
             }
@@ -239,17 +234,15 @@ pipeline {
           }
 
           environment {
-            img = ''
             arch = 'arm32v7'
             flavour = 'alpine'
-            tag = 'armv7-alpine'
           }
 
           stages {
             stage('Build image') {
               steps {
                 script {
-                  img = buildImage(tag, arch, flavour)
+                  buildImage(arch, flavour)
                 }
               }
             }
@@ -257,7 +250,7 @@ pipeline {
             stage('Push image') {
               steps {
                 script {
-                  pushImage(img, tag)
+                  pushImage(arch, flavour)
                 }
               }
             }
@@ -270,17 +263,15 @@ pipeline {
           }
 
           environment {
-            img = ''
             arch = 'arm32v7'
             flavour = 'slim'
-            tag = 'armv7-slim'
           }
 
           stages {
             stage('Build image') {
               steps {
                 script {
-                  img = buildImage(tag, arch, flavour)
+                  buildImage(arch, flavour)
                 }
               }
             }
@@ -288,7 +279,7 @@ pipeline {
             stage('Push image') {
               steps {
                 script {
-                  pushImage(img, tag)
+                  pushImage(arch, flavour)
                 }
               }
             }
@@ -310,19 +301,25 @@ pipeline {
 
       steps {
         script {
-          if(env.BRANCH_NAME == 'master') {
-            sh 'docker manifest create majorcadevs/mdbackup:slim majorcadevs/mdbackup:amd64-slim majorcadevs/mdbackup:armv7-slim majorcadevs/mdbackup:armv8-slim'
-            sh 'docker manifest create majorcadevs/mdbackup:alpine majorcadevs/mdbackup:amd64-alpine majorcadevs/mdbackup:armv7-alpine majorcadevs/mdbackup:armv8-alpine'
+          def flavours = ['slim', 'alpine']
+          def arches = ['amd64', 'armv7', 'armv8']
+          def images = [:]
+
+          flavours.each { flavour ->
+            images[flavour] = arches
+              .collect { arch -> generateImageName(arch, flavour) }
+              .join(' ')
           }
-          sh "docker manifest create majorcadevs/mdbackup:${GIT_TAG}-slim majorcadevs/mdbackup:${GIT_TAG}-amd64-slim majorcadevs/mdbackup:${GIT_TAG}-armv7-slim majorcadevs/mdbackup:${GIT_TAG}-armv8-slim"
-          sh "docker manifest create majorcadevs/mdbackup:${GIT_TAG}-alpine majorcadevs/mdbackup:${GIT_TAG}-amd64-alpine majorcadevs/mdbackup:${GIT_TAG}-armv7-alpine majorcadevs/mdbackup:${GIT_TAG}-armv8-alpine"
-          docker.withRegistry('https://registry.hub.docker.com', 'bobthabuilda') {
-            if(env.BRANCH_NAME == 'master') {
-              sh 'docker manifest push -p majorcadevs/mdbackup:slim'
-              sh 'docker manifest push -p majorcadevs/mdbackup:alpine'
+
+          images.each { flavour, imgs ->
+            docker.withRegistry('', 'bobthabuilda') {
+              sh "docker manifest create majorcadevs/mdbackup:${GIT_TAG}-${flavour} ${imgs}"
+              sh "docker manifest push -p majorcadevs/mdbackup:${GIT_TAG}-${flavour}"
+              if(env.BRANCH_NAME == 'master') {
+                sh "docker manifest create majorcadevs/mdbackup:${flavour} ${imgs}"
+                sh "docker manifest push -p majorcadevs/mdbackup:${flavour}"
+              }
             }
-            sh "docker manifest push -p majorcadevs/mdbackup:${GIT_TAG}-slim"
-            sh "docker manifest push -p majorcadevs/mdbackup:${GIT_TAG}-alpine"
           }
         }
       }
@@ -341,18 +338,18 @@ pipeline {
 
       steps {
         script {
-          unarchive mapping: ['dist/*.whl': '.']
+          unarchive mapping: ['*.whl': '.']
           def file = sh(script: 'ls *.whl', returnStdout: true).trim()
           githubRelease(
             'amgxv-github-token',
             'majorcadevs/mdbackup',
-            "${GIT_TAG}",
-            "Release ${GIT_TAG}",
-            "TBD",
+            "${GIT_TAG}".toString(),
+            "Release ${GIT_TAG}".toString(),
+            'TBD',
             [
               [file, 'application/octet-stream'],
             ],
-            draft: IS_DRAFT
+            new Boolean(IS_DRAFT)
           )
         }
       }
