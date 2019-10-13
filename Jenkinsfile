@@ -63,7 +63,7 @@ pipeline {
         script {
           GIT_TAG = sh(script: 'git tag -l --contains HEAD', returnStdout: true).trim()
           if(GIT_TAG == '') {
-            GIT_TAG = 'v0.4.0-beta.0' #TODO null
+            GIT_TAG = 'v0.4.0-beta.0' //TODO null
             echo 'No tag detected'
           } else {
             IS_DRAFT = GIT_TAG.matches('v?\\d+\\.\\d+\\.\\d+-.+')
@@ -133,7 +133,7 @@ pipeline {
     stage('Build images') {
       when {
         expression {
-          GIT_TAG != null && GIT_TAG != '' && BRANCH_NAME ==~ /master|dev|feature\/suicidio/
+          GIT_TAG != null && GIT_TAG != '' && BRANCH_NAME ==~ /master|dev|feature\/suicidio/ //TODO
         }
       }
 
@@ -323,7 +323,7 @@ pipeline {
     stage('Update manifest') {
       when {
         expression {
-          GIT_TAG != null && GIT_TAG != '' && BRANCH_NAME ==~ /master|dev|feature\/suicidio/
+          GIT_TAG != null && GIT_TAG != '' && BRANCH_NAME ==~ /master|dev|feature\/suicidio/ //TODO
         }
       }
 
@@ -365,7 +365,7 @@ pipeline {
     stage('Create release') {
       when {
         expression {
-          GIT_TAG != null && GIT_TAG != '' && BRANCH_NAME ==~ /master|dev|feature\/suicidio/
+          GIT_TAG != null && GIT_TAG != '' && BRANCH_NAME ==~ /master|dev|feature\/suicidio/ //TODO
         }
       }
 
