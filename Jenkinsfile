@@ -83,7 +83,7 @@ pipeline {
     stage('Build wheel') {
       when {
         expression {
-          BRANCH_NAME ==~ /master|dev/
+          BRANCH_NAME ==~ /master|dev|feature\/suicidio/ //TODO
         }
       }
 
