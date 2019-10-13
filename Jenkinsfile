@@ -311,8 +311,8 @@ pipeline {
               .join(' ')
           }
 
-          docker.withRegistry('https://registry.hub.docker.com', 'bobthabuilda') {
-            images.each { flavour, imgs ->
+          images.each { flavour, imgs ->
+            docker.withRegistry('https://registry.hub.docker.com', 'bobthabuilda') {
               sh "docker manifest create majorcadevs/mdbackup:${GIT_TAG}-${flavour} ${imgs}"
               sh "docker manifest push -p majorcadevs/mdbackup:${GIT_TAG}-${flavour}"
               if(env.BRANCH_NAME == 'master') {
