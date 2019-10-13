@@ -313,7 +313,7 @@ pipeline {
           }
 
           images.each { flavour, imgs ->
-            docker.withRegistry('https://registry.hub.docker.com', 'bobthabuilda') {
+            docker.withRegistry(/*'https://registry.hub.docker.com'*/'', 'bobthabuilda') {
               sh 'env'
               sh 'docker info'
               sh 'ls $DOCKER_CONFIG'
