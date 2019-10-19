@@ -29,6 +29,7 @@ class FTPStorage(AbstractStorage):
         self.__log = logging.getLogger(f'{__name__}:FTPStorage')
         self.__conn = self._create_connection(params)
 
+        self.__conn.port = params.get('port', 21)
         self.__conn.cwd(params.backups_path)
         self.__dir = Path(params.backups_path)
 

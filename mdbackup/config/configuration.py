@@ -16,12 +16,14 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import logging
+import os
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Dict, List, Optional, Union
 
+from mdbackup.config.cloud import CloudConfig
 from mdbackup.config.secret import SecretConfig
-from mdbackup.config.storage import StorageConfig
-from mdbackup.utils import change_keys, read_data_file
+from mdbackup.jsonschemavalidator import validate
+from mdbackup.utils import read_data_file
 
 
 class Config(object):
@@ -59,6 +61,15 @@ class Config(object):
         if parsed_config is None:
             raise NotImplementedError(f'Cannot read this type of config file: {self.__file.parts[-1]}')
 
+        schema_path = os.path.join(
+            os.path.abspath(os.path.dirname(__file__)),
+            '..',
+            'json-schemas',
+            'config.schema.json',
+        )
+        if not validate(schema_path, parsed_config):
+            raise Exception('Configuration is invalid')
+
         self._parse_config(parsed_config)
 
     def _parse_config(self, conf):
@@ -67,25 +78,13 @@ class Config(object):
         self.__log_level = logging.getLevelName(conf.get('logLevel', 'WARNING'))
         self.__max_backups_kept = conf.get('maxBackupsKept', 7)
         self.__env = conf.get('env', {})
-        self.__providers = [StorageConfig(provider_dict) for provider_dict in conf.get('storage', [])]
         self.__secrets = [
-            SecretConfig(key, secret_dict.get('envDefs'), secret_dict['config'], secret_dict.get('storage'))
+            SecretConfig(key, secret_dict.get('envDefs'), secret_dict['config'], secret_dict.get('storageProviders'))
             for key, secret_dict in conf.get('secrets', {}).items()
         ]
         self.__hooks = conf.get('hooks', {})
-        if 'compression' in conf:
-            self.__compression_level = conf['compression'].get('level', 5)
-            self.__compression_strategy = conf['compression']['strategy']
-        else:
-            self.__compression_level = None
-            self.__compression_strategy = None
-        if 'cypher' in conf:
-            self.__cypher_strategy = conf['cypher']['strategy']
-            self.__cypher_params = change_keys(conf['cypher'])
-            del self.__cypher_params['strategy']
-        else:
-            self.__cypher_strategy = None
-            self.__cypher_params = None
+        if 'cloud' in conf:
+            self.__cloud = CloudConfig(conf['cloud'])
 
         Config.__check_paths('backupsPath', self.__backups_path)
 
@@ -137,13 +136,6 @@ class Config(object):
         return self.__env
 
     @property
-    def providers(self) -> List[StorageConfig]:
-        """
-        :return: The list of cloud providers where the backups will be uploaded
-        """
-        return self.__providers
-
-    @property
     def secrets(self) -> List[SecretConfig]:
         """
         :return: The list of secret backend configurations from where some config will be obtained securely
@@ -151,32 +143,11 @@ class Config(object):
         return self.__secrets
 
     @property
-    def compression_strategy(self) -> Optional[str]:
+    def cloud(self) -> CloudConfig:
         """
-        :return: The compression strategy
+        :return: The cloud configuraiton
         """
-        return self.__compression_strategy
-
-    @property
-    def compression_level(self) -> Optional[int]:
-        """
-        :return: The compression level
-        """
-        return self.__compression_level
-
-    @property
-    def cypher_strategy(self) -> Optional[str]:
-        """
-        :return: The cypher strategy
-        """
-        return self.__cypher_strategy
-
-    @property
-    def cypher_params(self) -> Optional[Dict[str, Any]]:
-        """
-        :return: The cypher parameters for the given strategy
-        """
-        return self.__cypher_params
+        return self.__cloud
 
     @property
     def hooks(self) -> Dict[str, str]:
