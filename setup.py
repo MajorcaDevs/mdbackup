@@ -31,5 +31,6 @@ setuptools.setup(
     install_requires=[
         'pyyaml',
         'xattr',
+        'jsonschema',
     ],
 )
