@@ -263,8 +263,6 @@ def main():
         print(e.args[0])
         sys.exit(3)
 
-    return
-
     logging.basicConfig(format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
                         level=config.log_level)
     logger = logging.getLogger('mdbackup')
