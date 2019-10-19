@@ -26,11 +26,7 @@ from typing import Dict, List, Tuple
 
 from .actions.builtin._register import register
 from .actions.container import register_actions_from_module
-from .archive import (
-    archive_folder,
-    get_compression_strategy,
-    get_cypher_strategy,
-)
+from .archive import archive_folder
 from .backup import do_backup, get_backup_folders_sorted
 from .config import Config, StorageConfig
 from .hooks import define_hook, run_hook
@@ -95,22 +91,7 @@ def main_compress_folders(config: Config, backup: Path) -> Tuple[List[Path], Lis
     for item in backup.iterdir():
         # Compress if it is a directory
         if item.resolve().is_dir():
-            strategies = []
-
-            if config.cloud.compression_strategy is not None:
-                strategies.append(get_compression_strategy(
-                    config.cloud.compression_strategy,
-                    config.cloud.compression_level,
-                ))
-
-            if config.cloud.cypher_strategy is not None:
-                strategies.append(get_cypher_strategy(
-                    config.cloud.cypher_strategy,
-                    **config.cloud.cypher_params,
-                ))
-
-            filename = archive_folder(backup, item.resolve(), strategies)
-
+            filename = archive_folder(backup, item.resolve(), config.cloud)
             final_items.append(Path(backup, filename))
             items_to_remove.append(Path(backup, filename))
         else:
@@ -124,7 +105,7 @@ def main_upload_backup(logger: logging.Logger, config: Config, backup: Path):
     final_items, items_to_remove = None, []
 
     # (do the following only if there are any providers defined)
-    if len(config.providers) == 0:
+    if len(config.cloud.providers) == 0:
         return
 
     try:
