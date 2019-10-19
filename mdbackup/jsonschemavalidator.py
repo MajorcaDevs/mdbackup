@@ -19,18 +19,17 @@ def _stringify_path(path):
     return str_path
 
 
-def validate(schema, instance):
-    if isinstance(schema, (str, Path)):
-        schema = read_data_file(Path(schema))
-    if isinstance(instance, (str, Path)):
-        instance = read_data_file(Path(instance))
+def validate(schema, instance, output=sys.stderr):
+    schema_path = Path(schema)
+    schema = read_data_file(schema_path)
+    schema['$id'] = f'file://{schema_path.absolute()}'
 
     validator = jsonschema.Draft7Validator(schema=schema)
     validator.check_schema(schema)
 
     is_valid = True
     for error in validator.iter_errors(instance):
-        sys.stderr.write(f'- {_stringify_path(error.path)}: {error.message}\n')
+        output.write(f'- {_stringify_path(error.path)}: {error.message}\n')
         is_valid = False
 
     return is_valid
