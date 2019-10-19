@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "#/",
+  "type": ["object", "null"],
+  "title": "Configures the cypher strategy to use when uploading to a storage provider",
+  "required": [
+    "strategy"
+  ],
+  "properties": {
+    "strategy": {
+      "$id": "#/properties/strategy",
+      "type": "string",
+      "title": "Selects the cypher strategy to follow",
+      "default": null,
+      "enum": [
+        "gpg-passphrase",
+        "gpg-keys"
+      ]
+    },
+    "passphrase": {
+      "$id": "#/properties/passphrase",
+      "type": ["string", "null"],
+      "title": "For a strategy requiring one, uses this as cypher passphrase (symmetric cypher)",
+      "default": null,
+      "examples": [
+        "Ap0werful[passw@rd]"
+      ],
+      "pattern": "^(.*)$"
+    },
+    "keys": {
+      "$id": "#/properties/keys",
+      "type": "array",
+      "title": "For a strategy requiring one, uses the list items as keys to cypher (asymmetric cypher)",
+      "examples": [
+        [ "melchor9000@gmail.com" ]
+      ],
+      "items": {
+        "$id": "#/properties/keys/items",
+        "type": "string",
+        "pattern": "^(.+@.+\\..+)$"
+      }
+    },
+    "algorithm": {
+      "$id": "#/properties/algorithm",
+      "type": ["string", "null"],
+      "title": "Define the cypher algorithm to use in the process",
+      "examples": [
+        "CAMELLIA256",
+        "AES256",
+        "AES192"
+      ]
+    }
+  }
+}

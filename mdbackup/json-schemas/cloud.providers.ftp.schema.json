@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "#/",
+  "type": "object",
+  "title": "Configuration for FTP server upload",
+  "allOf": [
+    { "$ref": "cloud.providers.base.schema.json#/" },
+    {
+      "required": [
+        "type",
+        "backupsPath",
+        "host"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [ "ftp" ]
+        },
+        "host": {
+          "type": "string",
+          "title": "Hostname of the server (can be an IP or domain)"
+        },
+        "user": {
+          "type": "string",
+          "title": "The user that will be used to upload the files"
+        },
+        "password": {
+          "type": "string",
+          "title": "If needed, declares the password for the user"
+        },
+        "acct": {
+          "type": "string"
+        },
+        "port": {
+          "type": "integer",
+          "title": "Port of the FTP server",
+          "default": 21
+        }
+      }
+    }
+  ]
+}

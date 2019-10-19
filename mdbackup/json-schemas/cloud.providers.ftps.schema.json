@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "#/",
+  "type": "object",
+  "title": "Configuration for FTPS server upload",
+  "allOf": [
+    { "$ref": "cloud.providers.base.schema.json#/" },
+    {
+      "required": [
+        "type",
+        "backupsPath",
+        "host"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [ "ftps" ]
+        },
+        "keyFile": {
+          "type": "string"
+        },
+        "certFile": {
+          "type": "string"
+        }
+      }
+    }
+  ]
+}
