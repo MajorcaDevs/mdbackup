@@ -51,7 +51,7 @@ def main_load_secrets(logger: logging.Logger, config: Config):
                     value = secret_backend.get_provider(key)
                 provider = StorageConfig(value)
                 logger.debug(f'Provider type is {provider.type}')
-                config.providers.append(provider)
+                config.cloud.providers.append(provider)
     except Exception as e:
         raise e
 
@@ -97,16 +97,16 @@ def main_compress_folders(config: Config, backup: Path) -> Tuple[List[Path], Lis
         if item.resolve().is_dir():
             strategies = []
 
-            if config.compression_strategy is not None:
+            if config.cloud.compression_strategy is not None:
                 strategies.append(get_compression_strategy(
-                    config.compression_strategy,
-                    config.compression_level,
+                    config.cloud.compression_strategy,
+                    config.cloud.compression_level,
                 ))
 
-            if config.cypher_strategy is not None:
+            if config.cloud.cypher_strategy is not None:
                 strategies.append(get_cypher_strategy(
-                    config.cypher_strategy,
-                    **config.cypher_params,
+                    config.cloud.cypher_strategy,
+                    **config.cloud.cypher_params,
                 ))
 
             filename = archive_folder(backup, item.resolve(), strategies)
@@ -130,7 +130,7 @@ def main_upload_backup(logger: logging.Logger, config: Config, backup: Path):
     try:
         # Upload files to storage providers
         backup_folder_name = backup.relative_to(config.backups_path.resolve()).parts[0]
-        for prov_config in config.providers:
+        for prov_config in config.cloud.providers:
             # Detect provider type and instantiate it
             storage = create_storage_instance(prov_config)
 
@@ -193,7 +193,7 @@ def main_clean_up(logger: logging.Logger, config: Config):
             run_hook('oldBackup:error', str(old.absolute()), str(e))
 
     regex = re.compile(r'\d{4}-\d{2}-\d{2}T\d{1,2}:\d{2}')
-    for prov_config in config.providers:
+    for prov_config in config.cloud.providers:
         storage = create_storage_instance(prov_config)
         if storage is None or prov_config.max_backups_kept is None:
             continue

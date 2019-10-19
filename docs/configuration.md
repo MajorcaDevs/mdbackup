@@ -33,7 +33,7 @@ This allows you to auto-complete with the elements available in the configuratio
           "setting-1": "value",
           "setting-2": true
         },
-        "storage": [
+        "storageProviders": [
           "storage/digital-ocean",
           {
             "key": "storage/gdrive",
@@ -43,33 +43,35 @@ This allows you to auto-complete with the elements available in the configuratio
         ]
       }
     },
-    "compression": {
-      "strategy": "gzip|xz",
-      "level": 8
-    },
-    "cypher": {
-      "strategy": "gpg-keys|gpg-passphrase",
-      "passphrase": "If using gpg-passphrase, this will be used as passphrase for the cypher",
-      "keys": "If using gpg-keys, this will be used as recipients option for the gpg cypher (emails)",
-      "algorithm": "Defines the algorithm to use in the cypher process, depends in the strategy (currently one of `gpg --version` cyphers)"
-    },
-    "storage": [
-      {
-        "type": "provider-type-1",
-        "backupsPath": "Path in the storage provider where to store the backups",
-        "maxBackupsKept": 30,
-        "provider-specific-param-1": "config/client_secrets.json",
-        "provider-specific-param-2": false
+    "cloud": {
+      "compression": {
+        "method": "gzip|xz",
+        "level": 8
       },
-      {
-        "type": "provider-type-2",
-        "backupsPath": "Path in the storage provider where to store the backups",
-        "maxBackupsKept": 7,
-        "provider-specific-param-1": "THIS_IS-NOT-AN-API-KEY",
-        "provider-specific-param-2": "THIS_IS_NOT_AN-API-S3Cr3t",
-        "provider-specific-param-3": 10
-      }
-    ],
+      "cypher": {
+        "strategy": "gpg-keys|gpg-passphrase",
+        "passphrase": "If using gpg-passphrase, this will be used as passphrase for the cypher",
+        "keys": "If using gpg-keys, this will be used as recipients option for the gpg cypher (emails)",
+        "algorithm": "Defines the algorithm to use in the cypher process, depends in the strategy (currently one of `gpg --version` cyphers)"
+      },
+      "providers": [
+        {
+          "type": "provider-type-1",
+          "backupsPath": "Path in the storage provider where to store the backups",
+          "maxBackupsKept": 30,
+          "provider-specific-param-1": "config/client_secrets.json",
+          "provider-specific-param-2": false
+        },
+        {
+          "type": "provider-type-2",
+          "backupsPath": "Path in the storage provider where to store the backups",
+          "maxBackupsKept": 7,
+          "provider-specific-param-1": "THIS_IS-NOT-AN-API-KEY",
+          "provider-specific-param-2": "THIS_IS_NOT_AN-API-S3Cr3t",
+          "provider-specific-param-3": 10
+        }
+      ]
+    },
     "hooks": {
       "backup:before": "echo $@",
       "backup:after": "path/to/script",
@@ -102,34 +104,35 @@ secrets:
     config:
       "setting-1": "value"
       "setting-2": true
-    storage:
+    storageProviders:
       - storage/digital-ocean
       - key: storage/gdrive
         backupsPath: /Backups/mbp
       - storage/aws-s3
 
-compression:
-  strategy: gzip|xz
-  level: 8
+cloud:
+  compression:
+    strategy: gzip|xz
+    level: 8
 
-cypher:
-  strategy: gpg-keys|gpg-passphrase
-  passphrase: If using gpg-passphrase, this will be used as passphrase for the cypher
-  keys: If using gpg-keys, this will be used as recipients option for the gpg cypher (emails)
-  algorithm: Defines the algorithm to use in the cypher process, depends in the strategy (currently one of `gpg --version` cyphers)
+  cypher:
+    strategy: gpg-keys|gpg-passphrase
+    passphrase: If using gpg-passphrase, this will be used as passphrase for the cypher
+    keys: If using gpg-keys, this will be used as recipients option for the gpg cypher (emails)
+    algorithm: Defines the algorithm to use in the cypher process, depends in the strategy (currently one of `gpg --version` cyphers)
 
-storage:
-  - type: "provider-type-1"
-    backupsPath: "Path in the storage provider where to store the backups"
-    maxBackupsKept: 30
-    provider-specific-param-1: "config/client_secrets.json"
-    provider-specific-param-2: false
-  - type: "provider-type-2"
-    backupsPath: "Path in the storage provider where to store the backups"
-    maxBackupsKept: 7
-    provider-specific-param-1: "THIS_IS-NOT-AN-API-KEY"
-    provider-specific-param-2: "THIS_IS_NOT_AN-API-S3Cr3t"
-    provider-specific-param-3: 10
+  providers:
+    - type: "provider-type-1"
+      backupsPath: "Path in the storage provider where to store the backups"
+      maxBackupsKept: 30
+      provider-specific-param-1: "config/client_secrets.json"
+      provider-specific-param-2: false
+    - type: "provider-type-2"
+      backupsPath: "Path in the storage provider where to store the backups"
+      maxBackupsKept: 7
+      provider-specific-param-1: "THIS_IS-NOT-AN-API-KEY"
+      provider-specific-param-2: "THIS_IS_NOT_AN-API-S3Cr3t"
+      provider-specific-param-3: 10
 
 hooks:
   backup:before: "echo $@"
@@ -190,58 +193,62 @@ The configuration section contains provider-specific configuration which allows 
 
 Declares environment variable definitions that can be used to reference secrets in the [tasks](../tasks) `env` sections and [actions](../actions) parameters.
 
-### storage
+### storageProviders
 
 The storage section defines [storage provider configurations](#storage_1) that will be grabbed from the secret provider. Each value of the list is a (secret) provider-specific url/path/identifier that tells the provider where to look for the configuration. The value must have the same structure of the configuration of the storage provider.
 
-## compression
+## cloud
+
+This section defines settings for the storage servers and cloud storage providers.
+
+### compression
 
 If defined, when backups are uploaded to a storage provider, folders will be compressed using this configuration.
 
 Can be used with or without [cyphering](#cypher).
 
-### strategy
+#### strategy
 
 The strategy defines which compression algorithm is going to be used. Currently, the algorithms supported are `gzip` (which requires `gzip` to be installed) and `xz` (which requires `xz` to be installed).
 
 In general, a lot of Linux distributions includes these commands, as well as in macOS. But it's worth to check their existence before using them.
 
-### level
+#### level
 
 The compression level. Higher values indicates better but slower compressions. Values accepted for `gzip` are from 1 to 9. Values accepted for `xz` are from 0 to 9 (by default is 6, 7-9 are not recommended).
 
-## cypher
+### cypher
 
 If defined, when backups are uploaded to a storage provider, folders will be encrypted using this configuration.
 
 Can be used with or without [compression](#compression).
 
-### strategy
+#### strategy
 
 Defines which strategy to use to encrypt the data. Currently the supported cypher strategies are:
 
 - `gpg-passphrase` - Uses a passphrase to encrypt and decrypt the data (requires `gpg2`). The `passphrase` setting will be used as passphrase.
 - `gpg-keys` - Uses the keys associated to the list of emails to encrypt the data (requires `gpg2`). The `keys` list will be used as recipients/emails list that will be used to protect the data. The people in the list will be able to decrypt the data and no one else. **Recommended over passphrase**.
 
-### algorithm
+#### algorithm
 
 If defined, will use this algorithm to encrypt the data. The supported algorithms and the default algorithm can be found in `gpg --version` `gpg2 --version`.
 
-## storage
+### providers
 
 If defined, the last backup will be uploaded to the configured [storage providers](storage/index.md). Each provider must define the `type`, the `backupsPath` and `maxBackupsKept`, as well as the provider specific configuration. Unknown types will be ignored.
 
-### type
+#### type
 
 Defines the type of the storage provider for the entry. The list of [storage providers](storage/index.md) can be found in the 'Storage providers' section.
 
-### backupsPath
+#### backupsPath
 
 Path in the storage provider where to save the backups. Is the same concept as the [`backupsPath`](#backupspath) from above.
 
  > Some providers need this folder to exist, while others no. If possible, try to ensure that the folder is created before uploading any backup.
 
-### maxBackupsKept
+#### maxBackupsKept
 
 Defines how many backups will be kept in the storage provider. If set to `0` or `null` will not clean anything. There's no default value for this, so a value must be always provided.
 

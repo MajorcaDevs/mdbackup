@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "#/",
+  "type": "object",
+  "title": "Configuration for SFTP server upload",
+  "allOf": [
+    { "$ref": "cloud.providers.base.schema.json#/" },
+    {
+      "required": [
+        "type",
+        "backupsPath",
+        "host"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [ "sftp" ]
+        },
+        "host": {
+          "type": "string",
+          "title": "Hostname of the server (can be an IP or domain)"
+        },
+        "user": {
+          "type": "string",
+          "title": "The user that will be used to upload the files"
+        },
+        "password": {
+          "type": "string",
+          "title": "If needed, declares the password for the user"
+        },
+        "port": {
+          "type": "integer",
+          "title": "Port of the FTP server",
+          "default": 21
+        },
+        "privateKeyPath": {
+          "type": "string",
+          "title": "Path to a private key that will be used in authentication"
+        },
+        "allowAgent": {
+          "type": "boolean",
+          "title": "Allows SSH agent",
+          "default": false
+        },
+        "compress": {
+          "type": "boolean",
+          "title": "Use compression during transfers",
+          "default": false
+        },
+        "privateKey": {
+          "type": "string",
+          "title": "The private key in base64 that will be used in authentication",
+          "pattern": "^[a-zA-Z0-9+/]+={0,3}$"
+        },
+        "enableHostKeys": {
+          "type": "boolean",
+          "title": "Enables loading the system known-hosts or a custom (defined in hostKeysFilePath)",
+          "default": true
+        },
+        "hostKeysFilePath": {
+          "type": "string",
+          "title": "Path to a custom known-hosts file"
+        },
+        "knownHostsPolicy": {
+          "type": "string",
+          "enum": [
+            "reject",
+            "auto-add",
+            "ignore"
+          ],
+          "title": "Selects the known-hosts policy"
+        }
+      }
+    }
+  ]
+}

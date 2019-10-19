@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "#/",
+  "type": "object",
+  "title": "Base schema for a cloud/storage provider",
+  "required": [
+    "type",
+    "backupsPath"
+  ],
+  "properties": {
+    "type": {
+      "$id": "#/properties/type",
+      "type": "string",
+      "enum": [
+        "gdrive",
+        "s3",
+        "b2",
+        "ftp",
+        "ftps",
+        "sftp"
+      ],
+      "title": "Provider type",
+      "default": ""
+    },
+    "maxBackupsKept": {
+      "$id": "#/properties/maxBackupsKept",
+      "type": [ "number", "null" ],
+      "title": "Indicates how many backups will be kept in the storage provider",
+      "default": null
+    },
+    "backupsPath": {
+      "$id": "#/properties/backupsPath",
+      "type": "string",
+      "title": "Where to store the files in Google Drive (must exist)",
+      "default": "",
+      "examples": [
+        "/Backups"
+      ],
+      "pattern": "^/(.*)$"
+    }
+  }
+}

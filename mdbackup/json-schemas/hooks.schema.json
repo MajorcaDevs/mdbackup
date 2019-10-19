@@ -1,0 +1,83 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "#/",
+  "type": "object",
+  "title": "Run scripts or one-liner scripts before or after things occur",
+  "properties": {
+    "backup:before": {
+      "$id": "#/properties/backup:before",
+      "type": "string",
+      "title": "Run the script when the backup is going to be done"
+    },
+    "backup:after": {
+      "$id": "#/properties/backup:after",
+      "type": "string",
+      "title": "Run the script when the backup is done, but before uploading it"
+    },
+    "backup:error": {
+      "$id": "#/properties/backup:error",
+      "type": "string",
+      "title": "Run the script when the backup has failed for some reason"
+    },
+    "backup:tasks:before": {
+      "$id": "#/properties/backup:tasks:before",
+      "type": "string",
+      "title": "Run the script when the backup tasks definition is going to be run"
+    },
+    "backup:tasks:after": {
+      "$id": "#/properties/backup:tasks:after",
+      "type": "string",
+      "title": "Run the script when the backup tasks definition has been run"
+    },
+    "backup:tasks:error": {
+      "$id": "#/properties/backup:tasks:error",
+      "type": "string",
+      "title": "Run the script when the backup tasks definition run has failed for some reason"
+    },
+    "backup:tasks:task:before": {
+      "$id": "#/properties/backup:tasks:task:before",
+      "type": "string",
+      "title": "Run the script when the backup task is going to be run"
+    },
+    "backup:tasks:task:after": {
+      "$id": "#/properties/backup:tasks:task:after",
+      "type": "string",
+      "title": "Run the script when the backup task has been run"
+    },
+    "backup:tasks:task:error": {
+      "$id": "#/properties/backup:tasks:task:error",
+      "type": "string",
+      "title": "Run the script when the backup task run has failed for some reason"
+    },
+    "upload:before": {
+      "$id": "#/properties/upload:before",
+      "type": "string",
+      "title": "Run the script when the backup is going to be uploaded using one provider"
+    },
+    "upload:after": {
+      "$id": "#/properties/upload:after",
+      "type": "string",
+      "title": "Run the script when the backup have been uploaded using one provider"
+    },
+    "upload:error": {
+      "$id": "#/properties/upload:error",
+      "type": "string",
+      "title": "Run the script when the backup could not be uploaded using one provider"
+    },
+    "oldBackup:deleting": {
+      "$id": "#/properties/oldBackup:deleting",
+      "type": "string",
+      "title": "Run the script when an old backup is going to be deleted"
+    },
+    "oldBackup:deleted": {
+      "$id": "#/properties/oldBackup:deleted",
+      "type": "string",
+      "title": "Run the script when an old backup is already deleted"
+    },
+    "oldBackup:error": {
+      "$id": "#/properties/oldBackup:error",
+      "type": "string",
+      "title": "Run the script when an old backup failed when it was being deleted"
+    }
+  }
+}

@@ -49,7 +49,7 @@ class SFTPStorage(AbstractStorage):
     def _create_connection(self, params: StorageConfig) -> SFTPClient:
         self.__log.debug('Creating connection to SSH server ' + params['host'])
         self.__ssh = SSHClient()
-        if 'disableHostKeys' not in params or params['disableHostKeys']:
+        if 'enableHostKeys' not in params or params['enableHostKeys']:
             self.__ssh.load_system_host_keys(filename=params.get('hostKeysFilePath'))
 
         should_save_host_keys = False
