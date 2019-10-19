@@ -1,2 +1,2 @@
-# Include the utils script
-include mdbackup/utils.sh
+# Include the json schemas
+include mdbackup/json-schemas/*.json

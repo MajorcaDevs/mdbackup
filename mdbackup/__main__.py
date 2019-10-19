@@ -232,7 +232,7 @@ def main():
     try:
         config = Config(args.config)
     except (FileNotFoundError, NotADirectoryError, NotImplementedError) as e:
-        print(e.args[0])
+        print(' '.join(e.args))
         print('Check the paths and run again the utility')
         sys.exit(1)
     except KeyError as e:
