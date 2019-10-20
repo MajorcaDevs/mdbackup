@@ -302,7 +302,7 @@ pipeline {
       steps {
         script {
           def flavours = ['slim', 'alpine']
-          def arches = ['amd64', 'armv7', 'armv8']
+          def arches = ['amd64', 'arm32v7', 'arm64v8']
           def images = [:]
 
           flavours.each { flavour ->
