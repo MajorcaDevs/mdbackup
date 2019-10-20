@@ -24,6 +24,8 @@ import shutil
 import sys
 from typing import Dict, List, Tuple
 
+from yaml.parser import ParserError
+
 from .actions.builtin._register import register
 from .actions.container import register_actions_from_module
 from .archive import archive_folder
@@ -239,7 +241,7 @@ def main():
         print('Configuration is malformed')
         print(e.args[0])
         sys.exit(2)
-    except JSONDecodeError as e:
+    except (JSONDecodeError, ParserError) as e:
         print('Configuration is malformed')
         print(e.args[0])
         sys.exit(3)
