@@ -71,7 +71,7 @@ A symlink will have the `link_content` attribute set with the contents of the sy
         if compression_level is not None:
             args.append(f'-{compression_level}')
 
-        # Composition of actions: using command action to create the compress-gzip action
+        # Composition of actions: using command action to create the compress-gz action
         return action_command(inp, {'args': args})
 
     def action_example_of_dir_entry(inp, params):

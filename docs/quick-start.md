@@ -215,13 +215,13 @@ What if your postgres backup takes some MB and you think "what if the file were 
     actions:
       - postgres-database:
           database: test1
-      - compress-gzip: {}  #Compress using `gzip` (the command)
+      - compress-gz: {}  #Compress using `gzip` (the command)
       - to-file:
           path: test1.sql.gz
 ...
 ```
 
-The [`compress-gzip`](../actions/compress#compress-gzip) action receives data as input and compresses it using `gzip` command. And that's how you compress some data.
+The [`compress-gz`](../actions/compress#compress-gz) action receives data as input and compresses it using `gzip` command. And that's how you compress some data.
 
 In addition, when uploading folders to a storage provider, they automatically are archived into a `tar` file. If you want to save some bits, you can also compress them by adding the following configuration in the configuration file:
 
@@ -276,7 +276,7 @@ The [`encrypt-gpg`](../actions/encrypt#encrypt-gpg) action will use `gpg` to enc
     actions:
       - postgres-database:
           database: test1
-      - compress-gzip: {}
+      - compress-gz: {}
       - encrypt-gpg:
           passphrase: AVeryPowerfulPassw0rd:)
       - to-file:

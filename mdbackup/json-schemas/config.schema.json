@@ -29,7 +29,7 @@
           "my.actions#actions_loader",
           "mdbackup.ext_actions#register_actions"
         ],
-        "pattern": ".+#[a-zA-Z_][a-zA-Z0-9_]+"
+        "pattern": ".+#[a-zA-Z_][a-zA-Z0-9_]*"
       }
     },
     "logLevel": {

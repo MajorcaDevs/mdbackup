@@ -22,12 +22,12 @@ from threading import Thread
 from typing import Dict, List, Optional
 
 
-hooks_config: Dict[str, List[str]] = {}
+_hooks_config: Dict[str, List[str]] = {}
 
 
 def run_hook(hook_name: str, *args: str, cwd: Optional[str] = None):
     logger = logging.getLogger(__name__)
-    if hook_name not in hooks_config:
+    if hook_name not in _hooks_config:
         logger.debug(f'The hook {hook_name} is not defined, not running it')
         return
 
@@ -42,7 +42,7 @@ def run_hook(hook_name: str, *args: str, cwd: Optional[str] = None):
 
     logger.info(f'Running hook {hook_name}')
     joins = [(_hook_runner(hook_name, hook, hook_name, *args, cwd=cwd, shell=True), hook)
-             for hook in hooks_config[hook_name]]
+             for hook in _hooks_config[hook_name]]
     for join, hook in joins:
         try:
             join()
@@ -77,7 +77,7 @@ def _hook_runner(name: str, path: str, *args: str, cwd: Optional[str] = None, sh
 
 
 def define_hook(hook_name: str, hook_script: str):
-    if hook_name not in hooks_config:
-        hooks_config[hook_name] = []
+    if hook_name not in _hooks_config:
+        _hooks_config[hook_name] = []
 
-    hooks_config[hook_name].append(hook_script)
+    _hooks_config[hook_name].append(hook_script)

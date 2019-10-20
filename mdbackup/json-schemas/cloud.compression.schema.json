@@ -11,9 +11,8 @@
       "$id": "#/properties/strategy",
       "type": "string",
       "title": "Selects the compression method",
-      "default": "gzip",
       "enum": [
-        "gzip",
+        "gz",
         "xz",
         "bz2",
         "br"

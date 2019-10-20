@@ -7,7 +7,7 @@
   "items": {
     "$id": "#/items",
     "type": "object",
-    "title": "Enables upload backups to Google Drive. Sets configurations for the storage provider.",
+    "title": "Sets configurations for the storage provider.",
     "required": [
       "type",
       "backupsPath"

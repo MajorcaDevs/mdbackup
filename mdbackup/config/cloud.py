@@ -13,9 +13,9 @@ class CloudConfig(object):
         else:
             self.__compression_level = None
             self.__compression_strategy = None
-        if 'cypher' in conf:
-            self.__cypher_strategy = conf['cypher']['strategy']
-            self.__cypher_params = change_keys(conf['cypher'])
+        if 'encrypt' in conf:
+            self.__cypher_strategy = conf['encrypt']['strategy']
+            self.__cypher_params = change_keys(conf['encrypt'])
             del self.__cypher_params['strategy']
         else:
             self.__cypher_strategy = None

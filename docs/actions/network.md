@@ -38,7 +38,7 @@ Does a backup from an AsusWRT router through its web admin panel. The file is do
             user: admin
             password: 'WhatPassword?'
             backupType: jffs
-        - compress-gzip: {}
+        - compress-gz: {}
         - to-file: 'router/jffs.tar.gz'
     ```
 
