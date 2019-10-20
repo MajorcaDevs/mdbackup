@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="mdbackup",
-    version="0.4.0-beta.0",
+    version="0.4.0-beta.1",
     author="majorcadevs (melchor9000 & amgxv)",
     author_email="melchor9000@gmail.com",
     description="Small but customizable utility to create backups and store them in cloud storage providers",
@@ -14,7 +14,7 @@ setuptools.setup(
     url="https://github.com/majorcadevs/mdbackup",
     packages=setuptools.find_packages(
         include=('mdbackup', 'mdbackup.*'),
-        exclude=('tests', 'tests.*')
+        exclude=('tests', 'tests.*'),
     ),
     classifiers=[
         "Programming Language :: Python :: 3",
