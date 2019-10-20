@@ -1,0 +1,13 @@
+actionsModules:
+  - wrong
+
+maxBackupsKept: -1
+logLevel: INFO
+cloud:
+  compression:
+    method: deflate
+  encrypt:
+    strategy: gpg
+  providers:
+    - type: nope
+      backupsPath: /backups
