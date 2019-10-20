@@ -102,7 +102,7 @@ class ArchiveTests(TestCase):
         config = CloudConfig({
             'providers': [],
             'cypher': {'strategy': 'gpg-passphrase', 'passphrase': '1'},
-            'compression': {'method': 'gzip'},
+            'compression': {'method': 'gz'},
         })
         backup_path = Path()
         folder = backup_path / 'folder'
@@ -115,7 +115,7 @@ class ArchiveTests(TestCase):
         self._check_from_dir(folder)
         self._check_tar()
         self.assertDictEqual({
-            'compress-gzip': {
+            'compress-gz': {
                 'level': 6,
             },
         }, self._actions[2])
@@ -126,4 +126,4 @@ class ArchiveTests(TestCase):
                 'algorithm': None,
             },
         }, self._actions[3])
-        self._check_to_file(folder, backup_path, '.gzip.asc', 4)
+        self._check_to_file(folder, backup_path, '.gz.asc', 4)

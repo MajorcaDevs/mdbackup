@@ -39,7 +39,7 @@ This compression algorithm uses huge amount of CPU and the result is usually bet
     ```
 
 
-## `compress-gzip`
+## `compress-gz`
 
 **Input**: stream
 
@@ -67,7 +67,7 @@ This compression algorithm is rather fast and good-balanced in resources consump
     - name: gzip task example
       actions:
         - from-file: '/big/compressible/file'
-        - compress-gzip:
+        - compress-gz:
             compressionLevel: 7
         - to-file:
             path: 'compressed-file.gz'

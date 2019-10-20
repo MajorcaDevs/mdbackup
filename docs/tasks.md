@@ -21,7 +21,7 @@ tasks:
     stopOnFail: True
     actions:
       - from-file: /etc/hosts
-      - compress-gzip: {}
+      - compress-gz: {}
       - to-file:
           path: hosts.gz
 ```
@@ -47,7 +47,7 @@ tasks:
       "stopOnFail": false,
       "actions": [
         { "from-file": "/etc/hosts" },
-        { "compress-gzip": {} },
+        { "compress-gz": {} },
         {
           "to-file": {
             "path": "hosts.gz"

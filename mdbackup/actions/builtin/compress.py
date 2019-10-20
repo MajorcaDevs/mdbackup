@@ -23,7 +23,7 @@ def action_compress_xz(inp: InputDataStream, params) -> subprocess.Popen:
     return action_command(inp, {'args': args})
 
 
-@action('compress-gzip', input='stream', output='stream:process')
+@action('compress-gz', input='stream', output='stream:process')
 def action_compress_gzip(inp: InputDataStream, params) -> subprocess.Popen:
     compression_level = params.get('compressionLevel')
 

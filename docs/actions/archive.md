@@ -23,7 +23,7 @@ Archives a directory into a `tar` file. Only files, symbolic links and directori
         - from-directory:
             path: '/some/where'
         - tar:
-        - compress-gzip: {}
+        - compress-gz: {}
         - to-file:
             path: 'compressed-folder.tar.gz'
     ```
