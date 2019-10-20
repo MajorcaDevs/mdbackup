@@ -38,28 +38,31 @@ class Config(object):
         """
         Creates an instance of the configuration with the given ``config.json``
         """
-        if not isinstance(path, Path):
-            path = Path(path)
-        if not path.exists():
-            raise FileNotFoundError(f'"{path}" must exist')
-        if not path.is_dir():
-            raise NotADirectoryError(f'"{path}" must be a directory')
-
-        self.config_folder = path
-        if (path / 'config.json').exists():
-            self.__file = path / 'config.json'
-        elif (path / 'config.yaml').exists():
-            self.__file = path / 'config.yaml'
-        elif (path / 'config.yml').exists():
-            self.__file = path / 'config.yml'
+        if isinstance(path, dict):
+            parsed_config = path
         else:
-            raise FileNotFoundError(
-                'Expected a config file config.json, config.yaml or config.yml, but non of them was found',
-            )
+            if not isinstance(path, Path):
+                path = Path(path)
+            if not path.exists():
+                raise FileNotFoundError(f'"{path}" must exist')
+            if not path.is_dir():
+                raise NotADirectoryError(f'"{path}" must be a directory')
 
-        parsed_config = read_data_file(self.__file)
-        if parsed_config is None:
-            raise NotImplementedError(f'Cannot read this type of config file: {self.__file.parts[-1]}')
+            self.config_folder = path
+            if (path / 'config.json').exists():
+                self.__file = path / 'config.json'
+            elif (path / 'config.yaml').exists():
+                self.__file = path / 'config.yaml'
+            elif (path / 'config.yml').exists():
+                self.__file = path / 'config.yml'
+            else:
+                raise FileNotFoundError(
+                    'Expected a config file config.json, config.yaml or config.yml, but none of them was found',
+                )
+
+            parsed_config = read_data_file(self.__file)
+            if parsed_config is None:
+                raise NotImplementedError(f'Cannot read this type of config file: {self.__file.parts[-1]}')
 
         schema_path = os.path.join(
             os.path.abspath(os.path.dirname(__file__)),
@@ -83,8 +86,7 @@ class Config(object):
             for key, secret_dict in conf.get('secrets', {}).items()
         ]
         self.__hooks = conf.get('hooks', {})
-        if 'cloud' in conf:
-            self.__cloud = CloudConfig(conf['cloud'])
+        self.__cloud = CloudConfig(conf.get('cloud', {'providers': []}))
 
         Config.__check_paths('backupsPath', self.__backups_path)
 

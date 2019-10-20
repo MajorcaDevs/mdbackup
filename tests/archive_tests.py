@@ -77,7 +77,7 @@ class ArchiveTests(TestCase):
 
     @patch('mdbackup.archive.run_task_actions')
     def test_no_compression_encrypt_should_run_actions_to_create_a_tar_file(self, mock: Mock):
-        config = CloudConfig({'providers': [], 'cypher': {'strategy': 'gpg-passphrase', 'passphrase': '1'}})
+        config = CloudConfig({'providers': [], 'encrypt': {'strategy': 'gpg-passphrase', 'passphrase': '1'}})
         backup_path = Path()
         folder = backup_path / 'folder'
         mock.side_effect = self._run_task_actions
@@ -101,7 +101,7 @@ class ArchiveTests(TestCase):
     def test_compression_encrypt_should_run_actions_to_create_a_tar_file(self, mock: Mock):
         config = CloudConfig({
             'providers': [],
-            'cypher': {'strategy': 'gpg-passphrase', 'passphrase': '1'},
+            'encrypt': {'strategy': 'gpg-passphrase', 'passphrase': '1'},
             'compression': {'method': 'gz'},
         })
         backup_path = Path()
