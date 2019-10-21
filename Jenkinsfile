@@ -104,6 +104,29 @@ pipeline {
       }
     }
 
+    stage('Build docs') {
+      when {
+        expression {
+          BRANCH_NAME ==~ /master|dev/
+        }
+      }
+
+      agent {
+        docker {
+          label 'docker'
+          filename 'docs/docker/Dockerfile.jenkins'
+          args '-e HOME=$WORKSPACE -e PATH=$PATH:$WORKSPACE/.local/bin'
+        }
+      }
+
+      steps {
+        script {
+          sh './docs/docker/versioning-build.sh'
+          sh 'npx gh-pages -d build/docs'
+        }
+      }
+    }
+
     stage('Build images') {
       when {
         expression {
@@ -349,7 +372,7 @@ pipeline {
             [
               [file, 'application/octet-stream'],
             ],
-            new Boolean(IS_DRAFT)
+            IS_DRAFT && IS_DRAFT == 'true'
           )
         }
       }

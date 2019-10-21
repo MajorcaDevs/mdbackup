@@ -2,11 +2,10 @@ ARG arch=library
 
 FROM python:alpine as builder
 
+RUN apk add --no-cache git jq moreutils
 COPY . /src
 RUN cd /src && \
-    pip install -r docs/requirements.txt && \
-    mkdocs build --config-file=mkdocs.yaml
-
+    ./docs/docker/versioning-build.sh
 
 FROM ${arch}/nginx:alpine
 
