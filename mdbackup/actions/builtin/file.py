@@ -76,7 +76,7 @@ def _checks(params: dict) -> Path:
     if file_path.is_absolute():
         raise ValueError('Path cannot be absolute')
     if params.get('mkdirParents', False):
-        full_path.parent().mkdir(0o755, parents=True, exist_ok=True)
+        full_path.parent.mkdir(0o755, parents=True, exist_ok=True)
     else:
         if not full_path.parent.exists():
             raise FileNotFoundError('Parent directory does not exist')
