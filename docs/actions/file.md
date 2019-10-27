@@ -6,6 +6,8 @@
 
 **Output**: stream
 
+**Unaction**: Yes
+
 **Parameters**
 
 Expects a path as string or an object like `{ path: '/path/to/file' }`.
@@ -31,6 +33,8 @@ Initial action that opens a file to be read from the next actions. The user runn
 **Input**: Nothing
 
 **Output**: stream
+
+**Unaction**: Yes
 
 **Parameters**
 
@@ -75,6 +79,8 @@ Reads a file from the remote server using `scp`, and the output can be used in o
 
 **Output**: Nothing
 
+**Unaction**: Yes
+
 **Parameters**
 
 | Name | Type | Description | Optional |
@@ -105,6 +111,8 @@ Writes the data stream into a file, reading chunks of `chunkSize` bytes until en
 **Input**: Nothing
 
 **Output**: Nothing
+
+**Unaction**: Yes
 
 **Parameters**
 
@@ -142,6 +150,8 @@ Copies a file to the backup folder. It is an optimized version in which the prev
 **Input**: Nothing
 
 **Output**: Nothing
+
+**Unaction**: Yes
 
 **Parameters**
 

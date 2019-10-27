@@ -4,8 +4,8 @@ from pathlib import Path
 
 from mdbackup.actions.builtin._os_utils import _preserve_stats
 from mdbackup.actions.builtin.command import action_command
-from mdbackup.actions.builtin.file import action_copy_file
-from mdbackup.actions.container import action
+from mdbackup.actions.builtin.file import action_copy_file, action_reverse_copy_file
+from mdbackup.actions.container import action, unaction
 from mdbackup.actions.ds import DirEntry, DirEntryGenerator
 from mdbackup.utils import raise_if_type_is_incorrect
 
@@ -45,9 +45,44 @@ def action_read_dir(_, params: dict):
     return _recurse_dir(root_path, root_path, resolve_symlinks=resolve_symlinks)
 
 
-@action('from-physical-docker-volume', output='directory')
-def action_read_physical_docker_volume(_, params: dict):
-    logger = logging.getLogger(__name__).getChild('action_read_physical_docker_volume')
+@unaction('from-directory')
+def action_reverse_read_dir(inp, params: dict):
+    logger = logging.getLogger(__name__).getChild('action_reverse_read_dir')
+    if isinstance(params, str):
+        params = {'path': params}
+    root_path = Path(params['path'])
+    preserve_stats = params.get('preserveStats', 'utime')
+
+    raise_if_type_is_incorrect(preserve_stats, (str, bool), 'preserveStats must be a string or a boolean')
+    root_path.mkdir(0o755, parents=True, exist_ok=True)
+
+    for entry in inp:
+        entry_path = root_path / entry.path
+        if entry.type == 'dir':
+            logger.debug(f'Creating directory {entry_path}')
+            entry_path.mkdir(0o755, exist_ok=True)
+        elif entry.type == 'symlink':
+            logger.debug(f'Creating symlink {entry_path} pointing to {entry.link_content}')
+            os.symlink(entry.link_content, str(entry_path))
+        elif entry.type == 'file':
+            logger.debug(f'Creating file {entry_path}')
+            action_reverse_copy_file(None, {
+                '_stream': entry.stream,
+                '_stat': entry.stats,
+                '_backup_path': params['_backup_path'],
+                'from': entry_path,
+                'chunkSize': params.get('chunkSize', 1024 * 8),
+                'forceCopy': params.get('forceCopy', False),
+                'preserveStats': False,
+            })
+
+        if preserve_stats:
+            logger.debug(f'Modifying stats of file {entry_path} to match the originals')
+            _preserve_stats(entry_path, entry.stats, entry.xattrs, preserve_stats)
+
+
+def _get_physical_path_to_docker_volume(params: dict):
+    logger = logging.getLogger(__name__).getChild('_get_physical_path_to_docker_volume')
     if isinstance(params, str):
         params = {'volume': params}
     volume = params['volume']
@@ -61,9 +96,25 @@ def action_read_physical_docker_volume(_, params: dict):
         logger.error(f'Failed getting volume path with exit code {proc.returncode} and error: {error_dec}')
         raise RuntimeError(f'Get docker volume path failed: {error_dec}')
 
-    params['path'] = path.decode('utf-8')[:-1]
-    logger.debug(f'Docker volume {volume} has phisical path of {params["path"]}')
+    path = path.decode('utf-8')[:-1]
+    logger.debug(f'Docker volume {volume} has phisical path of {path}')
+    return path
+
+
+@action('from-physical-docker-volume', output='directory')
+def action_read_physical_docker_volume(_, params: dict):
+    if isinstance(params, str):
+        params = {'volume': params}
+    params['path'] = _get_physical_path_to_docker_volume(params)
     return action_read_dir(None, params)
+
+
+@unaction('from-physical-docker-volume')
+def action_write_physical_docker_volume(inp, params: dict):
+    if isinstance(params, str):
+        params = {'volume': params}
+    params['path'] = _get_physical_path_to_docker_volume(params)
+    return action_reverse_read_dir(inp, params)
 
 
 @action('to-directory', input='directory')
@@ -110,6 +161,14 @@ def action_write_dir(inp: DirEntryGenerator, params: dict):
     return parent
 
 
+@unaction('to-directory')
+def action_reverse_write_dir(_, params: dict):
+    backup_path = Path(params['_backup_path'])
+    dest_path = Path(params['path'])
+    parent = backup_path / dest_path
+    return action_read_dir(_, {'path': parent, 'resolveSymlinks': params.get('resolveSymlinks')})
+
+
 @action('copy-directory')
 def action_copy_directory(_, params: dict):
     new_params = params.copy()
@@ -117,4 +176,18 @@ def action_copy_directory(_, params: dict):
     return action_write_dir(
         action_read_dir(_, {'path': params['from'], 'resolveSymlinks': params.get('resolveSymlinks')}),
         new_params,
+    )
+
+
+@unaction('copy-directory')
+def action_reverse_copy_directory(_, params: dict):
+    new_params = params.copy()
+    new_params['path'] = params['to']
+    return action_reverse_read_dir(
+        action_reverse_write_dir(_, new_params),
+        {
+            'path': params['from'],
+            'resolveSymlinks': params.get('resolveSymlinks'),
+            '_backup_path': params['_backup_path'],
+        },
     )

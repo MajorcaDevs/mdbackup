@@ -159,6 +159,8 @@ def unaction(identifier: str):
     def _unaction_impl(func):
         if identifier not in _actions:
             raise SystemError(f'Cannot register unaction {identifier} before registering its action counterpart')
+        if callable(_actions[identifier].unaction):
+            raise SystemError(f'Cannot register again an already registered unaction for action {identifier}')
 
         _actions[identifier].unaction = func
 

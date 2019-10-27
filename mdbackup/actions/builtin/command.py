@@ -16,16 +16,22 @@ def reverse_action(func):
     def impl(inp, params: dict):
         logger = logging.getLogger(__name__).getChild(func.__name__ + '_reversed')
         new_params = params.copy()
+        if 'reverse' not in params:
+            raise ValueError('no reverse option is defined')
         args = params['reverse'].get('args')
         command = params['reverse'].get('command')
         if args is not None:
             new_params['args'] = args
+            if 'command' in new_params:
+                del new_params['command']
         elif command is not None:
             new_params['command'] = command
+            if 'args' in new_params:
+                del new_params['args']
         else:
-            raise KeyError('no reverse args nor command defined')
+            raise ValueError('no reverse args nor command defined')
         logger.debug('Next command is run reversed')
-        return func(inp, params)
+        return func(inp, new_params)
 
     return impl
 

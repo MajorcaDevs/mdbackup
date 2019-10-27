@@ -6,6 +6,10 @@
 
 **Output**: stream
 
+**Unaction**:
+
+Yes, but to make it work, you need to defined the reverse command. To do so, just define a new section called `reverse` with `args` or `command` (see example below). If trying to do a restore with no `reverse.args` nor `reverse.command` will result in a failure.
+
 **Parameters**
 
 Can be a `str` or an object. The string will be interpreted as a sh-like command, the object with the folliwing structure:
@@ -20,7 +24,7 @@ Can be a `str` or an object. The string will be interpreted as a sh-like command
 
 Executes the command that produces an output, and may receive an input. The command can be defined by either using `args` or `command` parameter. If needed, the command can run with extra environment variables defined in the `env` parameter. The current working directory will be the backup path. The parameter can also be a string, in this case will be interpreted as `command` parameter.
 
-!!! Example
+!!! Example "Example of command as initial action"
     Does a backup of a partition and then compresses it.
 
     ```yaml
@@ -32,7 +36,7 @@ Executes the command that produces an output, and may receive an input. The comm
             path: 'full-backup.gz'
     ```
 
-!!! Example
+!!! Example "Example of command as transform action"
     Does a backup of a file transforming all instances of `A` to `a` (using `sed`).
 
     ```yaml
@@ -44,12 +48,29 @@ Executes the command that produces an output, and may receive an input. The comm
             path: 'transformed-backup.txt'
     ```
 
+!!! Example "Example of command with `reverse`"
+    Does a backup of some program that exports its data using a CLI tool, but also defining how to restore the data.
+
+    ```yaml
+    - name: command task example 3
+      actions:
+        - command:
+            command: 'tool-cli export -'
+            reverse:
+              command: 'tool-cli import -'
+        - compress-zst: {}
+        - to-file:
+            path: 'tool-data.zst'
+    ```
+
 
 ## `ssh`
 
 **Input**: Nothing or stream
 
 **Output**: stream
+
+**Unaction**: See [command](#command) *unaction* section.
 
 **Parameters**
 
@@ -96,6 +117,8 @@ Executes the command through ssh, in another host, which must produce an output 
 **Input**: Nothing or stream
 
 **Output**: stream
+
+**Unaction**: See [command](#command) *unaction* section.
 
 **Parameters**
 
