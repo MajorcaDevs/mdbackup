@@ -119,9 +119,17 @@ pipeline {
         }
       }
 
+      environment {
+        HOMEPAGE_URL = 'https://majorcadevs.github.io/mdbackup/'
+      }
+
       steps {
         script {
           sh './docs/docker/versioning-build.sh'
+          if(env.HOMEPAGE_URL.indexOf('github.io') == -1) {
+            sh "echo $HOMEPAGE_URL > build/docs/CNAME"
+          }
+
           withCredentials([
             usernamePassword(credentialsId: 'GitHub-melchor629',
                              usernameVariable: 'GIT_USERNAME',
