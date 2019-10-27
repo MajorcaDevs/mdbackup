@@ -59,7 +59,7 @@
 
       let url = window.app.homepage || '/'
       if (versions[i].path) {
-        url = url + versions[i].path + '/'
+        url = versions[i].path + '/'
       }
       a.href = url
       a.title = versions[i].title
@@ -87,7 +87,7 @@
       let opt = document.createElement('option')
       opt.value = window.app.homepage || '/'
       if (versions[i].path) {
-          opt.value = opt.value + versions[i].path + '/'
+          opt.value = versions[i].path + '/'
       }
       opt.text = versions[i].text
       opt.selected = versions[i].selected
