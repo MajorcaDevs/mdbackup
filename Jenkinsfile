@@ -122,9 +122,16 @@ pipeline {
       steps {
         script {
           sh './docs/docker/versioning-build.sh'
-          sh 'git config user.name "bobthabuilda"'
-          sh 'git config user.email "bobthabuilda@majorcadevs.com"'
-          sh 'npx gh-pages -d build/docs'
+          sh 'git config user.name "melchor629"'
+          sh 'git config user.email "melchor9000@gmail.com"'
+          sh 'git config --local credential.helper "!p() { echo username=\\$GIT_USERNAME; echo password=\\$GIT_PASSWORD; }; p"'
+          withCredentials([
+            usernamePassword(credentialsId: 'GitHub-melchor629',
+                             usernameVariable: 'GIT_USERNAME',
+                             passwordVariable: 'GIT_PASSWORD')
+          ]) {
+            sh 'npx gh-pages -d build/docs'
+          }
         }
       }
     }
