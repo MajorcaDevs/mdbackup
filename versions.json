@@ -1,18 +1,18 @@
 [
   {
     "title": "stable",
-    "path": "https://majorcadevs.github.io/mdbackup/stable"
+    "path": "https://mdbackup.majorcadevs.com//stable"
   },
   {
     "title": "dev",
-    "path": "https://majorcadevs.github.io/mdbackup/dev"
+    "path": "https://mdbackup.majorcadevs.com//dev"
   },
   {
     "title": "0.3.0",
-    "path": "https://majorcadevs.github.io/mdbackup/0.3.0"
+    "path": "https://mdbackup.majorcadevs.com//0.3.0"
   },
   {
     "title": "0.3.1",
-    "path": "https://majorcadevs.github.io/mdbackup/0.3.1"
+    "path": "https://mdbackup.majorcadevs.com//0.3.1"
   }
 ]
