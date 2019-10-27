@@ -122,6 +122,8 @@ pipeline {
       steps {
         script {
           sh './docs/docker/versioning-build.sh'
+          sh 'git config user.name "bobthabuilda"'
+          sh 'git config user.email "bobthabuilda@majorcadevs.com"'
           sh 'npx gh-pages -d build/docs'
         }
       }
