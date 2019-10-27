@@ -56,7 +56,8 @@
       if (versions[i].selected) {
         a.classList.add('md-nav__link--active')
       }
-      const url = window.app.homepage || '/'
+
+      let url = window.app.homepage || '/'
       if (versions[i].path) {
         url = url + versions[i].path + '/'
       }
