@@ -127,7 +127,8 @@ pipeline {
         script {
           sh './docs/docker/versioning-build.sh'
           if(env.HOMEPAGE_URL.indexOf('github.io') == -1) {
-            sh "echo $HOMEPAGE_URL > build/docs/CNAME"
+            def domain = (env.HOMEPAGE_URL =~ /^https?:\/\/([^\/]+)/)[0][1]
+            sh "echo ${domain} > build/docs/CNAME"
           }
 
           withCredentials([
