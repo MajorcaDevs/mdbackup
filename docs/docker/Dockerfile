@@ -2,6 +2,8 @@ ARG arch=library
 
 FROM python:alpine as builder
 
+ARG HOMEPAGE_URL
+
 RUN apk add --no-cache git jq moreutils
 COPY . /src
 RUN cd /src && \

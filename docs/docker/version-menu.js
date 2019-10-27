@@ -56,9 +56,9 @@
       if (versions[i].selected) {
         a.classList.add('md-nav__link--active')
       }
-      a.href = window.location.protocol + '//' + window.location.host
+      a.href = window.app.homepage || '/'
       if (versions[i].path) {
-        a.href = a.href.substr(0, a.href.length - 1) + versions[i].path + '/'
+        a.href = (window.app.homepage || '/') + versions[i].path + '/'
       }
       a.title = versions[i].title
       a.text = versions[i].title
@@ -83,7 +83,7 @@
 
     for (let i = 0; i < versions.length; i++) {
       let opt = document.createElement('option')
-      opt.value = window.location.protocol + '//' + window.location.host
+      opt.value = window.app.homepage || '/'
       if (versions[i].path) {
           opt.value = opt.value + versions[i].path + '/'
       }
