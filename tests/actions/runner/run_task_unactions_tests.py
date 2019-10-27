@@ -22,7 +22,7 @@ def _register_actions(this=None):
         this._middle_stream_mock.stderr = MagicMock(spec=FileIO)
         this._middle_stream_mock.wait.return_value = 0
         register_action('final', nop, lambda _1, _2: this._initial_stream_mock, expected_input='stream')
-        register_action('middle', nop, lambda _1, _2: this._middle_stream_mock, expected_input='stream', output='stream')
+        register_action('middle', nop, lambda _, _2: this._middle_stream_mock, expected_input='stream', output='stream')
     else:
         register_action('final', nop, lambda _1, _2: None, expected_input='stream')
         register_action('middle', nop, lambda _1, _2: None, expected_input='stream', output='stream')
