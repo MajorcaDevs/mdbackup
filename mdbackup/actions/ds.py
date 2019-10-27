@@ -57,7 +57,7 @@ class DirEntry:
 
     @staticmethod
     def from_tar_info(tar_info, **kwargs) -> 'DirEntry':
-        stats = os.stat_result()
+        stats = StatResult()
         stats.st_mode = tar_info.mode
         stats.st_uid = tar_info.uid
         stats.st_gid = tar_info.gid
@@ -89,3 +89,19 @@ DirEntryAction = Callable[[dict], DirEntryGenerator]
 DirEntryTransformAction = Callable[[DirEntryGenerator, dict], DirEntryGenerator]
 DirEntryToDataStreamTransformAction = Callable[[DirEntryGenerator, dict], OutputDataStream]
 DirEntryFinalAction = Callable[[DirEntryGenerator, dict], None]
+
+
+class StatResult:
+    st_mode: int = 0
+    st_ino: int = 0
+    st_dev: int = 0
+    st_nlink: int = 0
+    st_uid: int = 0
+    st_gid: int = 0
+    st_size: int = 0
+    st_atime: float = 0.0
+    st_mtime: float = 0.0
+    st_ctime: float = 0.0
+    st_atime_ns: int = 0
+    st_mtime_ns: int = 0
+    st_ctime_ns: int = 0

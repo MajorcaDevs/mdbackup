@@ -39,7 +39,7 @@ def action_untar(stream, params) -> DirEntryGenerator:
     tar = tarfile.open(mode='r|', fileobj=stream)
     for tar_info in tar:
         tar_info: tarfile.TarInfo
-        if tar_info.isdir() or tar_info.islnk() or tar_info.isreg():
+        if tar_info.isdir() or tar_info.islnk() or tar_info.issym():
             yield DirEntry.from_tar_info(tar_info)
         elif tar_info.isreg():
             yield DirEntry.from_tar_info(tar_info, stream=tar.extractfile(tar_info))
