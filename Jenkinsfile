@@ -105,11 +105,11 @@ pipeline {
     }
 
     stage('Build docs') {
-      /*when {
+      when {
         expression {
           BRANCH_NAME ==~ /master|dev/
         }
-      }*/
+      }
 
       agent {
         dockerfile {
