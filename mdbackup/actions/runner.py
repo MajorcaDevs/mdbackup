@@ -5,11 +5,8 @@ import subprocess
 import types
 from typing import Any, Dict, List, Optional, Tuple
 
-from mdbackup.actions.container import are_compatible, get_action, is_final
+from mdbackup.actions.container import are_compatible, get_action, get_unaction, is_final
 from mdbackup.actions.ds import OutputDataStream
-
-
-logger = logging.getLogger(__name__)
 
 
 def _get_action_key_from_definition(action_def: dict):
@@ -21,10 +18,16 @@ def _get_action_from_definition(action_def: dict) -> Tuple[Any, dict, str]:
     return (get_action(key), action_def[key], key)
 
 
+def _get_unaction_from_definition(action_def: dict) -> Tuple[Any, dict, str]:
+    key = _get_action_key_from_definition(action_def)
+    return (get_unaction(key), action_def[key], key)
+
+
 def _check_for_incompatible_actions(actions: List[Dict[str, Any]]):
     if len(actions) == 0:
         return
 
+    logger = logging.getLogger(__name__).getChild('_check_for_incompatible_actions')
     prev_action = _get_action_key_from_definition(actions[0])
     for action_def in actions[1:]:
         action = _get_action_key_from_definition(action_def)
@@ -38,7 +41,15 @@ def _check_for_incompatible_actions(actions: List[Dict[str, Any]]):
         raise Exception(f'The final action {prev_action} has output and should not have')
 
 
+def _check_for_missing_unactions(actions: List[Dict[str, Any]]):
+    for action_def in actions:
+        unaction, _, action_name = _get_unaction_from_definition(action_def)
+        if not callable(unaction):
+            raise Exception(f'The action {action_name} has no unaction')
+
+
 def _process_output(output, action_key: str):
+    logger = logging.getLogger(__name__).getChild('_process_output')
     if isinstance(output, subprocess.Popen):
         prev_input = output.stdout
         thing = (output, action_key)
@@ -73,6 +84,7 @@ def _process_output(output, action_key: str):
 
 
 def _cleanup(things_to_dipose: List[Tuple[OutputDataStream, str]], has_raised: bool):
+    logger = logging.getLogger(__name__).getChild('_cleanup')
     failed = []
     for (thing, action) in things_to_dipose:
         logger.debug(f'Waiting for {action} to dispose')
@@ -90,6 +102,7 @@ def _cleanup(things_to_dipose: List[Tuple[OutputDataStream, str]], has_raised: b
 
 
 def run_task_actions(task_name: str, actions: List[Dict[str, Any]]) -> Optional[Path]:
+    logger = logging.getLogger(__name__).getChild('run_task_actions')
     if len(actions) == 0:
         logger.warning(f'Task {task_name} has no actions')
         return
@@ -107,8 +120,7 @@ def run_task_actions(task_name: str, actions: List[Dict[str, Any]]) -> Optional[
 
             output = action(prev_input, params)
             prev_input, thing = _process_output(output, action_key)
-            if thing is not None:
-                things_to_dipose.append(thing)
+            things_to_dipose.append(thing)
 
         action, params, action_key = _get_action_from_definition(actions[-1])
         logger.info(f'Running final action {action_key} and waiting for the whole process to end')
@@ -119,6 +131,41 @@ def run_task_actions(task_name: str, actions: List[Dict[str, Any]]) -> Optional[
     except Exception as e:
         has_raised = True
         logger.exception('An action raised an exception')
+        raise e
+    finally:
+        _cleanup(things_to_dipose, has_raised)
+        logger.info(f'End running task {task_name}')
+
+
+def run_task_unactions(task_name: str, actions: List[Dict[str, Any]]):
+    logger = logging.getLogger(__name__).getChild('run_task_unactions')
+    if len(actions) == 0:
+        logger.warning(f'Task {task_name} has no actions')
+        return
+
+    logger.info(f'Starting run of task {task_name}')
+    _check_for_incompatible_actions(actions)
+    _check_for_missing_unactions(actions)
+
+    things_to_dipose: List[Tuple[OutputDataStream, str]] = []
+    prev_input = None
+    has_raised = False
+    unactions = list(reversed(actions))
+    try:
+        for unaction_def in unactions[:-1]:
+            unaction, params, unaction_key = _get_unaction_from_definition(unaction_def)
+            logger.info(f'Running unaction {unaction_key}')
+
+            output = unaction(prev_input, params)
+            prev_input, thing = _process_output(output, unaction_key)
+            things_to_dipose.append(thing)
+
+        unaction, params, unaction_key = _get_unaction_from_definition(unactions[-1])
+        logger.info(f'Running final unaction {unaction_key} and waiting for the whole process to end')
+        unaction(prev_input, params)
+    except Exception as e:
+        has_raised = True
+        logger.exception('An unaction raised an exception')
         raise e
     finally:
         _cleanup(things_to_dipose, has_raised)
