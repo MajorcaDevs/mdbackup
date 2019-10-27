@@ -104,6 +104,47 @@ pipeline {
       }
     }
 
+    stage('Build docs') {
+      when {
+        expression {
+          BRANCH_NAME ==~ /master|dev/
+        }
+      }
+
+      agent {
+        dockerfile {
+          label 'docker'
+          filename 'docs/docker/Dockerfile.jenkins'
+          args '-e HOME=$WORKSPACE -e PATH=$PATH:$WORKSPACE/.local/bin'
+        }
+      }
+
+      environment {
+        HOMEPAGE_URL = 'https://mdbackup.majorcadevs.com/'
+      }
+
+      steps {
+        script {
+          sh './docs/docker/versioning-build.sh'
+          if(env.HOMEPAGE_URL.indexOf('github.io') == -1) {
+            def domain = (env.HOMEPAGE_URL =~ /^https?:\/\/([^\/]+)/)[0][1]
+            sh "echo ${domain} > build/docs/CNAME"
+          }
+
+          withCredentials([
+            usernamePassword(credentialsId: 'GitHub-melchor629',
+                             usernameVariable: 'GIT_USERNAME',
+                             passwordVariable: 'GIT_PASSWORD')
+          ]) {
+            sh 'git config user.name "melchor629"'
+            sh 'git config user.email "melchor9000@gmail.com"'
+            sh 'git remote set-url origin https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/MajorcaDevs/mdbackup'
+            sh 'npx gh-pages -d build/docs'
+          }
+        }
+      }
+    }
+
     stage('Build images') {
       when {
         expression {
@@ -349,7 +390,7 @@ pipeline {
             [
               [file, 'application/octet-stream'],
             ],
-            new Boolean(IS_DRAFT)
+            IS_DRAFT && IS_DRAFT == 'true'
           )
         }
       }
