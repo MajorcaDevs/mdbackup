@@ -112,7 +112,7 @@ pipeline {
       }*/
 
       agent {
-        docker {
+        dockerfile {
           label 'docker'
           filename 'docs/docker/Dockerfile.jenkins'
           args '-e HOME=$WORKSPACE -e PATH=$PATH:$WORKSPACE/.local/bin'
