@@ -55,7 +55,7 @@ pipeline {
         docker {
           label 'docker'
           image 'python:3.7-buster'
-          args '-e HOME=$WORKSPACE -e PATH=$PATH:$WORKSPACE/.local/bin'
+          args '-e HOME=$WORKSPACE -e PATH=$PATH:$WORKSPACE/.local/bin -v $HOME/caches:$HOME/caches'
         }
       }
 
