@@ -8,6 +8,8 @@
 
 **Output**: stream
 
+**Unaction**: No
+
 **Parameters**
 
 | Name | Type | Description | Optional |
@@ -62,6 +64,8 @@ Does a backup from an AsusWRT router through its web admin panel. The file is do
 **Input**: Nothing
 
 **Output**: stream
+
+**Unaction**: No
 
 **Parameters**
 

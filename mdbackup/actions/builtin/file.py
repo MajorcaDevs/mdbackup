@@ -6,7 +6,7 @@ from pathlib import Path
 
 from mdbackup.actions.builtin._os_utils import _preserve_stats, _read_xattrs
 from mdbackup.actions.builtin.command import action_command
-from mdbackup.actions.container import action
+from mdbackup.actions.container import action, unaction
 from mdbackup.actions.ds import InputDataStream
 from mdbackup.utils import raise_if_type_is_incorrect
 
@@ -17,8 +17,7 @@ def action_read_file(_, params) -> io.FileIO:
     return open(params['path'] if isinstance(params, dict) else str(params), 'rb', buffering=0)
 
 
-@action('from-file-ssh', output='stream:process')
-def action_read_file_from_ssh(_, params):
+def _parse_ssh_args(params: dict):
     logger = logging.getLogger(__name__).getChild('action_read_file_from_ssh')
     args = []
     env = {}
@@ -57,12 +56,29 @@ def action_read_file_from_ssh(_, params):
     if config_file is not None:
         args.extend(['-F', config_file])
 
-    args.append(f"{params['host']}:{params['path']}")
+    remote = f"{params['host']}:{params['path']}"
     if user is not None:
-        args[-1] = f"{user}@{args[-1]}"
+        remote = f'{user}@{remote}'
 
+    return args, env, remote
+
+
+@action('from-file-ssh', output='stream:process')
+def action_read_file_from_ssh(_, params):
+    args, env, remote = _parse_ssh_args(params)
+
+    args.append(remote)
     args.append('/dev/stdout')
     return action_command(None, {'args': args, 'env': env})
+
+
+@unaction('from-file-ssh')
+def action_write_file_to_ssh(inp: InputDataStream, params):
+    args, env, remote = _parse_ssh_args(params)
+
+    args.append('/dev/stdin')
+    args.append(remote)
+    return action_command(inp, {'args': args, 'env': env})
 
 
 def _checks(params: dict) -> Path:
@@ -76,7 +92,7 @@ def _checks(params: dict) -> Path:
     if file_path.is_absolute():
         raise ValueError('Path cannot be absolute')
     if params.get('mkdirParents', False):
-        full_path.parent().mkdir(0o755, parents=True, exist_ok=True)
+        full_path.parent.mkdir(0o755, parents=True, exist_ok=True)
     else:
         if not full_path.parent.exists():
             raise FileNotFoundError('Parent directory does not exist')
@@ -90,20 +106,41 @@ def _file_has_changed(entry, old_file: Path) -> bool:
     return mod_time_current != mod_time_prev
 
 
+def _write_file(inp: InputDataStream, out, chunk_size):
+    raise_if_type_is_incorrect(chunk_size, int, 'chunkSize is not a string')
+    data = inp.read(chunk_size)
+    while data is not None and len(data) != 0:
+        out.write(data)
+        data = inp.read(chunk_size)
+    out.close()
+
+
 @action('to-file', input='stream')
 def action_write_file(inp: InputDataStream, params):
     full_path = _checks(params)
 
     file_object = open(full_path, 'wb', buffering=0)
     chunk_size = params.get('chunkSize', 1024 * 8)
-    raise_if_type_is_incorrect(chunk_size, int, 'chunkSize is not a string')
-    data = inp.read(chunk_size)
-    while data is not None and len(data) != 0:
-        file_object.write(data)
-        data = inp.read(chunk_size)
-    file_object.close()
+    _write_file(inp, file_object, chunk_size)
 
     return full_path
+
+
+@unaction('to-file')
+def action_reverse_write_file(inp: InputDataStream, params):
+    if 'path' not in params:
+        params['path'] = params['to']
+    params['path'] = Path(params['_backup_path']) / params['path']
+    return action_read_file(inp, params)
+
+
+@unaction('from-file')
+def action_reverse_read_file(inp: InputDataStream, params):
+    if isinstance(params, str):
+        params = {'path': params}
+    file_object = open(params['path'], 'wb', buffering=0)
+    chunk_size = params.get('chunkSize', 1024 * 8)
+    _write_file(inp, file_object, chunk_size)
 
 
 @action('copy-file')
@@ -150,11 +187,42 @@ def action_copy_file(_, params: dict):
             },
         )
 
-    if preserve_stats and orig_path is not None:
-        xattrs = _read_xattrs(orig_path)
+    if preserve_stats:
+        xattrs = _read_xattrs(orig_path) if orig_path is not None else None
         _preserve_stats(dest_path, orig_stat, xattrs, preserve_stats)
 
     return dest_path
+
+
+@unaction('copy-file')
+def action_reverse_copy_file(_, params: dict):
+    logger = logging.getLogger(__name__).getChild('action_reverse_copy_file')
+    dest_path = Path(params['from'])
+    orig_path = _checks(params) if 'to' in params or 'path' in params else None
+    orig_stream = params.get('_stream')
+    orig_stat = orig_path.stat() if orig_path is not None else params['_stat']
+    preserve_stats = params.get('preserveStats', 'utime')
+
+    raise_if_type_is_incorrect(preserve_stats, (str, bool), 'preserveStats must be a string or a boolean')
+
+    avoid_copy = False
+    if not params.get('forceCopy', False):
+        logger.debug(f'Checking if the file can be needs to be copied')
+        avoid_copy = not _file_has_changed(orig_stat, dest_path) if dest_path.exists() else False
+
+    if avoid_copy:
+        logger.debug('File will not be copied')
+    else:
+        logger.debug(f'Copying file {orig_path if orig_path is not None else "*stream*"} to {dest_path}')
+        _write_file(
+            open(orig_path, 'rb', buffering=0) if orig_path is not None else orig_stream,
+            open(dest_path, 'wb', buffering=0),
+            params.get('chunkSize', 1024 * 8),
+        )
+
+    if preserve_stats:
+        xattrs = _read_xattrs(orig_path) if orig_path is not None else None
+        _preserve_stats(dest_path, orig_stat, xattrs, preserve_stats)
 
 
 @action('clone-file')
@@ -199,3 +267,14 @@ def action_clone_file(_, params: dict):
         os.link(str(orig_path), str(dest_path))
 
     return dest_path
+
+
+@unaction('clone-file')
+def action_reverse_clone_file(_, params: dict):
+    orig = params['from']
+    dest = params.get('path', params.get('to'))
+    params['from'] = dest
+    params['to'] = orig
+    if 'path' in params:
+        del params['path']
+    return action_clone_file(None, params)
