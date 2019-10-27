@@ -56,10 +56,11 @@
       if (versions[i].selected) {
         a.classList.add('md-nav__link--active')
       }
-      a.href = window.app.homepage || '/'
+      const url = window.app.homepage || '/'
       if (versions[i].path) {
-        a.href = (window.app.homepage || '/') + versions[i].path + '/'
+        url = url + versions[i].path + '/'
       }
+      a.href = url
       a.title = versions[i].title
       a.text = versions[i].title
 
