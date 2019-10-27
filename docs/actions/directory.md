@@ -6,6 +6,8 @@
 
 **Output**: directory
 
+**Unaction**: Yes (Only works when using `dictionary` parameter - if using a `string` as parameter the restore will fail).
+
 **Parameters**
 
 | Name | Type | Description | Optional |
@@ -38,6 +40,8 @@ Reads the contents of the folder to be used in another action. By default, the s
 **Input**: Nothing
 
 **Output**: directory
+
+**Unaction**: Yes (Only works when using `dictionary` parameter - if using a `string` as parameter the restore will fail).
 
 **Parameters**
 
@@ -74,6 +78,8 @@ Determines which is the path to the folder of the desired volume (using `docker 
 **Input**: directory
 
 **Output**: Nothing
+
+**Unaction**: Yes
 
 **Parameters**
 
@@ -116,6 +122,8 @@ Writes the full contents of the folder into the folder defined in `path` (which 
 **Input**: Nothing
 
 **Output**: Nothing
+
+**Unaction**: Yes
 
 **Parameters**
 

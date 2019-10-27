@@ -6,6 +6,8 @@
 
 **Output**: stream
 
+**Unaction**: yes
+
 **Parameters**
 
 ignored (you can pass whatever you want 🙃)

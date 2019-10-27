@@ -6,6 +6,8 @@
 
 **Output**: stream
 
+**Unaction**: To be implemented...
+
 **Parameters**:
 
 | Name | Type | Description | Optional |
@@ -66,6 +68,8 @@ Uses `pg_dump` to make a full backup of a PostgreSQL database into a SQL file. B
 **Input**: Nothing
 
 **Output**: stream
+
+**Unaction**: To be implemented...
 
 **Parameters**
 
@@ -130,6 +134,8 @@ Uses `mysqldump` to make a full backup of a MySQL/MariaDB database into a SQL fi
 **Input**: Nothing
 
 **Output**: Nothing
+
+**Unaction**: To be implemented...
 
 **Parameters**
 

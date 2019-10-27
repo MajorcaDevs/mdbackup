@@ -6,6 +6,8 @@
 
 **Output**: stream
 
+**Unaction**: yes
+
 **Parameters**
 
 | Name | Type | Description | Optional |
@@ -45,6 +47,8 @@ This compression algorithm uses huge amount of CPU and the result is usually bet
 
 **Output**: stream
 
+**Unaction**: yes
+
 **Parameters**
 
 | Name | Type | Description | Optional |
@@ -79,6 +83,8 @@ This compression algorithm is rather fast and good-balanced in resources consump
 **Input**: stream
 
 **Output**: stream
+
+**Unaction**: yes
 
 **Parameters**
 
@@ -115,6 +121,8 @@ This compression algorithm is rather fast and good-balanced in resources consump
 
 **Output**: stream
 
+**Unaction**: yes
+
 **Parameters**
 
 | Name | Type | Description | Optional |
@@ -141,4 +149,41 @@ This compression algorithm is fast and good-balanced in resources consumption. C
             compressionLevel: 7
         - to-file:
             path: 'compressed-file.br'
+    ```
+
+
+## `compress-zst`
+
+**Input**: stream
+
+**Output**: stream
+
+**Unaction**: yes
+
+**Parameters**
+
+| Name | Type | Description | Optional |
+|------|------|-------------|----------|
+| `compressionLevel` | `ìnt` | Compression level from 1 to 19 (default 3) | Yes |
+
+**Description**
+
+Compresses the input stream using `zstd` utility. If the compression level increases, more resources will be used to compress and more compressed the file should result (it may not compress any further if increasing it to 19).
+
+This compression algorithm is blazing fast and good in compression (similar to `xz` but faster). Can be used as a fast compression algorithm for text and binary files.
+
+!!! Warning
+    Requires `zstd` to be installed in the system. On Debian-based distros use `apt install zstd`, on Arch-based distros use `pacman -S zstd`, on macOS use `brew install zstd`.
+
+!!! Example
+    Compresses a file using `zstd`
+
+    ```yaml
+    - name: zst task example
+      actions:
+        - from-file: '/big/compressible/file'
+        - compress-zst:
+            compressionLevel: 7
+        - to-file:
+            path: 'compressed-file.zst'
     ```
