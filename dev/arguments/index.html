@@ -596,9 +596,66 @@
       
     
     
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Arguments
+      </label>
+    
     <a href="./" title="Arguments" class="md-nav__link md-nav__link--active">
       Arguments
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#complete" class="md-nav__link">
+    complete
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup" class="md-nav__link">
+    backup
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#upload" class="md-nav__link">
+    upload
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cleanup" class="md-nav__link">
+    cleanup
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#check-config" class="md-nav__link">
+    check-config
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
     
   </li>
 
@@ -644,6 +701,50 @@
     
   
   
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#complete" class="md-nav__link">
+    complete
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup" class="md-nav__link">
+    backup
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#upload" class="md-nav__link">
+    upload
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cleanup" class="md-nav__link">
+    cleanup
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#check-config" class="md-nav__link">
+    check-config
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -658,9 +759,9 @@
                 
                 
                 <h1 id="arguments">Arguments<a class="headerlink" href="#arguments" title="Permanent link">&para;</a></h1>
-<p>The tool has a few arguments, in general you may not use them, but to test some parts, could be really useful.</p>
-<div class="codehilite"><pre><span></span><span class="nv">usage</span>: <span class="nv">mdbackup</span> [<span class="o">-</span><span class="nv">h</span>] [<span class="o">-</span><span class="nv">c</span> <span class="nv">CONFIG</span>] [<span class="o">--</span><span class="nv">backup</span><span class="o">-</span><span class="nv">only</span>] [<span class="o">--</span><span class="nv">upload</span><span class="o">-</span><span class="nv">current</span><span class="o">-</span><span class="nv">only</span>]
-                [<span class="o">--</span><span class="nv">cleanup</span><span class="o">-</span><span class="nv">only</span>]
+<p>The tool has some subcommands that can be used manually. By default the tool will run in complete mode which does
+everything (check configuration, backup, upload and clean up).</p>
+<div class="codehilite"><pre><span></span><span class="nv">usage</span>: <span class="nv">mdbackup</span> [<span class="o">-</span><span class="nv">h</span>] [<span class="o">-</span><span class="nv">c</span> <span class="nv">CONFIG</span>] <span class="nv">mode</span> ...
 
 <span class="nv">Small</span> <span class="nv">but</span> <span class="nv">customizable</span> <span class="nv">utility</span> <span class="nv">to</span> <span class="nv">create</span> <span class="nv">backups</span> <span class="nv">and</span> <span class="nv">store</span> <span class="nv">them</span> <span class="nv">in</span> <span class="nv">cloud</span>
 <span class="nv">storage</span> <span class="nv">providers</span>
@@ -669,11 +770,38 @@
   <span class="o">-</span><span class="nv">h</span>, <span class="o">--</span><span class="nv">help</span>            <span class="k">show</span> <span class="nv">this</span> <span class="nv">help</span> <span class="nv">message</span> <span class="nv">and</span> <span class="k">exit</span>
   <span class="o">-</span><span class="nv">c</span> <span class="nv">CONFIG</span>, <span class="o">--</span><span class="nv">config</span> <span class="nv">CONFIG</span>
                         <span class="nv">Path</span> <span class="nv">to</span> <span class="nv">configuration</span> <span class="nv">folder</span> <span class="ss">(</span><span class="nv">default</span>: <span class="nv">config</span><span class="ss">)</span>
-  <span class="o">--</span><span class="nv">backup</span><span class="o">-</span><span class="nv">only</span>         <span class="nv">Only</span> <span class="nv">does</span> <span class="nv">the</span> <span class="nv">backup</span> <span class="nv">actions</span>
-  <span class="o">--</span><span class="nv">upload</span><span class="o">-</span><span class="nv">current</span><span class="o">-</span><span class="nv">only</span>
-                        <span class="nv">Only</span> <span class="nv">uploads</span> <span class="nv">the</span> <span class="nv">last</span> <span class="nv">backup</span>
-  <span class="o">--</span><span class="nv">cleanup</span><span class="o">-</span><span class="nv">only</span>        <span class="nv">Only</span> <span class="nv">does</span> <span class="nv">the</span> <span class="nv">backup</span> <span class="nv">cleanup</span>
+
+<span class="nv">subcommands</span>:
+  <span class="nv">Selects</span> <span class="nv">the</span> <span class="nv">run</span> <span class="nv">mode</span> <span class="ss">(</span><span class="nv">defaults</span> <span class="nv">to</span> <span class="nv">complete</span><span class="ss">)</span>
+
+  <span class="nv">mode</span>
+    <span class="nv">complete</span>            <span class="nv">Checks</span> <span class="nv">config</span>, <span class="nv">does</span> <span class="nv">a</span> <span class="nv">backup</span>, <span class="nv">uploads</span> <span class="nv">the</span> <span class="nv">backup</span> <span class="nv">and</span>
+                        <span class="nv">does</span> <span class="nv">cleanup</span>
+    <span class="nv">backup</span>              <span class="nv">Does</span> <span class="nv">a</span> <span class="nv">backup</span>
+    <span class="nv">upload</span>              <span class="nv">Upload</span> <span class="nv">a</span> <span class="nv">pending</span> <span class="nv">backups</span>
+    <span class="nv">cleanup</span>             <span class="nv">Does</span> <span class="nv">cleanup</span> <span class="nv">of</span> <span class="nv">backups</span>
+    <span class="nv">check</span><span class="o">-</span><span class="nv">config</span>        <span class="nv">Checks</span> <span class="nv">configuration</span> <span class="nv">to</span> <span class="nv">catch</span> <span class="nv">issues</span>
 </pre></div>
+
+<h2 id="complete"><code class="codehilite"><span class="n">complete</span></code><a class="headerlink" href="#complete" title="Permanent link">&para;</a></h2>
+<p>This subcommand has no extra arguments.</p>
+<h2 id="backup"><code class="codehilite"><span class="n">backup</span></code><a class="headerlink" href="#backup" title="Permanent link">&para;</a></h2>
+<p>This subcommand has no extra arguments.</p>
+<h2 id="upload"><code class="codehilite"><span class="n">upload</span></code><a class="headerlink" href="#upload" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><span class="nv">usage</span>: <span class="nv">mdbackup</span> <span class="nv">upload</span> [<span class="o">-</span><span class="nv">h</span>] [<span class="o">--</span><span class="nv">backup</span> <span class="nv">BACKUP</span>] [<span class="o">-</span><span class="nv">f</span>]
+
+<span class="nv">optional</span> <span class="nv">arguments</span>:
+  <span class="o">-</span><span class="nv">h</span>, <span class="o">--</span><span class="nv">help</span>       <span class="k">show</span> <span class="nv">this</span> <span class="nv">help</span> <span class="nv">message</span> <span class="nv">and</span> <span class="k">exit</span>
+  <span class="o">--</span><span class="nv">backup</span> <span class="nv">BACKUP</span>  <span class="nv">Selects</span> <span class="nv">which</span> <span class="nv">backup</span> <span class="nv">to</span> <span class="nv">upload</span> <span class="nv">by</span> <span class="nv">the</span> <span class="nv">name</span> <span class="nv">of</span> <span class="nv">the</span> <span class="nv">folder</span>
+                   <span class="ss">(</span><span class="nv">which</span> <span class="nv">is</span> <span class="nv">the</span> <span class="nv">date</span> <span class="nv">of</span> <span class="nv">the</span> <span class="nv">backup</span><span class="ss">)</span>
+  <span class="o">-</span><span class="nv">f</span>, <span class="o">--</span><span class="nv">force</span>      <span class="nv">Force</span> <span class="nv">upload</span> <span class="nv">the</span> <span class="nv">backup</span> <span class="nv">even</span> <span class="k">if</span> <span class="nv">the</span> <span class="nv">backup</span> <span class="nv">was</span> <span class="nv">already</span>
+                   <span class="nv">uploaded</span>
+</pre></div>
+
+<h2 id="cleanup"><code class="codehilite"><span class="n">cleanup</span></code><a class="headerlink" href="#cleanup" title="Permanent link">&para;</a></h2>
+<p>This subcommand has no extra arguments.</p>
+<h2 id="check-config"><code class="codehilite"><span class="k">check</span><span class="o">-</span><span class="n">config</span></code><a class="headerlink" href="#check-config" title="Permanent link">&para;</a></h2>
+<p>This subcommand has no extra arguments.</p>
                 
                   
                 

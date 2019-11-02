@@ -723,6 +723,10 @@
 <p>The <code class="codehilite"><span class="n">backupsPath</span></code> in B2 is like a prefix for the object keys. It is recommended to put something here to easily organise the backups from the rest of files in the bucket. The initial slash <code class="codehilite"><span class="o">/</span></code> is removed when uploading the files. You don&rsquo;t need to create anything under the <code class="codehilite"><span class="n">backupsPath</span></code> prefix, it will be created automatically with the upload.</p>
 <p>The content type of the files will be guessed and set in the metadata when uploading.</p>
 <p>To start using B2, you must get and define the <code class="codehilite"><span class="n">keyId</span></code>, <code class="codehilite"><span class="n">appKey</span></code> and <code class="codehilite"><span class="n">bucket</span></code>. If <code class="codehilite"><span class="n">password</span></code> is defined, the files will be protected using this setting as password.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The <code class="codehilite"><span class="n">backupsPath</span></code> must start with initial slash <code class="codehilite"><span class="o">/</span></code>.</p>
+</div>
 <h2 id="dependencies">Dependencies<a class="headerlink" href="#dependencies" title="Permanent link">&para;</a></h2>
 <p>In order to use B2, you must install the following python packages:</p>
 <ul>
