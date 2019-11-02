@@ -166,6 +166,7 @@ def create_backup_manifest(backup_path: Path, results: Dict[str, Tuple[Tasks, Di
     manifest_dict = {
         'version': MANIFEST_VERSION,
         'createdAt': datetime.utcnow().isoformat(),
+        'uploaded': False,
         'tasksDefinitions': {},
     }
 

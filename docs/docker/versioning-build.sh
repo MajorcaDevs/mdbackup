@@ -19,7 +19,7 @@ function build_docs {
 }
 
 git checkout -- .
-# git clean -fdx .
+git clean -fdx .
 
 mkdir -p build/docs
 printf '[]' > build/docs/versions.json
@@ -31,10 +31,12 @@ python -m venv .venv
 
 echo Building docs for master branch
 git checkout master
+git pull
 build_docs "stable"
 
 echo Building docs for dev branch
 git checkout dev
+git pull
 build_docs "dev"
 
 for tag in `git tag | egrep '^v\d+\.\d+\.\d+$' | sort`; do

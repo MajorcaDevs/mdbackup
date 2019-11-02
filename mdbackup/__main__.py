@@ -16,6 +16,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import argparse
+from functools import reduce
 from json.decoder import JSONDecodeError
 import logging
 from pathlib import Path
@@ -33,6 +34,7 @@ from .backup import do_backup, get_backup_folders_sorted
 from .config import Config, StorageConfig
 from .hooks import define_hook, run_hook
 from .storage import create_storage_instance
+from .utils import read_data_file, write_data_file
 
 
 def main_load_secrets(logger: logging.Logger, config: Config):
@@ -85,70 +87,102 @@ def main_do_backup(logger: logging.Logger, config: Config, secret_env) -> Path:
         sys.exit(1)
 
 
-def main_compress_folders(config: Config, backup: Path) -> Tuple[List[Path], List[Path]]:
+def _compress_folders(config: Config, backup: Path, items: List[Path]) -> Tuple[List[Path], List[Path]]:
     final_items = []
     items_to_remove = []
 
     # Compress directories
-    for item in backup.iterdir():
+    for item in items:
         # Compress if it is a directory
-        if item.resolve().is_dir():
-            filename = archive_folder(backup, item.resolve(), config.cloud)
-            final_items.append(Path(backup, filename))
-            items_to_remove.append(Path(backup, filename))
+        if item.is_dir():
+            filename = archive_folder(backup, item, config.cloud)
+            final_items.append(backup / filename)
+            items_to_remove.append(backup / filename)
         else:
-            final_items.append(item.resolve())
+            final_items.append(item)
 
     return final_items, items_to_remove
 
 
-def main_upload_backup(logger: logging.Logger, config: Config, backup: Path):
-    has_compressed = False
+def _upload_backup(config: Config, backup: Path, items: List[Path]) -> bool:
+    logger = logging.getLogger('mdbackup').getChild('upload')
+    could_upload = False
+
+    # Upload files to storage providers
+    backup_folder_name = backup.relative_to(config.backups_path.resolve()).parts[0]
+    for prov_config in config.cloud.providers:
+        # Detect provider type and instantiate it
+        storage = create_storage_instance(prov_config)
+
+        run_hook('upload:before', prov_config.type, str(backup))
+
+        # Create folder for this backup
+        try:
+            logger.info(f'Creating folder {backup_folder_name} in {prov_config.backups_path}')
+            backup_cloud_folder = storage.create_folder(backup_folder_name)
+        except Exception as e:
+            # If we cannot create it, will continue to the next configured provider
+            run_hook('upload:error', prov_config.type, str(backup), str(e))
+            logger.exception(f'Could not create folder {backup_folder_name}', e)
+            continue
+
+        # Upload every file
+        try:
+            for item in items:
+                parent = item.relative_to(backup).parent
+                cloud_folder = backup_cloud_folder
+                if parent != Path('.'):
+                    logger.info(f'Creating parent folder {parent} for {item}')
+                    for part in parent.parts:
+                        cloud_folder = storage.create_folder(part, cloud_folder)
+                logger.info(f'Uploading {item} to {cloud_folder}')
+                storage.upload(item, cloud_folder)
+
+            could_upload = True
+        except Exception as e:
+            # Log only in case of error
+            run_hook('upload:error', prov_config.type, str(backup), str(e))
+            logger.exception(f'Could not upload file {item}: {e}')
+            storage.delete(backup_cloud_folder)
+
+        run_hook('upload:after', prov_config.type, str(backup), str(backup_cloud_folder))
+        del storage
+
+    return could_upload
+
+
+def main_upload_backup(config: Config, backup: Path, force: bool = False):
+    logger = logging.getLogger('mdbackup').getChild('upload')
     final_items, items_to_remove = None, []
 
     # (do the following only if there are any providers defined)
     if len(config.cloud.providers) == 0:
+        logger.warn('No configured cloud storage providers, not uploading anything...')
+        return
+
+    if not backup.exists():
+        raise FileNotFoundError(backup)
+    if not backup.is_dir():
+        raise NotADirectoryError(backup)
+    if not str(backup).startswith(str(config.backups_path)):
+        raise ValueError(f'Backup path {backup} is not inside the backups path')
+    manifest = read_data_file(backup / '.manifest.yaml')
+    if not force and manifest.get('uploaded', False):
+        logger.warn(f'Backup {backup} has been already uploaded')
         return
 
     try:
-        # Upload files to storage providers
-        backup_folder_name = backup.relative_to(config.backups_path.resolve()).parts[0]
-        for prov_config in config.cloud.providers:
-            # Detect provider type and instantiate it
-            storage = create_storage_instance(prov_config)
+        # Get files and folders to upload from the manifest
+        tasks = reduce(lambda x, y: [*x, *y],
+                       (tasks['tasks'] for tasks in manifest['tasksDefinitions'].values()),
+                       [])
+        items = (backup / task['result'] for task in tasks)
+        items = map(lambda p: p.resolve(), items)
 
-            if storage is not None:
-                if not has_compressed:
-                    final_items, items_to_remove = main_compress_folders(config, backup)
-                    has_compressed = True
+        final_items, items_to_remove = _compress_folders(config, backup, items)
+        manifest['uploaded'] = _upload_backup(config, backup, final_items)
 
-                run_hook('upload:before', prov_config.type, str(backup))
-
-                # Create folder for this backup
-                try:
-                    logger.info(f'Creating folder {backup_folder_name} in {prov_config.backups_path}')
-                    backup_cloud_folder = storage.create_folder(backup_folder_name)
-                except Exception as e:
-                    # If we cannot create it, will continue to the next configured provider
-                    run_hook('upload:error', prov_config.type, str(backup), str(e))
-                    logger.exception(f'Could not create folder {backup_folder_name}', e)
-                    continue
-
-                # Upload every file
-                for item in final_items:
-                    try:
-                        logger.info(f'Uploading {item} to {backup_cloud_folder}')
-                        storage.upload(item, backup_cloud_folder)
-                    except Exception as e:
-                        # Log only in case of error (tries to upload as much as it can)
-                        run_hook('upload:error', prov_config.type, str(backup), str(e))
-                        logger.exception(f'Could not upload file {item}: {e}')
-
-                run_hook('upload:after', prov_config.type, str(backup), str(backup_cloud_folder))
-                del storage
-            else:
-                # The provider is invalid, show error
-                logger.error(f'Unknown storage provider "{prov_config.type}", ignoring...')
+        write_data_file(backup / '.manifest.yaml', manifest)
     finally:
         # Remove compressed directories
         for item in items_to_remove:
@@ -208,31 +242,36 @@ def configure_default_value_for_file_secrets(config: Config):
                 s.config['basePath'] = str(config.config_folder / s.config['basePath'])
 
 
-def main():
+def parse_arguments():
     parser = argparse.ArgumentParser(description=('Small but customizable utility to create backups and store them in '
                                                   'cloud storage providers'))
 
     parser.add_argument('-c', '--config',
                         help='Path to configuration folder (default: config)',
                         default='config')
-    parser.add_argument('--backup-only',
-                        help='Only does the backup actions',
-                        action='store_true',
-                        default=False)
-    parser.add_argument('--upload-current-only',
-                        help='Only uploads the last backup',
-                        action='store_true',
-                        default=False)
-    parser.add_argument('--cleanup-only',
-                        help='Only does the backup cleanup',
-                        action='store_true',
-                        default=False)
-    parser.add_argument('--validate-config',
-                        help='Validates the config and exits',
-                        action='store_true',
-                        default=False)
+    subparsers = parser.add_subparsers(description='Selects the run mode (defaults to complete)',
+                                       metavar='mode',
+                                       dest='mode')
 
-    args = parser.parse_args()
+    subparsers.add_parser('complete',
+                          help='Checks config, does a backup, uploads the backup and does cleanup')
+    subparsers.add_parser('backup', help='Does a backup')
+    upload_parser = subparsers.add_parser('upload', help='Upload a pending backups')
+    subparsers.add_parser('cleanup', help='Does cleanup of backups')
+    subparsers.add_parser('check-config', help='Checks configuration to catch issues')
+
+    upload_parser.add_argument('--backup',
+                               help=('Selects which backup to upload by the name of the folder (which is the date of '
+                                     'the backup)'))
+    upload_parser.add_argument('-f', '--force',
+                               help='Force upload the backup even if the backup was already uploaded',
+                               action='store_true')
+
+    return parser.parse_args()
+
+
+def main():
+    args = parse_arguments()
 
     # Check if configuration file exists and read it
     try:
@@ -262,19 +301,20 @@ def main():
 
     try:
         main_register_actions(logger, config)
-        if args.backup_only:
+        if args.mode == 'backup':
             secret_env = main_load_secrets(logger, config)
             backup = main_do_backup(logger, config, secret_env)
             logger.info(f'Backup done: {backup.absolute()}')
-        elif args.upload_current_only:
+        elif args.mode == 'upload':
+            backup_path = (config.backups_path / (args.backup if args.backup is not None else 'current')).resolve()
             main_load_secrets(logger, config)
-            main_upload_backup(logger, config, (config.backups_path / 'current').resolve())
-        elif args.cleanup_only:
+            main_upload_backup(config, backup_path, force=args.force)
+        elif args.mode == 'cleanup':
             main_clean_up(logger, config)
         elif not args.validate_config:
             secret_env = main_load_secrets(logger, config)
             backup = main_do_backup(logger, config, secret_env)
-            main_upload_backup(logger, config, backup)
+            main_upload_backup(config, backup)
             main_clean_up(logger, config)
     except Exception as e:
         logger.exception(e)
