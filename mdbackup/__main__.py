@@ -306,10 +306,7 @@ def main():
             backup = main_do_backup(logger, config, secret_env)
             logger.info(f'Backup done: {backup.absolute()}')
         elif args.mode == 'upload':
-            if args.backup is not None:
-                backup_path = config.backups_path / args.backup
-            else:
-                backup_path = (config.backups_path / 'current').resolve()
+            backup_path = (config.backups_path / (args.backup if args.backup is not None else 'current')).resolve()
             main_load_secrets(logger, config)
             main_upload_backup(config, backup_path, force=args.force)
         elif args.mode == 'cleanup':
