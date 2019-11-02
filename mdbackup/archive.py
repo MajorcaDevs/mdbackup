@@ -34,7 +34,7 @@ def archive_folder(backup_path: Path, folder: Path, cloud_config: CloudConfig) -
     The returned value is the file name for the archived folder.
     """
     logger = logging.getLogger(__name__)
-    filename = folder.parts[-1] + '.tar'
+    filename = str(folder.relative_to(backup_path)) + '.tar'
     actions = [
         {'from-directory': str(folder)},
         {'tar': None},

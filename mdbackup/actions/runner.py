@@ -120,7 +120,7 @@ def run_task_actions(task_name: str, actions: List[Dict[str, Any]]) -> Optional[
 
             output = action(prev_input, params)
             prev_input, thing = _process_output(output, action_key)
-            things_to_dipose.append(thing)
+            things_to_dipose.append(thing) if thing is not None else None
 
         action, params, action_key = _get_action_from_definition(actions[-1])
         logger.info(f'Running final action {action_key} and waiting for the whole process to end')
@@ -158,7 +158,7 @@ def run_task_unactions(task_name: str, actions: List[Dict[str, Any]]):
 
             output = unaction(prev_input, params)
             prev_input, thing = _process_output(output, unaction_key)
-            things_to_dipose.append(thing)
+            things_to_dipose.append(thing) if thing is not None else None
 
         unaction, params, unaction_key = _get_unaction_from_definition(unactions[-1])
         logger.info(f'Running final unaction {unaction_key} and waiting for the whole process to end')
