@@ -66,6 +66,8 @@ def run_tasks(
     if tasks.inside_folder is not None:
         logger.info(f'Tasks {tasks.name} will store files in {tasks.inside_folder}')
         final_backup_path = backup_path / tasks.inside_folder
+        if not str(final_backup_path).startswith(str(backup_path)):
+            raise ValueError('inside is not valid: cannot go outside the backup path, use relative paths')
         prev_backup_path = prev_backup_path / tasks.inside_folder if prev_backup_path is not None else None
         final_backup_path.mkdir(exist_ok=True, parents=True)
         final_backup_path.chmod(0o755)

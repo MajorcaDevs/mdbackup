@@ -31,7 +31,7 @@ class S3Storage(AbstractStorage):
         self.__log = logging.getLogger(__name__)
         self.__s3 = boto3.client(
             's3',
-            region_name=config['region'],
+            region_name=config.get('region'),
             endpoint_url=config.get('endpoint'),
             aws_access_key_id=config['accessKeyId'],
             aws_secret_access_key=config['accessSecretKey'],

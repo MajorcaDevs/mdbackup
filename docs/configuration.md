@@ -45,7 +45,7 @@ This allows you to auto-complete with the elements available in the configuratio
     },
     "cloud": {
       "compression": {
-        "method": "gzip|xz",
+        "method": "gz|xz|bz2|br|zst",
         "level": 8
       },
       "cypher": {
@@ -112,7 +112,7 @@ secrets:
 
 cloud:
   compression:
-    strategy: gzip|xz
+    method: gz|xz|bz2|br|zst
     level: 8
 
   cypher:

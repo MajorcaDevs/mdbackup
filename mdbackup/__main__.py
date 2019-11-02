@@ -300,8 +300,8 @@ def main():
     configure_default_value_for_file_secrets(config)
 
     try:
+        main_register_actions(logger, config)
         if args.mode == 'backup':
-            main_register_actions(logger, config)
             secret_env = main_load_secrets(logger, config)
             backup = main_do_backup(logger, config, secret_env)
             logger.info(f'Backup done: {backup.absolute()}')
@@ -314,8 +314,7 @@ def main():
             main_upload_backup(config, backup_path, force=args.force)
         elif args.mode == 'cleanup':
             main_clean_up(logger, config)
-        else:
-            main_register_actions(logger, config)
+        elif not args.validate_config:
             secret_env = main_load_secrets(logger, config)
             backup = main_do_backup(logger, config, secret_env)
             main_upload_backup(config, backup)
