@@ -3,7 +3,11 @@ import os
 from pathlib import Path
 from threading import Thread
 
-import xattr
+try:
+    import xattr
+except ImportError:
+    xattr = None
+
 
 # Portable way to access to these xattr function across linux, macOS, freebsd...
 _python_has_xattr_lib = hasattr(os, 'listxattr') and hasattr(os, 'getxattr') and hasattr(os, 'setxattr')

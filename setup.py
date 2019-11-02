@@ -1,11 +1,17 @@
+import sys
+
 import setuptools
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
+extra_packages = []
+if not sys.platform.startswith('linux'):
+    extra_packages.append('xattr')
+
 setuptools.setup(
     name="mdbackup",
-    version="0.4.0-beta.1",
+    version="0.4.0-beta.2",
     author="majorcadevs (melchor9000 & amgxv)",
     author_email="melchor9000@gmail.com",
     description="Small but customizable utility to create backups and store them in cloud storage providers",
@@ -33,7 +39,7 @@ setuptools.setup(
     include_package_data=True,
     install_requires=[
         'pyyaml',
-        'xattr',
         'jsonschema',
+        *extra_packages,
     ],
 )
