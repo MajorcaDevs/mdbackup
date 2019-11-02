@@ -227,6 +227,10 @@ def main():
                         help='Only does the backup cleanup',
                         action='store_true',
                         default=False)
+    parser.add_argument('--validate-config',
+                        help='Validates the config and exits',
+                        action='store_true',
+                        default=False)
 
     args = parser.parse_args()
 
@@ -257,8 +261,8 @@ def main():
     configure_default_value_for_file_secrets(config)
 
     try:
+        main_register_actions(logger, config)
         if args.backup_only:
-            main_register_actions(logger, config)
             secret_env = main_load_secrets(logger, config)
             backup = main_do_backup(logger, config, secret_env)
             logger.info(f'Backup done: {backup.absolute()}')
@@ -267,8 +271,7 @@ def main():
             main_upload_backup(logger, config, (config.backups_path / 'current').resolve())
         elif args.cleanup_only:
             main_clean_up(logger, config)
-        else:
-            main_register_actions(logger, config)
+        elif not args.validate_config:
             secret_env = main_load_secrets(logger, config)
             backup = main_do_backup(logger, config, secret_env)
             main_upload_backup(logger, config, backup)
