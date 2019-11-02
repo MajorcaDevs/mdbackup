@@ -17,4 +17,5 @@ optional arguments:
   --upload-current-only
                         Only uploads the last backup
   --cleanup-only        Only does the backup cleanup
+  --validate-config     Validates the config and exits
 ```
