@@ -41,7 +41,8 @@ Does a backup from an AsusWRT router through its web admin panel. The file is do
             password: 'WhatPassword?'
             backupType: jffs
         - compress-gz: {}
-        - to-file: 'router/jffs.tar.gz'
+        - to-file:
+            path: 'router/jffs.tar.gz'
     ```
 
 !!! Example
@@ -55,7 +56,8 @@ Does a backup from an AsusWRT router through its web admin panel. The file is do
             user: admin
             password: 'WhatPassword?'
             backupType: configuration
-        - to-file: 'router/asus.cnf'
+        - to-file:
+            path: 'router/asus.cnf'
     ```
 
 
@@ -96,5 +98,6 @@ Does a backup of a Mikrotik device with RouterOS. The type of backup can be `ful
             user: admin
             password: 'WhatPassword?'
             backupType: full-backup
-        - to-file: 'router/full.backup'
+        - to-file:
+            path: 'router/full.backup'
     ```

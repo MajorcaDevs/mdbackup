@@ -120,7 +120,7 @@ pipeline {
       }
 
       environment {
-        HOMEPAGE_URL = 'https://mdbackup.majorcadevs.com/'
+        HOMEPAGE_URL = 'https://mdbackup.majorcadevs.com'
       }
 
       steps {
