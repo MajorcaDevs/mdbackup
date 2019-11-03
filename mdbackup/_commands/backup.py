@@ -1,38 +1,22 @@
-# Small but customizable utility to create backups and store them in
-# cloud storage providers
-# Copyright (C) 2018  Melchor Alejo Garau Madrigal
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
 from datetime import datetime
 import logging
 import os
 from pathlib import Path
-import re
-from typing import Dict, List, Tuple
+import shutil
+import sys
+from typing import Any, Dict, List, Tuple
 
-from .actions.runner import run_task_actions
-from .config import SecretConfig
-from .hooks import run_hook
-from .tasks.tasks import Tasks
-from .utils import write_data_file
+from ..actions.runner import run_task_actions
+from ..config import Config, SecretConfig
+from ..hooks import run_hook
+from ..tasks.tasks import Tasks
+from ..utils import write_data_file
 
 
 MANIFEST_VERSION = 1
 
 
-def generate_backup_path(backups_folder: Path) -> Path:
+def _generate_backup_path(backups_folder: Path) -> Path:
     """
     Creates a path with the folder (named with the right structure)
     that will be used as backup folder in this run.
@@ -42,7 +26,7 @@ def generate_backup_path(backups_folder: Path) -> Path:
     return Path(backups_folder, isostring).resolve()
 
 
-def get_tasks_definitions(config_path: Path) -> List[Path]:
+def _get_tasks_definitions(config_path: Path) -> List[Path]:
     """
     Gets the list of available tasks definitions files inside the 'tasks' folder.
     """
@@ -54,13 +38,49 @@ def get_tasks_definitions(config_path: Path) -> List[Path]:
     return [script.absolute() for script in definitions]
 
 
-def run_tasks(
+def _inject_resolved_env_into_actions(
+    actions: List[Dict[str, Any]],
+    env: dict,
+    secrets: List[SecretConfig],
+) -> List[Dict[str, Any]]:
+    """
+    Given a list of actions for a task, resolves all secrets, injects them in the parameters to pass to each action
+    and returns the new parameters for the actions.
+    """
+    resolved_env = _resolve_secrets(env, secrets)
+    new_actions = []
+    for it in actions:
+        key, value = next(iter(it.items()))
+        resolved_value = _resolve_secrets(value, secrets)
+        if isinstance(value, dict):
+            new_value = {
+                **resolved_env,
+                **resolved_value,
+            }
+            new_value = _resolve_secrets(new_value, secrets)
+            new_actions.append({key: new_value})
+        else:
+            new_actions.append({key: value})
+
+    return new_actions
+
+
+def _run_tasks(
     tasks: Tasks,
     backup_path: Path,
     prev_backup_path: Path,
     env: dict,
     secrets: List[SecretConfig],
 ) -> Dict[str, Path]:
+    """
+    Given a tasks file (already parsed), runs each of the tasks.
+
+    If the tasks file has defined a ``inside`` path, it will create the folder and store all the results inside
+    the folder. For the each task ``env``section, will resolve all secrets using the providers (if possible) and
+    inject them as parameters into each action. Then will run each task and store the result path into a dictionary
+    that will be returned at the end. If a task fails and ``stopOnFail`` is set to true, then it will raise an
+    exception and stop running the tasks file.
+    """
     logger = logging.getLogger(__name__).getChild('run_tasks')
     final_backup_path = backup_path
     if tasks.inside_folder is not None:
@@ -74,24 +94,17 @@ def run_tasks(
 
     tasks_results: Dict[str, Path] = {}
     for task in tasks.tasks:
-        resolved_env = resolve_secrets({**env, **task.env}, secrets)
         run_hook(f'backup:tasks:{tasks.name}:task:{task.name}:before', str(final_backup_path), tasks.name, task.name)
 
         try:
-            actions = []
-            for it in task.actions:
-                key, value = next(iter(it.items()))
-                if isinstance(value, dict):
-                    new_value = {
-                        **resolved_env,
-                        **value,
-                        '_backup_path': final_backup_path,
-                        '_prev_backup_path': prev_backup_path,
-                    }
-                    new_value = resolve_secrets(new_value, secrets)
-                    actions.append({key: new_value})
-                else:
-                    actions.append({key: value})
+            actions = _inject_resolved_env_into_actions(task.actions,
+                                                        {
+                                                            **env,
+                                                            **task.env,
+                                                            '_backup_path': final_backup_path,
+                                                            '_prev_backup_path': prev_backup_path,
+                                                        },
+                                                        secrets)
 
             tasks_results[task.name] = run_task_actions(task.name, actions).relative_to(backup_path)
         except Exception as e:
@@ -109,7 +122,7 @@ def run_tasks(
     return tasks_results
 
 
-def resolve_secret(key_parts: List[str], secret: SecretConfig):
+def _resolve_secret(key_parts: List[str], secret: SecretConfig):
     """
     Given a key in parts and a secret configuration, tries to resolve the secret
     from the backend using the configured alias in the ``env`` section of the
@@ -130,19 +143,22 @@ def resolve_secret(key_parts: List[str], secret: SecretConfig):
     return secret.backend.get_secret(value)
 
 
-def resolve_secrets(env: dict, secrets: List[SecretConfig]) -> dict:
+def _resolve_secrets(env: dict, secrets: List[SecretConfig]) -> dict:
     """
     Given a environment dict, tries to resolve all secrets found and returns a
     copy of the dict with secrets resolved.
     """
     logger = logging.getLogger(__name__).getChild('resolve_secrets')
+    if not isinstance(env, dict):
+        return env
+
     new_env = {}
     for key, value in env.items():
         if isinstance(value, str):
             if value.startswith('#'):
                 logger.debug(f'Trying to resolve env {key} with secret alias {value}')
                 for secret in secrets:
-                    new_value = resolve_secret(value[1:].split('.'), secret)
+                    new_value = _resolve_secret(value[1:].split('.'), secret)
                     if new_value is not None:
                         logger.debug(f'Env {key} resolved using {secret.type}')
                         new_env[key] = new_value
@@ -154,14 +170,17 @@ def resolve_secrets(env: dict, secrets: List[SecretConfig]) -> dict:
             else:
                 new_env[key] = value
         elif isinstance(value, dict):
-            new_env[key] = resolve_secrets(value, secrets)
+            new_env[key] = _resolve_secrets(value, secrets)
         else:
             new_env[key] = value
 
     return new_env
 
 
-def create_backup_manifest(backup_path: Path, results: Dict[str, Tuple[Tasks, Dict[str, Path]]]):
+def _create_backup_manifest(backup_path: Path, results: Dict[str, Tuple[Tasks, Dict[str, Path]]]):
+    """
+    Given the backup path and all tasks with their results, writes the manifest into the backup folder.
+    """
     logger = logging.getLogger(__name__).getChild('create_backup_manifest')
     manifest_dict = {
         'version': MANIFEST_VERSION,
@@ -187,11 +206,11 @@ def create_backup_manifest(backup_path: Path, results: Dict[str, Tuple[Tasks, Di
     write_data_file(manifest_path, manifest_dict)
 
 
-def do_backup(backups_folder: Path,
-              config_path: Path,
-              action_modules: List[str] = [],
-              env: dict = {},
-              secrets: List[SecretConfig] = []) -> Path:
+def _do_backup(backups_folder: Path,
+               config_path: Path,
+               action_modules: List[str] = [],
+               env: dict = {},
+               secrets: List[SecretConfig] = []) -> Path:
     """
     Looks for the tasks defs, prepares the directory where the backups will
     be stored, run the tasks and saves the directory with the right name.
@@ -206,7 +225,7 @@ def do_backup(backups_folder: Path,
     tmp_backup = Path(backups_folder, '.partial')
     prev_backup = backups_folder / 'current'
     prev_backup = prev_backup.resolve() if prev_backup.exists() else None
-    resolved_env = resolve_secrets(env, secrets)
+    resolved_env = _resolve_secrets(env, secrets)
 
     run_hook('backup:before', str(tmp_backup))
 
@@ -214,7 +233,7 @@ def do_backup(backups_folder: Path,
     tmp_backup.mkdir(exist_ok=True, parents=True)
     tmp_backup.chmod(0o755)
     tasks_definitions_results: Dict[str, Tuple[Tasks, Dict[str, Path]]] = {}
-    for tasks_definition in get_tasks_definitions(config_path):
+    for tasks_definition in _get_tasks_definitions(config_path):
         try:
             logger.debug(f'Loading tasks definition file {tasks_definition}')
             tasks = Tasks(tasks_definition)
@@ -225,8 +244,8 @@ def do_backup(backups_folder: Path,
         logger.info(f'Preparing to run tasks of {tasks.name}')
         run_hook(f'backup:tasks:{tasks.name}:before', str(tmp_backup), tasks.name)
         try:
-            resolved_tasks_env = resolve_secrets({**resolved_env, **tasks.env}, secrets)
-            result = run_tasks(tasks, tmp_backup, prev_backup, resolved_tasks_env, secrets)
+            resolved_tasks_env = _resolve_secrets({**resolved_env, **tasks.env}, secrets)
+            result = _run_tasks(tasks, tmp_backup, prev_backup, resolved_tasks_env, secrets)
             tasks_definitions_results[tasks.file_name] = (tasks, result)
         except Exception as e:
             logger.error(f'One of the tasks of {tasks.name} failed')
@@ -235,12 +254,12 @@ def do_backup(backups_folder: Path,
 
         run_hook(f'backup:tasks:{tasks.name}:after', str(tmp_backup), tasks.name)
 
-    backup = generate_backup_path(backups_folder)
+    backup = _generate_backup_path(backups_folder)
     logger.info(f'Moving {tmp_backup} to {backup}')
     tmp_backup.rename(backup)
 
     logger.info(f'Creating manifest of backup {backup}')
-    create_backup_manifest(backup, tasks_definitions_results)
+    _create_backup_manifest(backup, tasks_definitions_results)
 
     current_backup = Path(backups_folder, 'current')
     if current_backup.is_symlink():
@@ -252,11 +271,19 @@ def do_backup(backups_folder: Path,
     return backup
 
 
-def get_backup_folders_sorted(backups_folder: Path) -> List[Path]:
-    """
-    Gets the backups folders sorted.
-    """
-    regex = re.compile(r'\d{4}-\d{2}-\d{2}T\d{1,2}:\d{2}')
-    folders = [folder for folder in backups_folder.iterdir() if folder.is_dir() and regex.match(folder.name)]
-    folders.sort()
-    return [folder.absolute() for folder in folders]
+def main_backup(config: Config) -> Path:
+    logger = logging.getLogger(__name__).getChild('backup')
+    # Do backups
+    try:
+        return _do_backup(config.backups_path,
+                          config.config_folder,
+                          config.actions_modules,
+                          env={
+                             **config.env,
+                          },
+                          secrets=config.secrets)
+    except Exception as e:
+        logger.error(e)
+        run_hook('backup:error', str(config.backups_path / '.partial'), str(e), e.args[1] if len(e.args) > 2 else '')
+        shutil.rmtree(str(config.backups_path / '.partial'))
+        sys.exit(1)

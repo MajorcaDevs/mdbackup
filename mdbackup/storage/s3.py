@@ -1,20 +1,3 @@
-# Small but customizable utility to create backups and store them in
-# cloud storage providers
-# Copyright (C) 2018  Melchor Alejo Garau Madrigal
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
 import logging
 from pathlib import Path
 from typing import List, Union
@@ -53,16 +36,18 @@ class S3Storage(AbstractStorage):
 
     def list_directory_recursive(self, path: Union[str, Path]) -> List[str]:
         full_path = self.__ok_key(path)
+        res = self.__s3.list_objects_v2(Bucket=self.__bucket, Prefix=full_path)
         items = [key
                  for key in [item['Key'][len(self.__pre):].lstrip('/')
-                             for item in self.__s3.list_objects_v2(Bucket=self.__bucket, Prefix=full_path)['Contents']]
+                             for item in res.get('Contents', [])]
                  if key != '']
+        self.__log.debug(items)
         return items
 
     def list_directory(self, path: Union[str, Path]) -> List[str]:
         items = self.list_directory_recursive(path)
         rep_path = path + '/' if path != '' else path
-        items = [key for key in items
+        items = [key[len(self.__pre):].lstrip('/') for key in items
                  if (len(key.replace(rep_path, '').split('/')) == 2 if key.endswith('/')
                      else len(key.replace(rep_path, '').split('/')) == 1)]
         return items

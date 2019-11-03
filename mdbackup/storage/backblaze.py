@@ -1,20 +1,3 @@
-# Small but customizable utility to create backups and store them in
-# cloud storage providers
-# Copyright (C) 2018  Melchor Alejo Garau Madrigal
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
 import logging
 from pathlib import Path
 from typing import List, Union
@@ -51,7 +34,7 @@ class B2Storage(AbstractStorage):
 
     def list_directory(self, path: Union[str, Path, str]) -> List[str]:
         full_path = self.__ok_key(path)
-        return [key
+        return [key[len(self.__pre):].lstrip('/')
                 for key in [file_name[len(self.__pre):].lstrip('/')
                             for (_, file_name) in self.__bucket.list_file_names(full_path)]
                 if key != '']
