@@ -836,6 +836,8 @@
       <span class="p p-Indicator">-</span> <span class="nt">compress-gz</span><span class="p">:</span> <span class="p p-Indicator">{}</span>
       <span class="p p-Indicator">-</span> <span class="nt">to-file</span><span class="p">:</span>
           <span class="nt">path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hosts.gz</span>
+    <span class="nt">cloud</span><span class="p">:</span>
+      <span class="nt">ignore</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
 </pre></div></div>
 <input name="__tabs_1" type="radio" id="__tab_1_1" />
 <label for="__tab_1_1">JSON syntax</label>
@@ -865,7 +867,10 @@
             <span class="nt">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;hosts.gz&quot;</span>
           <span class="p">}</span>
         <span class="p">}</span>
-      <span class="p">]</span>
+      <span class="p">],</span>
+      <span class="nt">&quot;cloud&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;ignore&quot;</span><span class="p">:</span> <span class="kc">false</span>
+      <span class="p">}</span>
     <span class="p">}</span>
   <span class="p">]</span>
 <span class="p">}</span>
@@ -879,7 +884,7 @@
 <h3 id="env">env<a class="headerlink" href="#env" title="Permanent link">&para;</a></h3>
 <p>Defines variables that can be used in actions as parameters. They can also refer to secrets using <code class="codehilite"><span class="o">#</span><span class="n">secret</span><span class="o">-</span><span class="n">name</span></code>. If a variable matches with a key of a parameter for an action, this will be used as default value if the parameter is not defined in the action. These variables can be referenced inside a string by using <code class="codehilite"><span class="cp">${</span><span class="n">VARIABLE_NAME</span><span class="cp">}</span></code>.</p>
 <h3 id="tasks_1">tasks<a class="headerlink" href="#tasks_1" title="Permanent link">&para;</a></h3>
-<p>Defines all tasks that will be run in this file. One task contains its name and the actions to run. Optionally, it can define more variables in the <code class="codehilite"><span class="n">env</span></code> section. If <code class="codehilite"><span class="n">stopOnFail</span></code> is set to false and the task fails, it won&rsquo;t stop the whole backup.</p>
+<p>Defines all tasks that will be run in this file. One task contains its name and the actions to run. Optionally, it can define more variables in the <code class="codehilite"><span class="n">env</span></code> section. If <code class="codehilite"><span class="n">stopOnFail</span></code> is set to false and the task fails, it won&rsquo;t stop the whole backup. The <code class="codehilite"><span class="n">cloud</span></code> section is optional, and at the moment allows to ignore a task result to be uploaded.</p>
 <p>The actions are defined with one item in the list by action, and to identify the action, the key of the dictionary is used:</p>
 <div class="codehilite"><pre><span></span><span class="p p-Indicator">-</span> <span class="nt">action-name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">parameters</span>
 <span class="p p-Indicator">-</span> <span class="nt">action-name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">parameters</span>
