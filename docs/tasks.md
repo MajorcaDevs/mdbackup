@@ -24,6 +24,8 @@ tasks:
       - compress-gz: {}
       - to-file:
           path: hosts.gz
+    cloud:
+      ignore: false
 ```
 
 ```json tab="JSON syntax"
@@ -53,7 +55,10 @@ tasks:
             "path": "hosts.gz"
           }
         }
-      ]
+      ],
+      "cloud": {
+        "ignore": false
+      }
     }
   ]
 }
@@ -75,7 +80,7 @@ Defines variables that can be used in actions as parameters. They can also refer
 
 ### tasks
 
-Defines all tasks that will be run in this file. One task contains its name and the actions to run. Optionally, it can define more variables in the `env` section. If `stopOnFail` is set to false and the task fails, it won't stop the whole backup.
+Defines all tasks that will be run in this file. One task contains its name and the actions to run. Optionally, it can define more variables in the `env` section. If `stopOnFail` is set to false and the task fails, it won't stop the whole backup. The `cloud` section is optional, and at the moment allows to ignore a task result to be uploaded.
 
 The actions are defined with one item in the list by action, and to identify the action, the key of the dictionary is used:
 

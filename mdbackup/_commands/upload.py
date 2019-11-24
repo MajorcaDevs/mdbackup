@@ -95,7 +95,7 @@ def _get_generated_files_from_manifest(manifest: dict, backup: Path) -> Iterable
     tasks = reduce(lambda x, y: [*x, *y],
                    (tasks['tasks'] for tasks in manifest['tasksDefinitions'].values()),
                    [])
-    items = ((backup / task['result'], task) for task in tasks)
+    items = ((backup / task['result'], task) for task in tasks if not task['cloud'].ignore)
     items = map(lambda p: (p[0].resolve(), p[1]), items)
     return items
 

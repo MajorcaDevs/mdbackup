@@ -242,6 +242,7 @@ def _create_backup_manifest(backup_path: Path, results: Dict[str, Tuple[Tasks, D
                 'name': task.name,
                 'env': task.env,
                 'actions': task.actions,
+                'cloud': task.cloud,
                 'result': tasks_results[task.name],
             } for task in tasks.tasks],
         }
