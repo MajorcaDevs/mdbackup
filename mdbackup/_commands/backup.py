@@ -2,6 +2,7 @@ from datetime import datetime
 import logging
 import os
 from pathlib import Path
+import re
 import shutil
 import sys
 from typing import Any, Dict, List, Tuple
@@ -48,6 +49,7 @@ def _inject_resolved_env_into_actions(
     and returns the new parameters for the actions.
     """
     resolved_env = _resolve_secrets(env, secrets)
+    resolved_env = _resolve_env_vars(resolved_env, resolved_env)
     new_actions = []
     for it in actions:
         key, value = next(iter(it.items()))
@@ -58,6 +60,11 @@ def _inject_resolved_env_into_actions(
                 **resolved_value,
             }
             new_value = _resolve_secrets(new_value, secrets)
+            new_value = _resolve_env_vars(new_value, resolved_env)
+            new_actions.append({key: new_value})
+        elif isinstance(value, str):
+            new_value = _resolve_secrets({'v': value}, secrets)['v']
+            new_value = _resolve_env_vars(new_value, resolved_env)
             new_actions.append({key: new_value})
         else:
             new_actions.append({key: value})
@@ -175,6 +182,44 @@ def _resolve_secrets(env: dict, secrets: List[SecretConfig]) -> dict:
             new_env[key] = value
 
     return new_env
+
+
+def _resolve_env_vars(value, task_env: dict) -> dict:
+    logger = logging.getLogger(__name__).getChild('resolve_env_vars')
+    if not isinstance(value, (str, list, dict)):
+        return value
+
+    expr = re.compile(r'\$\{[a-z0-9_-]*\}', re.IGNORECASE)
+    if isinstance(value, str):
+        env_var_match = expr.search(value)
+        while env_var_match is not None:
+            env_var = env_var_match[0][2:-1]
+            env_var_value = ''
+            if env_var in task_env:
+                if isinstance(task_env[env_var], (str, int, float, Path)):
+                    env_var_value = str(task_env[env_var])
+                else:
+                    logger.warn(f'Environment variable value from task {env_var} is not a string, ignoring...')
+            elif env_var in os.environ:
+                env_var_value = os.environ[env_var]
+            else:
+                logger.warn(f'Environment variable {env_var} cannot be found, ignoring...')
+
+            value = (
+                value[0:env_var_match.start()] +
+                env_var_value +
+                value[env_var_match.end():]
+            )
+            end_pos = env_var_match.start() + len(env_var_value)
+            env_var_match = expr.search(value, pos=end_pos)
+
+        return value
+    elif isinstance(value, list):
+        return list(map(lambda x: _resolve_env_vars(x, task_env), value))
+    else:
+        for key, val in value.items():
+            value[key] = _resolve_env_vars(val, task_env)
+        return value
 
 
 def _create_backup_manifest(backup_path: Path, results: Dict[str, Tuple[Tasks, Dict[str, Path]]]):
