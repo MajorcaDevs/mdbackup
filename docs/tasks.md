@@ -71,7 +71,7 @@ If defined, then all files and directory created by output actions will be store
 
 ### env
 
-Defines variables that can be used in actions as parameters. They can also refer to secrets using `#secret-name`.
+Defines variables that can be used in actions as parameters. They can also refer to secrets using `#secret-name`. If a variable matches with a key of a parameter for an action, this will be used as default value if the parameter is not defined in the action. These variables can be referenced inside a string by using `${VARIABLE_NAME}`.
 
 ### tasks
 
@@ -104,6 +104,14 @@ Imagine that the following secret backend config is set with this `envDefs`:
 So to refer to the user of postgres, this string will be used `#postgres.user`, as well as the password `#postgres.password`. For the passphrase, `#encrypt-passphrase` will be used.
 
 This way, secrets are referred from the tasks using a key, and changing the path in the `envDefs`, will be changed in all the tasks that references the secret.
+
+
+## Environment variables in parameters
+
+In the action parameters and the `env` sections, environment variables anv variables defined in `env` sections can be referred to customize even further the tasks. To reference a environment variable, just use it as `${ENV_VAR}` in a string and it will be converted into its value. If a variable cannot be found, it will replace the token with an empty string (just delete the variable token). Variables in `env` sections can reference another variables in the same section because variable substitution is done just before running a task.
+
+!!! Warning "`env` sections and variable substitution"
+    Strings and numbers are the only types supported for the variable substitution, any other type of variable will ignore it and a warning will be writen in the logs. When referencing variables from the same `env` section, order is important.
 
 
 ## Examples
@@ -153,5 +161,20 @@ This way, secrets are referred from the tasks using a key, and changing the path
           - encrypt-gpg:
               passphrase: '#gpg-password'
           - to-file:
-            path: folderino.tar.br.asc
+              path: folderino.tar.br.asc
     ```
+
+??? Example "Referrencing environment variables"
+    ```yaml
+    tasks:
+      - name: do stuff
+        env:
+          var1: yes
+          var2: maybe ${var1}  # This should be defined after var1
+        actions:
+          - from-directory: '${HOME}/files'
+          - tar: {}
+          - compress-br: {}
+          - to-file:
+              path: ${var2}.tar.br
+

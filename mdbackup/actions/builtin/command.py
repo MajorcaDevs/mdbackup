@@ -46,6 +46,7 @@ def action_command(inp, params) -> subprocess.Popen:
         args = None
         command = params
         extra_env: dict = None
+        params = {}
     else:
         args = params.get('args')
         command = params.get('command')

@@ -53,7 +53,7 @@ class _Action:
 
 
 _actions: Dict[str, _Action] = {}
-_id_regex: re.Pattern = re.compile(r'[a-z_][a-z0-9_-]+', re.IGNORECASE)
+_id_regex = re.compile(r'[a-z_][a-z0-9_-]+', re.IGNORECASE)
 _valid_expected_inputs = [
     'stream',
     'directory',
