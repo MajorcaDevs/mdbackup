@@ -366,7 +366,7 @@ pipeline {
       }
     }
 
-    stage('Create release') {
+    stage('Create Github release') {
       when {
         expression {
           GIT_TAG != null && GIT_TAG != '' && BRANCH_NAME ==~ /master|dev/
@@ -395,5 +395,36 @@ pipeline {
         }
       }
     }
+
+    stage('Create pypi release') {
+      when {
+        expression {
+          GIT_TAG != null && GIT_TAG != '' && BRANCH_NAME ==~ /master|dev/
+        }
+      }
+
+      agent {
+        docker {
+          label 'docker'
+          image 'python:3.7-buster'
+          args '-e HOME=$WORKSPACE -e PATH=$PATH:$WORKSPACE/.local/bin'
+        }
+      }
+
+      steps {
+        script {
+          withCredentials([
+            usernamePassword(credentialsId: 'pypi-majorcadevs',
+                             usernameVariable: 'PYPI_USER',
+                             passwordVariable: 'PYPI_PASS')
+            ])
+          {  
+            sh "pip install --user twine"
+            sh "python setup.py sdist bdist_wheel"
+            sh "twine upload --user ${PYPI_USER} --password ${PYPI_PASS} dist/*"
+          }
+        }  
+      }
+    }    
   }
 }
