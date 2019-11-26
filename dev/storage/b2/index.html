@@ -719,19 +719,19 @@
                 
                 
                 <h1 id="backblaze-b2">Backblaze B2<a class="headerlink" href="#backblaze-b2" title="Permanent link">&para;</a></h1>
-<p>Similar to <a href="../s3/">S3</a>, <a href="https://www.backblaze.com/b2/cloud-storage.html">B2</a> is a Object cloud storage that offers high performance, high availability and simple interface to store objects in the cloud. Like S3, it also uses keys to identify the objects and slashes <code class="codehilite"><span class="o">/</span></code> can be used to organize the objects.</p>
-<p>The <code class="codehilite"><span class="n">backupsPath</span></code> in B2 is like a prefix for the object keys. It is recommended to put something here to easily organise the backups from the rest of files in the bucket. The initial slash <code class="codehilite"><span class="o">/</span></code> is removed when uploading the files. You don&rsquo;t need to create anything under the <code class="codehilite"><span class="n">backupsPath</span></code> prefix, it will be created automatically with the upload.</p>
+<p>Similar to <a href="../s3/">S3</a>, <a href="https://www.backblaze.com/b2/cloud-storage.html">B2</a> is a Object cloud storage that offers high performance, high availability and simple interface to store objects in the cloud. Like S3, it also uses keys to identify the objects and slashes <code class="codehilite"><span class="err">/</span></code> can be used to organize the objects.</p>
+<p>The <code class="codehilite"><span class="err">backupsPath</span></code> in B2 is like a prefix for the object keys. It is recommended to put something here to easily organise the backups from the rest of files in the bucket. The initial slash <code class="codehilite"><span class="err">/</span></code> is removed when uploading the files. You don&rsquo;t need to create anything under the <code class="codehilite"><span class="err">backupsPath</span></code> prefix, it will be created automatically with the upload.</p>
 <p>The content type of the files will be guessed and set in the metadata when uploading.</p>
-<p>To start using B2, you must get and define the <code class="codehilite"><span class="n">keyId</span></code>, <code class="codehilite"><span class="n">appKey</span></code> and <code class="codehilite"><span class="n">bucket</span></code>. If <code class="codehilite"><span class="n">password</span></code> is defined, the files will be protected using this setting as password.</p>
+<p>To start using B2, you must get and define the <code class="codehilite"><span class="err">keyId</span></code>, <code class="codehilite"><span class="err">appKey</span></code> and <code class="codehilite"><span class="err">bucket</span></code>. If <code class="codehilite"><span class="err">password</span></code> is defined, the files will be protected using this setting as password.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>The <code class="codehilite"><span class="n">backupsPath</span></code> must start with initial slash <code class="codehilite"><span class="o">/</span></code>.</p>
+<p>The <code class="codehilite"><span class="err">backupsPath</span></code> must start with initial slash <code class="codehilite"><span class="err">/</span></code>.</p>
 </div>
 <h2 id="dependencies">Dependencies<a class="headerlink" href="#dependencies" title="Permanent link">&para;</a></h2>
 <p>In order to use B2, you must install the following python packages:</p>
 <ul>
-<li><code class="codehilite"><span class="n">b2sdk</span></code></li>
-<li><code class="codehilite"><span class="n">python</span><span class="o">-</span><span class="n">magic</span></code></li>
+<li><code class="codehilite"><span class="err">b2sdk</span></code></li>
+<li><code class="codehilite"><span class="err">python-magic</span></code></li>
 </ul>
 <h2 id="configuration-schema">Configuration schema<a class="headerlink" href="#configuration-schema" title="Permanent link">&para;</a></h2>
 <div class="codehilite"><pre><span></span><span class="p">{</span>

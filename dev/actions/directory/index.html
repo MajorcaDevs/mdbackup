@@ -749,10 +749,10 @@
                 
                 
                 <h1 id="actions-directory">Actions: Directory<a class="headerlink" href="#actions-directory" title="Permanent link">&para;</a></h1>
-<h2 id="from-directory"><code class="codehilite"><span class="k">from</span><span class="o">-</span><span class="n">directory</span></code><a class="headerlink" href="#from-directory" title="Permanent link">&para;</a></h2>
+<h2 id="from-directory"><code class="codehilite"><span class="err">from-directory</span></code><a class="headerlink" href="#from-directory" title="Permanent link">&para;</a></h2>
 <p><strong>Input</strong>: Nothing</p>
 <p><strong>Output</strong>: directory</p>
-<p><strong>Unaction</strong>: Yes (Only works when using <code class="codehilite"><span class="k">dictionary</span></code> parameter - if using a <code class="codehilite"><span class="n">string</span></code> as parameter the restore will fail).</p>
+<p><strong>Unaction</strong>: Yes (Only works when using <code class="codehilite"><span class="err">dictionary</span></code> parameter - if using a <code class="codehilite"><span class="err">string</span></code> as parameter the restore will fail).</p>
 <p><strong>Parameters</strong></p>
 <table>
 <thead>
@@ -765,22 +765,22 @@
 </thead>
 <tbody>
 <tr>
-<td><code class="codehilite"><span class="n">path</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">path</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Path to the directory to read</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">followSymlinks</span></code></td>
-<td><code class="codehilite"><span class="n">bool</span></code></td>
+<td><code class="codehilite"><span class="err">followSymlinks</span></code></td>
+<td><code class="codehilite"><span class="err">bool</span></code></td>
 <td>Follow symbolic links</td>
 <td>Yes</td>
 </tr>
 </tbody>
 </table>
-<p>Also a string is accepted as parameter, in this case will be converted to the <code class="codehilite"><span class="n">path</span></code> parameter and <code class="codehilite"><span class="n">followSymlinks</span></code> will be <code class="codehilite"><span class="k">false</span></code>.</p>
+<p>Also a string is accepted as parameter, in this case will be converted to the <code class="codehilite"><span class="err">path</span></code> parameter and <code class="codehilite"><span class="err">followSymlinks</span></code> will be <code class="codehilite"><span class="err">false</span></code>.</p>
 <p><strong>Description</strong></p>
-<p>Reads the contents of the folder to be used in another action. By default, the symlinks are left intact, but if <code class="codehilite"><span class="n">followSymlinks</span></code> is set to <code class="codehilite"><span class="k">true</span></code> then they will be followed and the resolved entry will be read instead.</p>
+<p>Reads the contents of the folder to be used in another action. By default, the symlinks are left intact, but if <code class="codehilite"><span class="err">followSymlinks</span></code> is set to <code class="codehilite"><span class="err">true</span></code> then they will be followed and the resolved entry will be read instead.</p>
 <div class="admonition example">
 <p class="admonition-title">Example</p>
 <p>Read the folder contents, then archive and compress it into a file.</p>
@@ -794,10 +794,10 @@
 </pre></div>
 
 </div>
-<h2 id="from-physical-docker-volume"><code class="codehilite"><span class="k">from</span><span class="o">-</span><span class="n">physical</span><span class="o">-</span><span class="n">docker</span><span class="o">-</span><span class="n">volume</span></code><a class="headerlink" href="#from-physical-docker-volume" title="Permanent link">&para;</a></h2>
+<h2 id="from-physical-docker-volume"><code class="codehilite"><span class="err">from-physical-docker-volume</span></code><a class="headerlink" href="#from-physical-docker-volume" title="Permanent link">&para;</a></h2>
 <p><strong>Input</strong>: Nothing</p>
 <p><strong>Output</strong>: directory</p>
-<p><strong>Unaction</strong>: Yes (Only works when using <code class="codehilite"><span class="k">dictionary</span></code> parameter - if using a <code class="codehilite"><span class="n">string</span></code> as parameter the restore will fail).</p>
+<p><strong>Unaction</strong>: Yes (Only works when using <code class="codehilite"><span class="err">dictionary</span></code> parameter - if using a <code class="codehilite"><span class="err">string</span></code> as parameter the restore will fail).</p>
 <p><strong>Parameters</strong></p>
 <table>
 <thead>
@@ -810,25 +810,25 @@
 </thead>
 <tbody>
 <tr>
-<td><code class="codehilite"><span class="n">volume</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">volume</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Name of the volume to backup</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">followSymlinks</span></code></td>
-<td><code class="codehilite"><span class="n">bool</span></code></td>
+<td><code class="codehilite"><span class="err">followSymlinks</span></code></td>
+<td><code class="codehilite"><span class="err">bool</span></code></td>
 <td>Follow symbolic links</td>
 <td>Yes</td>
 </tr>
 </tbody>
 </table>
-<p>Also a string is accepted as parameter, in this case will be converted to the <code class="codehilite"><span class="n">volume</span></code> parameter and <code class="codehilite"><span class="n">followSymlinks</span></code> will be <code class="codehilite"><span class="k">false</span></code>.</p>
+<p>Also a string is accepted as parameter, in this case will be converted to the <code class="codehilite"><span class="err">volume</span></code> parameter and <code class="codehilite"><span class="err">followSymlinks</span></code> will be <code class="codehilite"><span class="err">false</span></code>.</p>
 <p><strong>Description</strong></p>
-<p>Determines which is the path to the folder of the desired volume (using <code class="codehilite"><span class="x">docker volume inspect VOLUME_NAME --format </span><span class="cp">{{</span><span class="nv">.Mountpoint</span><span class="cp">}}</span><span class="x"></span></code> command), and then calls the <a href="#from-directory"><code class="codehilite"><span class="k">from</span><span class="o">-</span><span class="n">directory</span></code></a> action to perform the read. The path is set automatically to the resolved path from the command.</p>
+<p>Determines which is the path to the folder of the desired volume (using <code class="codehilite"><span class="x">docker volume inspect VOLUME_NAME --format </span><span class="cp">{{</span><span class="nv">.Mountpoint</span><span class="cp">}}</span><span class="x"></span></code> command), and then calls the <a href="#from-directory"><code class="codehilite"><span class="err">from-directory</span></code></a> action to perform the read. The path is set automatically to the resolved path from the command.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>Requires docker to run this action. The user running the backups must have access to the docker socket. Only <code class="codehilite"><span class="k">local</span></code> volume type is supported.</p>
+<p>Requires docker to run this action. The user running the backups must have access to the docker socket. Only <code class="codehilite"><span class="err">local</span></code> volume type is supported.</p>
 </div>
 <div class="admonition example">
 <p class="admonition-title">Example</p>
@@ -843,7 +843,7 @@
 </pre></div>
 
 </div>
-<h2 id="to-directory"><code class="codehilite"><span class="k">to</span><span class="o">-</span><span class="n">directory</span></code><a class="headerlink" href="#to-directory" title="Permanent link">&para;</a></h2>
+<h2 id="to-directory"><code class="codehilite"><span class="err">to-directory</span></code><a class="headerlink" href="#to-directory" title="Permanent link">&para;</a></h2>
 <p><strong>Input</strong>: directory</p>
 <p><strong>Output</strong>: Nothing</p>
 <p><strong>Unaction</strong>: Yes</p>
@@ -859,28 +859,28 @@
 </thead>
 <tbody>
 <tr>
-<td><code class="codehilite"><span class="n">path</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">path</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Folder to place the folder contents into this path inside the backup folder</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">parents</span></code></td>
-<td><code class="codehilite"><span class="n">bool</span></code></td>
+<td><code class="codehilite"><span class="err">parents</span></code></td>
+<td><code class="codehilite"><span class="err">bool</span></code></td>
 <td>Create parent folders if they do not exist (when creating the output folder)</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">preserveStats</span></code></td>
-<td><code class="codehilite"><span class="k">Union</span><span class="p">[</span><span class="n">bool</span><span class="p">,</span> <span class="n">str</span><span class="p">]</span></code></td>
+<td><code class="codehilite"><span class="err">preserveStats</span></code></td>
+<td><code class="codehilite"><span class="err">Union[bool, str]</span></code></td>
 <td>Preserve some or all of the stats of the entry (see description)</td>
 <td>Yes</td>
 </tr>
 </tbody>
 </table>
-<p>Also accepts the same parameters of <a href="../file#copy-file"><code class="codehilite"><span class="k">copy</span><span class="o">-</span><span class="n">file</span></code></a> action, but with the <code class="codehilite"><span class="k">from</span></code> and <code class="codehilite"><span class="k">to</span></code> filled by this action. These settings only apply when a file is being written.</p>
+<p>Also accepts the same parameters of <a href="../file#copy-file"><code class="codehilite"><span class="err">copy-file</span></code></a> action, but with the <code class="codehilite"><span class="err">from</span></code> and <code class="codehilite"><span class="err">to</span></code> filled by this action. These settings only apply when a file is being written.</p>
 <p><strong>Description</strong></p>
-<p>Writes the full contents of the folder into the folder defined in <code class="codehilite"><span class="n">path</span></code> (which will be inside the backup folder). The stats of the entries can be preserved in several ways by defining the <code class="codehilite"><span class="n">preserveStats</span></code> property. By default is set to <code class="codehilite"><span class="n">utime</span></code> (see table below for all options). To combine multiple options, use <code class="codehilite"><span class="p">,</span></code> to split them (<code class="codehilite"><span class="n">chmod</span><span class="p">,</span><span class="n">chown</span><span class="p">,</span><span class="n">utime</span></code>). Writing a file uses the <a href="../file#copy-file"><code class="codehilite"><span class="k">copy</span><span class="o">-</span><span class="n">file</span></code></a> action, which by default will try to reduce copies if the same file exists in the previous backup and no modification is detected (that is why <code class="codehilite"><span class="n">preserveStats</span></code> is <code class="codehilite"><span class="n">utime</span></code> by default). Can be disabled by setting <code class="codehilite"><span class="n">forceCopy</span></code> to <code class="codehilite"><span class="k">true</span></code>.</p>
+<p>Writes the full contents of the folder into the folder defined in <code class="codehilite"><span class="err">path</span></code> (which will be inside the backup folder). The stats of the entries can be preserved in several ways by defining the <code class="codehilite"><span class="err">preserveStats</span></code> property. By default is set to <code class="codehilite"><span class="err">utime</span></code> (see table below for all options). To combine multiple options, use <code class="codehilite"><span class="err">,</span></code> to split them (<code class="codehilite"><span class="err">chmod,chown,utime</span></code>). Writing a file uses the <a href="../file#copy-file"><code class="codehilite"><span class="err">copy-file</span></code></a> action, which by default will try to reduce copies if the same file exists in the previous backup and no modification is detected (that is why <code class="codehilite"><span class="err">preserveStats</span></code> is <code class="codehilite"><span class="err">utime</span></code> by default). Can be disabled by setting <code class="codehilite"><span class="err">forceCopy</span></code> to <code class="codehilite"><span class="err">true</span></code>.</p>
 <table>
 <thead>
 <tr>
@@ -891,32 +891,32 @@
 </thead>
 <tbody>
 <tr>
-<td><code class="codehilite"><span class="k">true</span></code></td>
+<td><code class="codehilite"><span class="err">true</span></code></td>
 <td>Preserves all stats</td>
 <td>Probably yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="k">false</span></code></td>
+<td><code class="codehilite"><span class="err">false</span></code></td>
 <td>Does not preserve any stats</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">chmod</span></code></td>
+<td><code class="codehilite"><span class="err">chmod</span></code></td>
 <td>Only changes the permissions of the entry</td>
 <td>Probably yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">chown</span></code></td>
+<td><code class="codehilite"><span class="err">chown</span></code></td>
 <td>Changes the UID and GID of the entry</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">utime</span></code></td>
+<td><code class="codehilite"><span class="err">utime</span></code></td>
 <td>Changes the access and modified times</td>
 <td>No, if can modify the files</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">xattrs</span></code></td>
+<td><code class="codehilite"><span class="err">xattrs</span></code></td>
 <td>Preserves the extended attributes of the entries</td>
 <td>Yes</td>
 </tr>
@@ -935,7 +935,7 @@
 </pre></div>
 
 </div>
-<h2 id="copy-directory"><code class="codehilite"><span class="k">copy</span><span class="o">-</span><span class="n">directory</span></code><a class="headerlink" href="#copy-directory" title="Permanent link">&para;</a></h2>
+<h2 id="copy-directory"><code class="codehilite"><span class="err">copy-directory</span></code><a class="headerlink" href="#copy-directory" title="Permanent link">&para;</a></h2>
 <p><strong>Input</strong>: Nothing</p>
 <p><strong>Output</strong>: Nothing</p>
 <p><strong>Unaction</strong>: Yes</p>
@@ -951,22 +951,22 @@
 </thead>
 <tbody>
 <tr>
-<td><code class="codehilite"><span class="k">from</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
-<td><code class="codehilite"><span class="n">path</span></code> parameter for <a href="#from-directory"><code class="codehilite"><span class="k">from</span><span class="o">-</span><span class="n">directory</span></code></a> action</td>
+<td><code class="codehilite"><span class="err">from</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
+<td><code class="codehilite"><span class="err">path</span></code> parameter for <a href="#from-directory"><code class="codehilite"><span class="err">from-directory</span></code></a> action</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="k">to</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
-<td><code class="codehilite"><span class="n">path</span></code> parameter for <a href="#from-directory"><code class="codehilite"><span class="k">to</span><span class="o">-</span><span class="n">directory</span></code></a> action</td>
+<td><code class="codehilite"><span class="err">to</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
+<td><code class="codehilite"><span class="err">path</span></code> parameter for <a href="#from-directory"><code class="codehilite"><span class="err">to-directory</span></code></a> action</td>
 <td>No</td>
 </tr>
 </tbody>
 </table>
-<p>All supported parameters from <a href="#from-directory"><code class="codehilite"><span class="k">from</span><span class="o">-</span><span class="n">directory</span></code></a> and <a href="#from-directory"><code class="codehilite"><span class="k">to</span><span class="o">-</span><span class="n">directory</span></code></a> actions are supported. The <code class="codehilite"><span class="n">path</span></code> for both actions are filled from this action parameters (see above table).</p>
+<p>All supported parameters from <a href="#from-directory"><code class="codehilite"><span class="err">from-directory</span></code></a> and <a href="#from-directory"><code class="codehilite"><span class="err">to-directory</span></code></a> actions are supported. The <code class="codehilite"><span class="err">path</span></code> for both actions are filled from this action parameters (see above table).</p>
 <p><strong>Description</strong></p>
-<p>Shortcut for the example of <a href="#from-directory"><code class="codehilite"><span class="k">to</span><span class="o">-</span><span class="n">directory</span></code></a>. Copies a directory from somewhere to the backup folder using the same functionallity.</p>
+<p>Shortcut for the example of <a href="#from-directory"><code class="codehilite"><span class="err">to-directory</span></code></a>. Copies a directory from somewhere to the backup folder using the same functionallity.</p>
 <div class="admonition example">
 <p class="admonition-title">Example</p>
 <p>Copy a folder (the good way).</p>

@@ -727,20 +727,20 @@
                 
                 
                 <h1 id="steps">Steps<a class="headerlink" href="#steps" title="Permanent link">&para;</a></h1>
-<p>To make backups, some shell scripts must be create inside the <code class="codehilite"><span class="n">steps</span></code> folder, located in the current working directory <code class="codehilite"><span class="n">cwd</span></code>. They will be run in alphabetical order one by one, but these scripts are not full scripts. The tool prepares the script with some environment variables (based on the configuration, the <a href="../configuration/#env">env</a> section and the injected env from the <a href="../secrets/">secret providers</a>) and some functions that will be available inside the step script. By default, there&rsquo;s some <a href="#function-utilities">functions</a> available, but you can add new functions by defining your own script and adding its path to <code class="codehilite"><span class="n">customUtilsScript</span></code> setting.</p>
+<p>To make backups, some shell scripts must be create inside the <code class="codehilite"><span class="err">steps</span></code> folder, located in the current working directory <code class="codehilite"><span class="err">cwd</span></code>. They will be run in alphabetical order one by one, but these scripts are not full scripts. The tool prepares the script with some environment variables (based on the configuration, the <a href="../configuration/#env">env</a> section and the injected env from the <a href="../secrets/">secret providers</a>) and some functions that will be available inside the step script. By default, there&rsquo;s some <a href="#function-utilities">functions</a> available, but you can add new functions by defining your own script and adding its path to <code class="codehilite"><span class="err">customUtilsScript</span></code> setting.</p>
 <p>A simple step script that copies the content of a folder will be this:</p>
-<p><code class="codehilite"><span class="mi">01</span> <span class="o">-</span> <span class="n">web</span><span class="p">.</span><span class="n">sh</span></code></p>
+<p><code class="codehilite"><span class="err">01 - web.sh</span></code></p>
 <div class="codehilite"><pre><span></span>backup-folder <span class="s2">&quot;/var/web/&quot;</span> web <span class="o">||</span> <span class="nb">exit</span> <span class="nv">$?</span>
 </pre></div>
 
 <p>You can define as many steps as you wish. The idea is to keep every step as simple as possible to simplify debugging.</p>
-<p>If the <code class="codehilite"><span class="n">logLevel</span></code> is set to <code class="codehilite"><span class="n">DEBUG</span></code> it will log all the output of the scripts. If set to <code class="codehilite"><span class="n">INFO</span></code> part of the output will be logged.</p>
+<p>If the <code class="codehilite"><span class="err">logLevel</span></code> is set to <code class="codehilite"><span class="err">DEBUG</span></code> it will log all the output of the scripts. If set to <code class="codehilite"><span class="err">INFO</span></code> part of the output will be logged.</p>
 <h2 id="function-utilities">Function utilities<a class="headerlink" href="#function-utilities" title="Permanent link">&para;</a></h2>
 <p>The steps runs with some function utilities defined that can be used to simplify the backup task. All functions receives parameters via arguments or via environment variables. The environment variables in general are defined by the tool through the configuration and secret providers, but can be overridden in the same script (take care when doing this).</p>
 <blockquote>
 <p>The environment variables declared in each function must be defined in lowercase in the configuration. Some of the environment variables are defined automatically, it is not a good idea to override them.</p>
 </blockquote>
-<h3 id="compress-encrypt"><code class="codehilite"><span class="n">compress</span><span class="o">-</span><span class="n">encrypt</span></code><a class="headerlink" href="#compress-encrypt" title="Permanent link">&para;</a></h3>
+<h3 id="compress-encrypt"><code class="codehilite"><span class="err">compress-encrypt</span></code><a class="headerlink" href="#compress-encrypt" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Description</strong>: Executes a command and the output it generates, will apply the compression and encrypt strategies, based on the configuration. If no of them are defined, then the input and output will be the same (won&rsquo;t do anything).</li>
 <li><strong>Parameters</strong>:<ol>
@@ -749,42 +749,42 @@
 </ol>
 </li>
 <li><strong>Environment variables</strong>:<ul>
-<li><code class="codehilite"><span class="n">COMPRESSION_STRATEGY</span></code>: Defined by the <a href="../configuration/#strategy">compression configuration</a>.</li>
-<li><code class="codehilite"><span class="n">COMPRESSION_LEVEL</span></code>: Defined by the <a href="../configuration/#level">compression configuration</a>.</li>
-<li><code class="codehilite"><span class="n">CYPHER_STRATEGY</span></code>: Defined by the <a href="../configuration/#strategy_1">cypher configuration</a>.</li>
-<li><code class="codehilite"><span class="n">CYPHER_KEYS</span></code>: Defined by the <a href="../configuration/#strategy_1">cypher configuration</a>.</li>
-<li><code class="codehilite"><span class="n">CYPHER_PASSPHRASE</span></code>: Defined by the <a href="../configuration/#strategy_1">cypher configuration</a>.</li>
+<li><code class="codehilite"><span class="err">COMPRESSION_STRATEGY</span></code>: Defined by the <a href="../configuration/#strategy">compression configuration</a>.</li>
+<li><code class="codehilite"><span class="err">COMPRESSION_LEVEL</span></code>: Defined by the <a href="../configuration/#level">compression configuration</a>.</li>
+<li><code class="codehilite"><span class="err">CYPHER_STRATEGY</span></code>: Defined by the <a href="../configuration/#strategy_1">cypher configuration</a>.</li>
+<li><code class="codehilite"><span class="err">CYPHER_KEYS</span></code>: Defined by the <a href="../configuration/#strategy_1">cypher configuration</a>.</li>
+<li><code class="codehilite"><span class="err">CYPHER_PASSPHRASE</span></code>: Defined by the <a href="../configuration/#strategy_1">cypher configuration</a>.</li>
 </ul>
 </li>
-<li><strong>Example</strong>: <code class="codehilite"><span class="nv">compress</span><span class="o">-</span><span class="nv">encrypt</span> <span class="s2">&quot;</span><span class="s">cat /dev/random</span><span class="s2">&quot;</span> <span class="s2">&quot;</span><span class="s">random.bin</span><span class="s2">&quot;</span></code></li>
+<li><strong>Example</strong>: <code class="codehilite"><span class="err">compress-encrypt &quot;cat /dev/random&quot; &quot;random.bin&quot;</span></code></li>
 <li><strong>Requirements</strong>:<ul>
-<li>If using the compression strategy <code class="codehilite"><span class="n">gzip</span></code>, <code class="codehilite"><span class="n">gzip</span></code> and <code class="codehilite"><span class="n">tar</span></code> must be installed on the system.</li>
-<li>If using the compression strategy <code class="codehilite"><span class="n">xz</span></code>, <code class="codehilite"><span class="n">xz</span></code> and <code class="codehilite"><span class="n">tar</span></code> must be installed on the system.</li>
-<li>If using any cypher strategy, <code class="codehilite"><span class="n">gpg</span></code> (v2.x.x series) must be installed on the system.</li>
-<li>The receivers used in the <code class="codehilite"><span class="n">keys</span></code> setting must have been imported previously.</li>
+<li>If using the compression strategy <code class="codehilite"><span class="err">gzip</span></code>, <code class="codehilite"><span class="err">gzip</span></code> and <code class="codehilite"><span class="err">tar</span></code> must be installed on the system.</li>
+<li>If using the compression strategy <code class="codehilite"><span class="err">xz</span></code>, <code class="codehilite"><span class="err">xz</span></code> and <code class="codehilite"><span class="err">tar</span></code> must be installed on the system.</li>
+<li>If using any cypher strategy, <code class="codehilite"><span class="err">gpg</span></code> (v2.x.x series) must be installed on the system.</li>
+<li>The receivers used in the <code class="codehilite"><span class="err">keys</span></code> setting must have been imported previously.</li>
 </ul>
 </li>
 </ul>
-<h3 id="backup-folder"><code class="codehilite"><span class="n">backup</span><span class="o">-</span><span class="n">folder</span></code><a class="headerlink" href="#backup-folder" title="Permanent link">&para;</a></h3>
+<h3 id="backup-folder"><code class="codehilite"><span class="err">backup-folder</span></code><a class="headerlink" href="#backup-folder" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>Description</strong>: Copies a folder to another that will be inside the backup folder, using <code class="codehilite"><span class="n">rsync</span></code>.</li>
+<li><strong>Description</strong>: Copies a folder to another that will be inside the backup folder, using <code class="codehilite"><span class="err">rsync</span></code>.</li>
 <li><strong>Parameters</strong>:<ol>
 <li>Source path of the backup</li>
 <li>Name of the folder where will be stored the copy of the source inside the backup folder</li>
-<li><strong>Extra arguments</strong> will be passed to <code class="codehilite"><span class="n">rsync</span></code></li>
+<li><strong>Extra arguments</strong> will be passed to <code class="codehilite"><span class="err">rsync</span></code></li>
 </ol>
 </li>
-<li><strong>Example</strong>: <code class="codehilite"><span class="n">backup</span><span class="o">-</span><span class="n">folder</span> <span class="ss">&quot;/var/www/html&quot;</span> <span class="n">my</span><span class="o">-</span><span class="n">web</span></code> will copy the contents of <code class="codehilite"><span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">www</span><span class="o">/</span><span class="n">html</span></code> into the folder <code class="codehilite"><span class="p">...</span><span class="o">/</span><span class="n">my</span><span class="o">-</span><span class="n">web</span></code>.</li>
+<li><strong>Example</strong>: <code class="codehilite"><span class="err">backup-folder &quot;/var/www/html&quot; my-web</span></code> will copy the contents of <code class="codehilite"><span class="err">/var/www/html</span></code> into the folder <code class="codehilite"><span class="err">.../my-web</span></code>.</li>
 <li><strong>Requirements</strong>:<ul>
-<li><code class="codehilite"><span class="n">rsync</span></code> must be installed on the system.</li>
+<li><code class="codehilite"><span class="err">rsync</span></code> must be installed on the system.</li>
 </ul>
 </li>
 </ul>
-<h3 id="backup-remote-folder"><code class="codehilite"><span class="n">backup</span><span class="o">-</span><span class="n">remote</span><span class="o">-</span><span class="n">folder</span></code><a class="headerlink" href="#backup-remote-folder" title="Permanent link">&para;</a></h3>
+<h3 id="backup-remote-folder"><code class="codehilite"><span class="err">backup-remote-folder</span></code><a class="headerlink" href="#backup-remote-folder" title="Permanent link">&para;</a></h3>
 <ul>
 <li>
-<p><strong>Description</strong>: Copies a remote folder to a local folder placed inside the backup folder. Uses <code class="codehilite"><span class="n">rsync</span></code> and <code class="codehilite"><span class="n">ssh</span></code>.</p>
-<p>To make it work, the server that is doing the backup with the user that will do the backups (in general, <code class="codehilite"><span class="n">root</span></code>) must create a pair of public/private keys for ssh (<code class="codehilite"><span class="n">ssh</span><span class="o">-</span><span class="n">keygen</span> <span class="o">-</span><span class="n">f</span> <span class="o">~/</span><span class="p">.</span><span class="n">ssh</span><span class="o">/</span><span class="n">id_rsa</span> <span class="o">-</span><span class="n">q</span> <span class="o">-</span><span class="n">P</span> <span class="ss">&quot;&quot;</span></code> for example). If you already have one, you don&rsquo;t need to create one if your key has no passphrase. When the key is generated, you can copy the public key (<code class="codehilite"><span class="n">cat</span> <span class="o">~/</span><span class="p">.</span><span class="n">ssh</span><span class="o">/</span><span class="n">id_rsa</span><span class="p">.</span><span class="n">pub</span></code>) and paste it inside the <code class="codehilite"><span class="o">~/</span><span class="p">.</span><span class="n">ssh</span><span class="o">/</span><span class="n">authorized_keys</span></code> file of the remote server using the same user (generally <code class="codehilite"><span class="n">root</span></code>).</p>
+<p><strong>Description</strong>: Copies a remote folder to a local folder placed inside the backup folder. Uses <code class="codehilite"><span class="err">rsync</span></code> and <code class="codehilite"><span class="err">ssh</span></code>.</p>
+<p>To make it work, the server that is doing the backup with the user that will do the backups (in general, <code class="codehilite"><span class="err">root</span></code>) must create a pair of public/private keys for ssh (<code class="codehilite"><span class="err">ssh-keygen -f ~/.ssh/id_rsa -q -P &quot;&quot;</span></code> for example). If you already have one, you don&rsquo;t need to create one if your key has no passphrase. When the key is generated, you can copy the public key (<code class="codehilite"><span class="err">cat ~/.ssh/id_rsa.pub</span></code>) and paste it inside the <code class="codehilite"><span class="err">~/.ssh/authorized_keys</span></code> file of the remote server using the same user (generally <code class="codehilite"><span class="err">root</span></code>).</p>
 </li>
 <li>
 <p><strong>Parameters</strong>:</p>
@@ -792,91 +792,91 @@
 <li>Domain or IP of the remote server</li>
 <li>Source path of the backup</li>
 <li>Name of the folder where will be stored the copy of the source inside the backup folder</li>
-<li><strong>Extra arguments</strong> will be passed to <code class="codehilite"><span class="n">rsync</span></code></li>
+<li><strong>Extra arguments</strong> will be passed to <code class="codehilite"><span class="err">rsync</span></code></li>
 </ol>
 </li>
-<li><strong>Example</strong>: <code class="codehilite"><span class="n">backup</span><span class="o">-</span><span class="n">remote</span><span class="o">-</span><span class="n">folder</span> <span class="s1">&#39;10.10.10.254&#39;</span> <span class="ss">&quot;/var/lib/unifi/backup/autobackup/&quot;</span> <span class="n">unifi</span></code> will copy the contents of <code class="codehilite"><span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">unifi</span><span class="o">/</span><span class="n">backup</span><span class="o">/</span><span class="n">autobackup</span><span class="o">/</span></code> from the server <code class="codehilite"><span class="mi">10</span><span class="p">.</span><span class="mi">10</span><span class="p">.</span><span class="mi">10</span><span class="p">.</span><span class="mi">254</span></code> to the local directory <code class="codehilite"><span class="n">unifi</span></code>.</li>
+<li><strong>Example</strong>: <code class="codehilite"><span class="err">backup-remote-folder &#39;10.10.10.254&#39; &quot;/var/lib/unifi/backup/autobackup/&quot; unifi</span></code> will copy the contents of <code class="codehilite"><span class="err">/var/lib/unifi/backup/autobackup/</span></code> from the server <code class="codehilite"><span class="err">10.10.10.254</span></code> to the local directory <code class="codehilite"><span class="err">unifi</span></code>.</li>
 <li><strong>Requirements</strong>:<ul>
-<li><code class="codehilite"><span class="n">rsync</span></code> must be installed on the system.</li>
-<li><code class="codehilite"><span class="n">ssh</span></code> (the client) must be installed on the system.</li>
+<li><code class="codehilite"><span class="err">rsync</span></code> must be installed on the system.</li>
+<li><code class="codehilite"><span class="err">ssh</span></code> (the client) must be installed on the system.</li>
 </ul>
 </li>
 </ul>
-<h3 id="backup-postgres-database"><code class="codehilite"><span class="n">backup</span><span class="o">-</span><span class="n">postgres</span><span class="o">-</span><span class="k">database</span></code><a class="headerlink" href="#backup-postgres-database" title="Permanent link">&para;</a></h3>
+<h3 id="backup-postgres-database"><code class="codehilite"><span class="err">backup-postgres-database</span></code><a class="headerlink" href="#backup-postgres-database" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>Description</strong>: Makes a backup of a database in PostgreSQL. By default uses the tools installed in the system, but if <code class="codehilite"><span class="n">docker</span></code> is define in the settings, it will use a docker container. Uses the configured compress and cypher strategies to create the backup.</li>
+<li><strong>Description</strong>: Makes a backup of a database in PostgreSQL. By default uses the tools installed in the system, but if <code class="codehilite"><span class="err">docker</span></code> is define in the settings, it will use a docker container. Uses the configured compress and cypher strategies to create the backup.</li>
 <li><strong>Parameters</strong>:<ol>
 <li>Database to backup</li>
 </ol>
 </li>
 <li><strong>Environment variables</strong>:<ul>
-<li><code class="codehilite"><span class="n">PGNETWORK</span></code>: (Docker only) Defines in which network the container will be attached. Default is <code class="codehilite"><span class="k">host</span></code>.</li>
-<li><code class="codehilite"><span class="n">PGIMAGE</span></code>: (Docker only) Defines which image will be used to run the container. Default is <code class="codehilite"><span class="n">postgres</span></code>.</li>
-<li><code class="codehilite"><span class="n">PGHOST</span></code>: Defines the host where the database is located. Default <code class="codehilite"><span class="n">localhost</span></code>.</li>
-<li><code class="codehilite"><span class="n">PGUSER</span></code>: Defines the user from who the connection will be made. Must be an existing user in the OS. Defaults to <code class="codehilite"><span class="n">postgres</span></code>.</li>
-<li><code class="codehilite"><span class="n">PGPASSWORD</span></code>: If set, this password will be used to connect to the database.</li>
+<li><code class="codehilite"><span class="err">PGNETWORK</span></code>: (Docker only) Defines in which network the container will be attached. Default is <code class="codehilite"><span class="err">host</span></code>.</li>
+<li><code class="codehilite"><span class="err">PGIMAGE</span></code>: (Docker only) Defines which image will be used to run the container. Default is <code class="codehilite"><span class="err">postgres</span></code>.</li>
+<li><code class="codehilite"><span class="err">PGHOST</span></code>: Defines the host where the database is located. Default <code class="codehilite"><span class="err">localhost</span></code>.</li>
+<li><code class="codehilite"><span class="err">PGUSER</span></code>: Defines the user from who the connection will be made. Must be an existing user in the OS. Defaults to <code class="codehilite"><span class="err">postgres</span></code>.</li>
+<li><code class="codehilite"><span class="err">PGPASSWORD</span></code>: If set, this password will be used to connect to the database.</li>
 </ul>
 </li>
-<li><strong>Example</strong>: <code class="codehilite"><span class="n">backup</span><span class="o">-</span><span class="n">postgres</span><span class="o">-</span><span class="k">database</span> <span class="ss">&quot;postgres&quot;</span></code> Will copy the database <code class="codehilite"><span class="n">postgres</span></code> into a compressed (and maybe encrypted) sql script named the same as the database.</li>
+<li><strong>Example</strong>: <code class="codehilite"><span class="err">backup-postgres-database &quot;postgres&quot;</span></code> Will copy the database <code class="codehilite"><span class="err">postgres</span></code> into a compressed (and maybe encrypted) sql script named the same as the database.</li>
 <li><strong>Requirements</strong>:<ul>
-<li>If using <em>Docker</em>, docker must be installed, and the image must exist. The image must have <code class="codehilite"><span class="n">pg_dump</span></code> installed. The image will be pulled automatically if it is not in the system, but it won&rsquo;t be updated. You can use a <a href="../hooks/">hook</a> to do it.</li>
-<li>If not using <em>Docker</em>, <code class="codehilite"><span class="n">pg_dump</span></code> must be installed on the system.</li>
+<li>If using <em>Docker</em>, docker must be installed, and the image must exist. The image must have <code class="codehilite"><span class="err">pg_dump</span></code> installed. The image will be pulled automatically if it is not in the system, but it won&rsquo;t be updated. You can use a <a href="../hooks/">hook</a> to do it.</li>
+<li>If not using <em>Docker</em>, <code class="codehilite"><span class="err">pg_dump</span></code> must be installed on the system.</li>
 <li>Uses <a href="#compress-encrypt">compress-encrypt</a> internally.</li>
 </ul>
 </li>
 </ul>
-<h3 id="backup-mysql-database"><code class="codehilite"><span class="n">backup</span><span class="o">-</span><span class="n">mysql</span><span class="o">-</span><span class="k">database</span></code><a class="headerlink" href="#backup-mysql-database" title="Permanent link">&para;</a></h3>
+<h3 id="backup-mysql-database"><code class="codehilite"><span class="err">backup-mysql-database</span></code><a class="headerlink" href="#backup-mysql-database" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>Description</strong>: Makes a backup of a database in MySQL/MariaDB. By default uses the tools installed in the system, but if <code class="codehilite"><span class="n">docker</span></code> is define in the settings, it will use a docker container. Uses the configured compress and cypher strategies to create the backup.</li>
+<li><strong>Description</strong>: Makes a backup of a database in MySQL/MariaDB. By default uses the tools installed in the system, but if <code class="codehilite"><span class="err">docker</span></code> is define in the settings, it will use a docker container. Uses the configured compress and cypher strategies to create the backup.</li>
 <li><strong>Parameters</strong>:<ol>
 <li>Database to backup</li>
 </ol>
 </li>
 <li><strong>Environment variables</strong>:<ul>
-<li><code class="codehilite"><span class="n">MYSQLNETWORK</span></code>: (Docker only) Defines in which network the container will be attached. Default is <code class="codehilite"><span class="k">host</span></code>.</li>
-<li><code class="codehilite"><span class="n">MYSQLIMAGE</span></code>: (Docker only) Defines which image will be used to run the container. Default is <code class="codehilite"><span class="n">mariadb</span></code>.</li>
-<li><code class="codehilite"><span class="n">MYSQLHOST</span></code>: Defines the host where the database is located. Default <code class="codehilite"><span class="n">localhost</span></code>.</li>
-<li><code class="codehilite"><span class="n">MYSQLUSER</span></code>: Defines the user from who the connection will be made. Defaults to user that runs the utility.</li>
-<li><code class="codehilite"><span class="n">MYSQLPASSWORD</span></code>: If set, this password will be used to connect to the database.</li>
+<li><code class="codehilite"><span class="err">MYSQLNETWORK</span></code>: (Docker only) Defines in which network the container will be attached. Default is <code class="codehilite"><span class="err">host</span></code>.</li>
+<li><code class="codehilite"><span class="err">MYSQLIMAGE</span></code>: (Docker only) Defines which image will be used to run the container. Default is <code class="codehilite"><span class="err">mariadb</span></code>.</li>
+<li><code class="codehilite"><span class="err">MYSQLHOST</span></code>: Defines the host where the database is located. Default <code class="codehilite"><span class="err">localhost</span></code>.</li>
+<li><code class="codehilite"><span class="err">MYSQLUSER</span></code>: Defines the user from who the connection will be made. Defaults to user that runs the utility.</li>
+<li><code class="codehilite"><span class="err">MYSQLPASSWORD</span></code>: If set, this password will be used to connect to the database.</li>
 </ul>
 </li>
-<li><strong>Example</strong>: <code class="codehilite"><span class="n">backup</span><span class="o">-</span><span class="n">mysql</span><span class="o">-</span><span class="k">database</span> <span class="ss">&quot;wordpress&quot;</span></code> Will copy the database <code class="codehilite"><span class="n">wordpress</span></code> into a compressed (and maybe encrypted) sql script named the same as the database.</li>
+<li><strong>Example</strong>: <code class="codehilite"><span class="err">backup-mysql-database &quot;wordpress&quot;</span></code> Will copy the database <code class="codehilite"><span class="err">wordpress</span></code> into a compressed (and maybe encrypted) sql script named the same as the database.</li>
 <li><strong>Requirements</strong>:<ul>
-<li>If using <em>Docker</em>, docker must be installed, and the image must exist. The image must have <code class="codehilite"><span class="n">mysqldump</span></code> installed and be compatible with the MySQL/MariaDB server. The image will be pulled automatically if it is not in the system, but it won&rsquo;t be updated. You can use a <a href="../hooks/">hook</a> to do it.</li>
-<li>If not using <em>Docker</em>, <code class="codehilite"><span class="n">mysqldump</span></code> must be installed on the system and be compatible with the MySQL/MariaDB server.</li>
+<li>If using <em>Docker</em>, docker must be installed, and the image must exist. The image must have <code class="codehilite"><span class="err">mysqldump</span></code> installed and be compatible with the MySQL/MariaDB server. The image will be pulled automatically if it is not in the system, but it won&rsquo;t be updated. You can use a <a href="../hooks/">hook</a> to do it.</li>
+<li>If not using <em>Docker</em>, <code class="codehilite"><span class="err">mysqldump</span></code> must be installed on the system and be compatible with the MySQL/MariaDB server.</li>
 <li>Uses <a href="#compress-encrypt">compress-encrypt</a> internally.</li>
 </ul>
 </li>
 </ul>
-<h3 id="backup-docker-volume"><code class="codehilite"><span class="n">backup</span><span class="o">-</span><span class="n">docker</span><span class="o">-</span><span class="n">volume</span></code><a class="headerlink" href="#backup-docker-volume" title="Permanent link">&para;</a></h3>
+<h3 id="backup-docker-volume"><code class="codehilite"><span class="err">backup-docker-volume</span></code><a class="headerlink" href="#backup-docker-volume" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Description</strong>: Makes a backup (in a <code class="codehilite"><span class="na">.tar</span></code> file) of a Docker volume given its name. Uses the configured compress and cypher strategies to create the backup.</li>
 <li><strong>Parameters</strong>:<ol>
 <li>Name of the volume to backup</li>
 </ol>
 </li>
-<li><strong>Example</strong>: <code class="codehilite"><span class="n">backup</span><span class="o">-</span><span class="n">docker</span><span class="o">-</span><span class="n">volume</span> <span class="ss">&quot;wordpress-content&quot;</span></code></li>
+<li><strong>Example</strong>: <code class="codehilite"><span class="err">backup-docker-volume &quot;wordpress-content&quot;</span></code></li>
 <li><strong>Requirements</strong>:<ul>
-<li>Requires <em>docker</em> to be installed and running. Uses <code class="codehilite"><span class="n">alpine</span></code> image to make the copy. The image is pulled automatically, but not updated. To update it, <a href="../hooks/">hooks</a> can be used to, or run <code class="codehilite"><span class="n">docker</span> <span class="n">image</span> <span class="n">pull</span> <span class="n">alpine</span></code> before any volume backup.</li>
+<li>Requires <em>docker</em> to be installed and running. Uses <code class="codehilite"><span class="err">alpine</span></code> image to make the copy. The image is pulled automatically, but not updated. To update it, <a href="../hooks/">hooks</a> can be used to, or run <code class="codehilite"><span class="err">docker image pull alpine</span></code> before any volume backup.</li>
 <li>Uses <a href="#compress-encrypt">compress-encrypt</a> internally.</li>
 </ul>
 </li>
 </ul>
-<h3 id="backup-docker-volume-physically"><code class="codehilite"><span class="n">backup</span><span class="o">-</span><span class="n">docker</span><span class="o">-</span><span class="n">volume</span><span class="o">-</span><span class="n">physically</span></code><a class="headerlink" href="#backup-docker-volume-physically" title="Permanent link">&para;</a></h3>
+<h3 id="backup-docker-volume-physically"><code class="codehilite"><span class="err">backup-docker-volume-physically</span></code><a class="headerlink" href="#backup-docker-volume-physically" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>Description</strong>: Makes a backup of a Docker volume given its name copying the folder given in <code class="codehilite"><span class="n">docker</span> <span class="n">volume</span> <span class="n">inspect</span></code> json.</li>
+<li><strong>Description</strong>: Makes a backup of a Docker volume given its name copying the folder given in <code class="codehilite"><span class="err">docker volume inspect</span></code> json.</li>
 <li><strong>Parameters</strong>:<ol>
 <li>Name of the volume to backup</li>
 </ol>
 </li>
-<li><strong>Example</strong>: <code class="codehilite"><span class="n">backup</span><span class="o">-</span><span class="n">docker</span><span class="o">-</span><span class="n">volume</span><span class="o">-</span><span class="n">physically</span> <span class="ss">&quot;wordpress-content&quot;</span></code><ul>
+<li><strong>Example</strong>: <code class="codehilite"><span class="err">backup-docker-volume-physically &quot;wordpress-content&quot;</span></code><ul>
 <li>Requires <em>docker</em> to be installed and running.</li>
-<li>The volume must use the <code class="codehilite"><span class="k">local</span></code> storage, and must be accessible by the tool.</li>
+<li>The volume must use the <code class="codehilite"><span class="err">local</span></code> storage, and must be accessible by the tool.</li>
 <li>Uses <a href="#backup-folder">backup-folder</a> internally.</li>
 </ul>
 </li>
 </ul>
-<h3 id="backup-file"><code class="codehilite"><span class="n">backup</span><span class="o">-</span><span class="n">file</span></code><a class="headerlink" href="#backup-file" title="Permanent link">&para;</a></h3>
+<h3 id="backup-file"><code class="codehilite"><span class="err">backup-file</span></code><a class="headerlink" href="#backup-file" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Description</strong>: Makes a backup of a file. Compares with the previous backup to avoid a copy and hard-link with the previous one, or copies it if there are differences..</li>
 <li><strong>Parameters</strong>:<ol>
@@ -884,9 +884,9 @@
 <li>(optional) Folder where to put the file when copying</li>
 </ol>
 </li>
-<li><strong>Example</strong>: <code class="codehilite"><span class="n">backup</span><span class="o">-</span><span class="n">file</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">ssh</span><span class="o">/</span><span class="n">sshd</span> <span class="n">sys</span><span class="o">-</span><span class="n">config</span><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">ssh</span></code></li>
+<li><strong>Example</strong>: <code class="codehilite"><span class="err">backup-file /etc/ssh/sshd sys-config/etc/ssh</span></code></li>
 </ul>
-<h3 id="backup-file-encrypted"><code class="codehilite"><span class="n">backup</span><span class="o">-</span><span class="n">file</span><span class="o">-</span><span class="k">encrypted</span></code><a class="headerlink" href="#backup-file-encrypted" title="Permanent link">&para;</a></h3>
+<h3 id="backup-file-encrypted"><code class="codehilite"><span class="err">backup-file-encrypted</span></code><a class="headerlink" href="#backup-file-encrypted" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Description</strong>: Makes a backup of a file and compress and encrypts it using the configuration in strategies defined. Compares with the previous backup to avoid a copy and hard-link with the previous one, or copies it if there are differences.</li>
 <li><strong>Parameters</strong>:<ol>
@@ -894,15 +894,15 @@
 <li>(optional) Folder where to put the file when copying</li>
 </ol>
 </li>
-<li><strong>Example</strong>: <code class="codehilite"><span class="n">backup</span><span class="o">-</span><span class="n">file</span><span class="o">-</span><span class="k">encrypted</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">ssh</span><span class="o">/</span><span class="n">sshd</span> <span class="n">sys</span><span class="o">-</span><span class="n">config</span><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">ssh</span></code></li>
+<li><strong>Example</strong>: <code class="codehilite"><span class="err">backup-file-encrypted /etc/ssh/sshd sys-config/etc/ssh</span></code></li>
 <li><strong>Requirements</strong>:<ul>
 <li>Uses <a href="#compress-encrypt">compress-encrypt</a> internally.</li>
 </ul>
 </li>
 </ul>
-<h3 id="backup-mikrotik"><code class="codehilite"><span class="n">backup</span><span class="o">-</span><span class="n">mikrotik</span></code><a class="headerlink" href="#backup-mikrotik" title="Permanent link">&para;</a></h3>
+<h3 id="backup-mikrotik"><code class="codehilite"><span class="err">backup-mikrotik</span></code><a class="headerlink" href="#backup-mikrotik" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>Description</strong>: Makes a backup of a Mikrotik device via SSH. The files will be stored in the device and then downloaded into the local backups folder. To connect to the device, <code class="codehilite"><span class="n">mikrotiksshkey</span></code> or <code class="codehilite"><span class="n">mikrotikpass</span></code> must be defined in order to work.</li>
+<li><strong>Description</strong>: Makes a backup of a Mikrotik device via SSH. The files will be stored in the device and then downloaded into the local backups folder. To connect to the device, <code class="codehilite"><span class="err">mikrotiksshkey</span></code> or <code class="codehilite"><span class="err">mikrotikpass</span></code> must be defined in order to work.</li>
 <li><strong>Parameters</strong>:<ol>
 <li>User of the mikrotik device</li>
 <li>Host of the mikrotik device</li>
@@ -910,25 +910,25 @@
 </ol>
 </li>
 <li><strong>Environment variables</strong>:<ul>
-<li><code class="codehilite"><span class="n">MIKROTIKDIR</span></code>: (Optional) Folder where to store the backups in local.</li>
-<li><code class="codehilite"><span class="n">MIKROTIKSSHKEY</span></code>: (Either) Will use this SSH Identity Key to connect to the device.</li>
-<li><code class="codehilite"><span class="n">MIKROTIKPASS</span></code>: (Either) Will use this password to connect to the device (requires <code class="codehilite"><span class="n">sshpass</span></code>).</li>
-<li><code class="codehilite"><span class="n">MIKROTIKFULLBACKUP</span></code>: (Optional) If set, will do a full backup.</li>
-<li><code class="codehilite"><span class="n">MIKROTIKEXPORTSCRIPTS</span></code>: (Optional) If set, will do a scripts backup.</li>
-<li><code class="codehilite"><span class="n">MIKROTIKEXPORTSYSTEMCONFIG</span></code>: (Optional) If set, will do a system config backup.</li>
-<li><code class="codehilite"><span class="n">MIKROTIKEXPORTGLOBALCONFIG</span></code>: (Optional) If set, will do a global config backup.</li>
+<li><code class="codehilite"><span class="err">MIKROTIKDIR</span></code>: (Optional) Folder where to store the backups in local.</li>
+<li><code class="codehilite"><span class="err">MIKROTIKSSHKEY</span></code>: (Either) Will use this SSH Identity Key to connect to the device.</li>
+<li><code class="codehilite"><span class="err">MIKROTIKPASS</span></code>: (Either) Will use this password to connect to the device (requires <code class="codehilite"><span class="err">sshpass</span></code>).</li>
+<li><code class="codehilite"><span class="err">MIKROTIKFULLBACKUP</span></code>: (Optional) If set, will do a full backup.</li>
+<li><code class="codehilite"><span class="err">MIKROTIKEXPORTSCRIPTS</span></code>: (Optional) If set, will do a scripts backup.</li>
+<li><code class="codehilite"><span class="err">MIKROTIKEXPORTSYSTEMCONFIG</span></code>: (Optional) If set, will do a system config backup.</li>
+<li><code class="codehilite"><span class="err">MIKROTIKEXPORTGLOBALCONFIG</span></code>: (Optional) If set, will do a global config backup.</li>
 </ul>
 </li>
-<li><strong>Example</strong>: <code class="codehilite"><span class="n">backup</span><span class="o">-</span><span class="n">mikrotik</span> <span class="ss">&quot;mdbackup&quot;</span> <span class="ss">&quot;192.168.1.1&quot;</span> <span class="mi">2222</span></code></li>
+<li><strong>Example</strong>: <code class="codehilite"><span class="err">backup-mikrotik &quot;mdbackup&quot; &quot;192.168.1.1&quot; 2222</span></code></li>
 </ul>
 <h2 id="create-custom-functions">Create custom functions<a class="headerlink" href="#create-custom-functions" title="Permanent link">&para;</a></h2>
 <p>You can create custom functions and let the tool <a href="../configuration/#customutilsscript">load them</a> in each step script for you. Here it is some advices to help you get through.</p>
 <p>Remember that your function should be specific and do only one thing, but it should be as generic as possible. If you intend to get your function in as a predefined function, this must be a <strong>must</strong>.</p>
-<p>If the output is a single file or a few files not in a folder, it is recommended to use the helper function <a href="#compress-encrypt"><code class="codehilite"><span class="n">compress</span><span class="o">-</span><span class="n">encrypt</span></code></a>, so it will output a compressed and/or encrypted file, depending on the configuration. Or if you change some configuration of the compression or cyphering, the changes will be reflected in your code as well.</p>
+<p>If the output is a single file or a few files not in a folder, it is recommended to use the helper function <a href="#compress-encrypt"><code class="codehilite"><span class="err">compress-encrypt</span></code></a>, so it will output a compressed and/or encrypted file, depending on the configuration. Or if you change some configuration of the compression or cyphering, the changes will be reflected in your code as well.</p>
 <p>If there are credentials involved, get them from environment variables, never from parameters which someone could hardcode them. Remember that the environment variables can be obtained from secret backends which are more secure thatn hardcoded in any script nor the configuration file.</p>
-<p>If you have to change the directory, keep track of the initial <em>current working directory</em> (cwd), because all the files and folders must be written inside this folder. Don&rsquo;t hardcode this path, get it from <code class="codehilite"><span class="n">cwd</span></code> or <code class="codehilite"><span class="err">$</span><span class="n">PWD</span></code>.</p>
+<p>If you have to change the directory, keep track of the initial <em>current working directory</em> (cwd), because all the files and folders must be written inside this folder. Don&rsquo;t hardcode this path, get it from <code class="codehilite"><span class="err">cwd</span></code> or <code class="codehilite"><span class="err">$PWD</span></code>.</p>
 <p>Docker can be used? Then could be a good idea to add an implementation that uses a docker container instead of the tools in the system.</p>
-<p>Using PostgreSQL or MySQL/MariaDB tools? Well, there are undocumented helpers that you can take advantage: <code class="codehilite"><span class="n">__run_mysql</span></code> and <code class="codehilite"><span class="n">__run_psql</span></code>. Just append this at the beginning of the command (<code class="codehilite"><span class="n">__run_psql</span> <span class="n">pg_dump</span> <span class="k">database</span></code>) and will take advantage of some of the configurations from the environment variables. You can even combine this with <a href="#compress-encrypt"><code class="codehilite"><span class="n">compress</span><span class="o">-</span><span class="n">encrypt</span></code></a>: <code class="codehilite"><span class="n">compress</span><span class="o">-</span><span class="n">encrypt</span> <span class="ss">&quot;__run_mysql mysqldump -h $MYSQLHOST database&quot;</span> <span class="ss">&quot;database.sql&quot;</span></code>.</p>
+<p>Using PostgreSQL or MySQL/MariaDB tools? Well, there are undocumented helpers that you can take advantage: <code class="codehilite"><span class="err">__run_mysql</span></code> and <code class="codehilite"><span class="err">__run_psql</span></code>. Just append this at the beginning of the command (<code class="codehilite"><span class="err">__run_psql pg_dump database</span></code>) and will take advantage of some of the configurations from the environment variables. You can even combine this with <a href="#compress-encrypt"><code class="codehilite"><span class="err">compress-encrypt</span></code></a>: <code class="codehilite"><span class="err">compress-encrypt &quot;__run_mysql mysqldump -h $MYSQLHOST database&quot; &quot;database.sql&quot;</span></code>.</p>
 <h2 id="ask-for-new-functions">Ask for new functions<a class="headerlink" href="#ask-for-new-functions" title="Permanent link">&para;</a></h2>
 <p>Do you think the tool should include any function predefined? Did you create a custom function and you think it should be included in the tool? Don&rsquo;t hesitate in <a href="https://github.com/MajorcaDevs/mdbackup/issues/new">filling an issue</a> or <a href="https://github.com/MajorcaDevs/mdbackup/pulls">sending us a pull request</a>.</p>
                 

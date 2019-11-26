@@ -763,12 +763,12 @@
                 
                 
                 <h1 id="actions-file">Actions: File<a class="headerlink" href="#actions-file" title="Permanent link">&para;</a></h1>
-<h2 id="from-file"><code class="codehilite"><span class="k">from</span><span class="o">-</span><span class="n">file</span></code><a class="headerlink" href="#from-file" title="Permanent link">&para;</a></h2>
+<h2 id="from-file"><code class="codehilite"><span class="err">from-file</span></code><a class="headerlink" href="#from-file" title="Permanent link">&para;</a></h2>
 <p><strong>Input</strong>: Nothing</p>
 <p><strong>Output</strong>: stream</p>
 <p><strong>Unaction</strong>: Yes</p>
 <p><strong>Parameters</strong></p>
-<p>Expects a path as string or an object like <code class="codehilite"><span class="err">{</span> <span class="n">path</span><span class="p">:</span> <span class="s1">&#39;/path/to/file&#39;</span> <span class="err">}</span></code>.</p>
+<p>Expects a path as string or an object like <code class="codehilite"><span class="err">{ path: &#39;/path/to/file&#39; }</span></code>.</p>
 <p><strong>Description</strong></p>
 <p>Initial action that opens a file to be read from the next actions. The user running the backups must be able to read the file.</p>
 <div class="admonition example">
@@ -782,7 +782,7 @@
 </pre></div>
 
 </div>
-<h2 id="from-file-ssh"><code class="codehilite"><span class="k">from</span><span class="o">-</span><span class="n">file</span><span class="o">-</span><span class="n">ssh</span></code><a class="headerlink" href="#from-file-ssh" title="Permanent link">&para;</a></h2>
+<h2 id="from-file-ssh"><code class="codehilite"><span class="err">from-file-ssh</span></code><a class="headerlink" href="#from-file-ssh" title="Permanent link">&para;</a></h2>
 <p><strong>Input</strong>: Nothing</p>
 <p><strong>Output</strong>: stream</p>
 <p><strong>Unaction</strong>: Yes</p>
@@ -798,65 +798,65 @@
 </thead>
 <tbody>
 <tr>
-<td><code class="codehilite"><span class="k">host</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">host</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Hostname of the host which has an ssh</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">path</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">path</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Path to the remote file to copy</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="k">user</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">user</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>User to be used in the connection</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">password</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">password</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Password for the authentication</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">port</span></code></td>
-<td><code class="codehilite"><span class="nb">int</span></code></td>
+<td><code class="codehilite"><span class="err">port</span></code></td>
+<td><code class="codehilite"><span class="err">int</span></code></td>
 <td>Port of the ssh server</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">identityFile</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">identityFile</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Path to an identity file which will be used for authentication</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">configFile</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">configFile</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Path to a ssh client configuration file</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">knownHostsPolicy</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
-<td>If set to <code class="codehilite"><span class="k">true</span></code>, will ignore unknown hosts errors</td>
+<td><code class="codehilite"><span class="err">knownHostsPolicy</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
+<td>If set to <code class="codehilite"><span class="err">true</span></code>, will ignore unknown hosts errors</td>
 <td>Yes</td>
 </tr>
 </tbody>
 </table>
 <div class="admonition warning">
 <p class="admonition-title">Use of password in ssh</p>
-<p>It is not recommended to use the password authentication method with ssh in scripts like this. If you need the password method, ensure the host (where <code class="codehilite"><span class="n">mdbackup</span></code> runs) has installed <code class="codehilite"><span class="n">sshpass</span></code>.</p>
-<p>A properly authentication using ssh is made by configuring an <code class="codehilite"><span class="n">ssh</span><span class="o">-</span><span class="n">agent</span></code> before running <code class="codehilite"><span class="n">mdbackup</span></code> with the keys preloaded so the tool can run without issues.</p>
+<p>It is not recommended to use the password authentication method with ssh in scripts like this. If you need the password method, ensure the host (where <code class="codehilite"><span class="err">mdbackup</span></code> runs) has installed <code class="codehilite"><span class="err">sshpass</span></code>.</p>
+<p>A properly authentication using ssh is made by configuring an <code class="codehilite"><span class="err">ssh-agent</span></code> before running <code class="codehilite"><span class="err">mdbackup</span></code> with the keys preloaded so the tool can run without issues.</p>
 </div>
 <p><strong>Description</strong></p>
-<p>Reads a file from the remote server using <code class="codehilite"><span class="n">scp</span></code>, and the output can be used in other actions as if it were a regular file in the same machine.</p>
+<p>Reads a file from the remote server using <code class="codehilite"><span class="err">scp</span></code>, and the output can be used in other actions as if it were a regular file in the same machine.</p>
 <div class="admonition example">
 <p class="admonition-title">Example</p>
-<p>Simple copy using <code class="codehilite"><span class="n">scp</span></code>.</p>
+<p>Simple copy using <code class="codehilite"><span class="err">scp</span></code>.</p>
 <div class="codehilite"><pre><span></span><span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">from file ssh task example</span>
   <span class="nt">actions</span><span class="p">:</span>
     <span class="p p-Indicator">-</span> <span class="nt">from-file-ssh</span><span class="p">:</span>
@@ -868,7 +868,7 @@
 </pre></div>
 
 </div>
-<h2 id="to-file"><code class="codehilite"><span class="k">to</span><span class="o">-</span><span class="n">file</span></code><a class="headerlink" href="#to-file" title="Permanent link">&para;</a></h2>
+<h2 id="to-file"><code class="codehilite"><span class="err">to-file</span></code><a class="headerlink" href="#to-file" title="Permanent link">&para;</a></h2>
 <p><strong>Input</strong>: stream</p>
 <p><strong>Output</strong>: Nothing</p>
 <p><strong>Unaction</strong>: Yes</p>
@@ -884,27 +884,27 @@
 </thead>
 <tbody>
 <tr>
-<td><code class="codehilite"><span class="n">path</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">path</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Path where the file will be written, inside the backup folder</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">mkdirParents</span></code></td>
-<td><code class="codehilite"><span class="n">bool</span></code></td>
-<td>If the path contains some folders and this parameter is set to <code class="codehilite"><span class="k">true</span></code>, then will create the folders</td>
+<td><code class="codehilite"><span class="err">mkdirParents</span></code></td>
+<td><code class="codehilite"><span class="err">bool</span></code></td>
+<td>If the path contains some folders and this parameter is set to <code class="codehilite"><span class="err">true</span></code>, then will create the folders</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">chunkSize</span></code></td>
-<td><code class="codehilite"><span class="nb">int</span></code></td>
+<td><code class="codehilite"><span class="err">chunkSize</span></code></td>
+<td><code class="codehilite"><span class="err">int</span></code></td>
 <td>Changes the chunk size to be used internally while reading the data to write (default 8KiB = 8192)</td>
 <td>Yes</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Description</strong></p>
-<p>Writes the data stream into a file, reading chunks of <code class="codehilite"><span class="n">chunkSize</span></code> bytes until end of the stream.</p>
+<p>Writes the data stream into a file, reading chunks of <code class="codehilite"><span class="err">chunkSize</span></code> bytes until end of the stream.</p>
 <div class="admonition example">
 <p class="admonition-title">Example</p>
 <p>Simple copy (the bad way), but a bit different.</p>
@@ -917,7 +917,7 @@
 </pre></div>
 
 </div>
-<h2 id="copy-file"><code class="codehilite"><span class="k">copy</span><span class="o">-</span><span class="n">file</span></code><a class="headerlink" href="#copy-file" title="Permanent link">&para;</a></h2>
+<h2 id="copy-file"><code class="codehilite"><span class="err">copy-file</span></code><a class="headerlink" href="#copy-file" title="Permanent link">&para;</a></h2>
 <p><strong>Input</strong>: Nothing</p>
 <p><strong>Output</strong>: Nothing</p>
 <p><strong>Unaction</strong>: Yes</p>
@@ -933,51 +933,51 @@
 </thead>
 <tbody>
 <tr>
-<td><code class="codehilite"><span class="k">from</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">from</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Path to the file to be copied</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="k">to</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">to</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Path to where the file will be copied inside the backup folder</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">mkdirParents</span></code></td>
-<td><code class="codehilite"><span class="n">bool</span></code></td>
-<td>If the path contains some folders and this parameter is set to <code class="codehilite"><span class="k">true</span></code>, then will create the folders</td>
+<td><code class="codehilite"><span class="err">mkdirParents</span></code></td>
+<td><code class="codehilite"><span class="err">bool</span></code></td>
+<td>If the path contains some folders and this parameter is set to <code class="codehilite"><span class="err">true</span></code>, then will create the folders</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">preserveStats</span></code></td>
-<td><code class="codehilite"><span class="k">Union</span><span class="p">[</span><span class="n">bool</span><span class="p">,</span> <span class="n">str</span><span class="p">]</span></code></td>
+<td><code class="codehilite"><span class="err">preserveStats</span></code></td>
+<td><code class="codehilite"><span class="err">Union[bool, str]</span></code></td>
 <td>Preserve some or all of the stats of the entry (see <a href="../directory#to-directory">this</a>)</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">forceCopy</span></code></td>
-<td><code class="codehilite"><span class="n">bool</span></code></td>
-<td>If set to <code class="codehilite"><span class="k">true</span></code>, then it will always copy the file and will not try to clone it from a previous backup</td>
+<td><code class="codehilite"><span class="err">forceCopy</span></code></td>
+<td><code class="codehilite"><span class="err">bool</span></code></td>
+<td>If set to <code class="codehilite"><span class="err">true</span></code>, then it will always copy the file and will not try to clone it from a previous backup</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">reflink</span></code></td>
-<td><code class="codehilite"><span class="n">bool</span></code></td>
-<td>If set to <code class="codehilite"><span class="k">true</span></code> it will try to make copy of the original file using <em>Copy on Write</em> (if the file system supports this - <a href="#clone-file">see <code class="codehilite"><span class="n">clone</span><span class="o">-</span><span class="n">file</span></code></a>)</td>
+<td><code class="codehilite"><span class="err">reflink</span></code></td>
+<td><code class="codehilite"><span class="err">bool</span></code></td>
+<td>If set to <code class="codehilite"><span class="err">true</span></code> it will try to make copy of the original file using <em>Copy on Write</em> (if the file system supports this - <a href="#clone-file">see <code class="codehilite"><span class="err">clone-file</span></code></a>)</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">chunkSize</span></code></td>
-<td><code class="codehilite"><span class="nb">int</span></code></td>
-<td>The same as in <a href="#to-file"><code class="codehilite"><span class="k">to</span><span class="o">-</span><span class="n">file</span></code></a></td>
+<td><code class="codehilite"><span class="err">chunkSize</span></code></td>
+<td><code class="codehilite"><span class="err">int</span></code></td>
+<td>The same as in <a href="#to-file"><code class="codehilite"><span class="err">to-file</span></code></a></td>
 <td>Yes</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Description</strong></p>
-<p>Copies a file to the backup folder. It is an optimized version in which the previous backup file is checked in order to clone it (which is faster). In order to make this work, the file must have the <code class="codehilite"><span class="n">utime</span></code> at least in the <code class="codehilite"><span class="n">preserveStats</span></code> parameter (the default). The action will check the modified time of the previous backup version and if they both match, then it will use <code class="codehilite"><span class="n">clone</span><span class="o">-</span><span class="n">file</span></code> action. If the modification time is different or <code class="codehilite"><span class="n">forceCopy</span></code> is <code class="codehilite"><span class="k">true</span></code>, then it will make a normal copy using <code class="codehilite"><span class="k">to</span><span class="o">-</span><span class="n">file</span></code> action. If the <code class="codehilite"><span class="n">clone</span><span class="o">-</span><span class="n">file</span></code> action fails, it will try to make a normal copy using <code class="codehilite"><span class="k">to</span><span class="o">-</span><span class="n">file</span></code> action.</p>
+<p>Copies a file to the backup folder. It is an optimized version in which the previous backup file is checked in order to clone it (which is faster). In order to make this work, the file must have the <code class="codehilite"><span class="err">utime</span></code> at least in the <code class="codehilite"><span class="err">preserveStats</span></code> parameter (the default). The action will check the modified time of the previous backup version and if they both match, then it will use <code class="codehilite"><span class="err">clone-file</span></code> action. If the modification time is different or <code class="codehilite"><span class="err">forceCopy</span></code> is <code class="codehilite"><span class="err">true</span></code>, then it will make a normal copy using <code class="codehilite"><span class="err">to-file</span></code> action. If the <code class="codehilite"><span class="err">clone-file</span></code> action fails, it will try to make a normal copy using <code class="codehilite"><span class="err">to-file</span></code> action.</p>
 <div class="admonition example">
 <p class="admonition-title">Example</p>
 <p>Optimized copy (the right way).</p>
@@ -992,7 +992,7 @@
 </pre></div>
 
 </div>
-<h2 id="clone-file"><code class="codehilite"><span class="n">clone</span><span class="o">-</span><span class="n">file</span></code><a class="headerlink" href="#clone-file" title="Permanent link">&para;</a></h2>
+<h2 id="clone-file"><code class="codehilite"><span class="err">clone-file</span></code><a class="headerlink" href="#clone-file" title="Permanent link">&para;</a></h2>
 <p><strong>Input</strong>: Nothing</p>
 <p><strong>Output</strong>: Nothing</p>
 <p><strong>Unaction</strong>: Yes</p>
@@ -1008,42 +1008,42 @@
 </thead>
 <tbody>
 <tr>
-<td><code class="codehilite"><span class="k">from</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">from</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Path to the file to be copied</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="k">to</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">to</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Path to where the file will be copied inside the backup folder</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">mkdirParents</span></code></td>
-<td><code class="codehilite"><span class="n">bool</span></code></td>
-<td>If the path contains some folders and this parameter is set to <code class="codehilite"><span class="k">true</span></code>, then will create the folders</td>
+<td><code class="codehilite"><span class="err">mkdirParents</span></code></td>
+<td><code class="codehilite"><span class="err">bool</span></code></td>
+<td>If the path contains some folders and this parameter is set to <code class="codehilite"><span class="err">true</span></code>, then will create the folders</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">preserveStats</span></code></td>
-<td><code class="codehilite"><span class="k">Union</span><span class="p">[</span><span class="n">bool</span><span class="p">,</span> <span class="n">str</span><span class="p">]</span></code></td>
-<td>Preserve some or all of the stats of the entry (see <a href="../directory#to-directory">this</a>) (only for <code class="codehilite"><span class="n">reflink</span></code>)</td>
+<td><code class="codehilite"><span class="err">preserveStats</span></code></td>
+<td><code class="codehilite"><span class="err">Union[bool, str]</span></code></td>
+<td>Preserve some or all of the stats of the entry (see <a href="../directory#to-directory">this</a>) (only for <code class="codehilite"><span class="err">reflink</span></code>)</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">reflink</span></code></td>
-<td><code class="codehilite"><span class="n">bool</span></code></td>
-<td>If set to <code class="codehilite"><span class="k">true</span></code> it will try to make copy of the original file using <em>Copy on Write</em> (if the file system supports this)</td>
+<td><code class="codehilite"><span class="err">reflink</span></code></td>
+<td><code class="codehilite"><span class="err">bool</span></code></td>
+<td>If set to <code class="codehilite"><span class="err">true</span></code> it will try to make copy of the original file using <em>Copy on Write</em> (if the file system supports this)</td>
 <td>Yes</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Description</strong></p>
-<p>Does a &ldquo;clone&rdquo; of a file. By default, does a <em>hard-link</em> between both files. But if <code class="codehilite"><span class="n">reflink</span></code> is set to <code class="codehilite"><span class="k">true</span></code>, then it will try to make a light copy using <a href="https://en.wikipedia.org/wiki/Copy-on-write"><em>Copy on Write</em></a> (if the file system supports that - only available on Linux). If the CoW fails, then a <em>hard-link</em> will be done as fallback.</p>
+<p>Does a &ldquo;clone&rdquo; of a file. By default, does a <em>hard-link</em> between both files. But if <code class="codehilite"><span class="err">reflink</span></code> is set to <code class="codehilite"><span class="err">true</span></code>, then it will try to make a light copy using <a href="https://en.wikipedia.org/wiki/Copy-on-write"><em>Copy on Write</em></a> (if the file system supports that - only available on Linux). If the CoW fails, then a <em>hard-link</em> will be done as fallback.</p>
 <div class="admonition warning">
 <p class="admonition-title">About hard-links and CoW</p>
-<p>For both to work, <code class="codehilite"><span class="k">from</span></code> and <code class="codehilite"><span class="k">to</span></code> paths must be under the same partition. Cross partition hard-links are impossible, as well as CoW copies.</p>
+<p>For both to work, <code class="codehilite"><span class="err">from</span></code> and <code class="codehilite"><span class="err">to</span></code> paths must be under the same partition. Cross partition hard-links are impossible, as well as CoW copies.</p>
 </div>
 <div class="admonition example">
 <p class="admonition-title">Example</p>

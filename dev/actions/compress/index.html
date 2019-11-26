@@ -763,7 +763,7 @@
                 
                 
                 <h1 id="actions-compress">Actions: Compress<a class="headerlink" href="#actions-compress" title="Permanent link">&para;</a></h1>
-<h2 id="compress-xz"><code class="codehilite"><span class="n">compress</span><span class="o">-</span><span class="n">xz</span></code><a class="headerlink" href="#compress-xz" title="Permanent link">&para;</a></h2>
+<h2 id="compress-xz"><code class="codehilite"><span class="err">compress-xz</span></code><a class="headerlink" href="#compress-xz" title="Permanent link">&para;</a></h2>
 <p><strong>Input</strong>: stream</p>
 <p><strong>Output</strong>: stream</p>
 <p><strong>Unaction</strong>: yes</p>
@@ -779,35 +779,35 @@
 </thead>
 <tbody>
 <tr>
-<td><code class="codehilite"><span class="n">compressionLevel</span></code></td>
-<td><code class="codehilite"><span class="err">ì</span><span class="n">nt</span></code></td>
+<td><code class="codehilite"><span class="err">compressionLevel</span></code></td>
+<td><code class="codehilite"><span class="err">ìnt</span></code></td>
 <td>Compression level from 0 to 9 (default 6)</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">extraCompression</span></code></td>
-<td><code class="codehilite"><span class="n">bool</span></code></td>
-<td>Enables the extra compression mode (<code class="codehilite"><span class="o">-</span><span class="n">e</span></code>)</td>
+<td><code class="codehilite"><span class="err">extraCompression</span></code></td>
+<td><code class="codehilite"><span class="err">bool</span></code></td>
+<td>Enables the extra compression mode (<code class="codehilite"><span class="err">-e</span></code>)</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">cpus</span></code></td>
-<td><code class="codehilite"><span class="nb">int</span></code></td>
+<td><code class="codehilite"><span class="err">cpus</span></code></td>
+<td><code class="codehilite"><span class="err">int</span></code></td>
 <td>Uses this amount of cores to compress the data</td>
 <td>Yes</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Description</strong></p>
-<p>Compresses the input stream using <code class="codehilite"><span class="n">xz</span></code> utility. If the compression level increases, more resources will be used to compress and more compressed the file should result (it may not compress any further if increasing it to 9). The extra compression mode uses even more resources to try to compress more (it does not affect decompression).</p>
+<p>Compresses the input stream using <code class="codehilite"><span class="err">xz</span></code> utility. If the compression level increases, more resources will be used to compress and more compressed the file should result (it may not compress any further if increasing it to 9). The extra compression mode uses even more resources to try to compress more (it does not affect decompression).</p>
 <p>This compression algorithm uses huge amount of CPU and the result is usually better than the rest of algorithms listed here, but it may not be worth the CPU usage with the result if the files are text.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>Requires <code class="codehilite"><span class="n">xz</span></code> to be installed in the system. In most distros it is included by default. On macOS, you should install it via <code class="codehilite"><span class="n">brew</span> <span class="n">install</span> <span class="n">xz</span></code>.</p>
+<p>Requires <code class="codehilite"><span class="err">xz</span></code> to be installed in the system. In most distros it is included by default. On macOS, you should install it via <code class="codehilite"><span class="err">brew install xz</span></code>.</p>
 </div>
 <div class="admonition example">
 <p class="admonition-title">Example</p>
-<p>Compresses a file using <code class="codehilite"><span class="n">xz</span></code></p>
+<p>Compresses a file using <code class="codehilite"><span class="err">xz</span></code></p>
 <div class="codehilite"><pre><span></span><span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xz task example</span>
   <span class="nt">actions</span><span class="p">:</span>
     <span class="p p-Indicator">-</span> <span class="nt">from-file</span><span class="p">:</span> <span class="s">&#39;/big/compressible/file&#39;</span>
@@ -820,7 +820,7 @@
 </pre></div>
 
 </div>
-<h2 id="compress-gz"><code class="codehilite"><span class="n">compress</span><span class="o">-</span><span class="n">gz</span></code><a class="headerlink" href="#compress-gz" title="Permanent link">&para;</a></h2>
+<h2 id="compress-gz"><code class="codehilite"><span class="err">compress-gz</span></code><a class="headerlink" href="#compress-gz" title="Permanent link">&para;</a></h2>
 <p><strong>Input</strong>: stream</p>
 <p><strong>Output</strong>: stream</p>
 <p><strong>Unaction</strong>: yes</p>
@@ -836,23 +836,23 @@
 </thead>
 <tbody>
 <tr>
-<td><code class="codehilite"><span class="n">compressionLevel</span></code></td>
-<td><code class="codehilite"><span class="err">ì</span><span class="n">nt</span></code></td>
+<td><code class="codehilite"><span class="err">compressionLevel</span></code></td>
+<td><code class="codehilite"><span class="err">ìnt</span></code></td>
 <td>Compression level from 1 to 9 (default 6)</td>
 <td>Yes</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Description</strong></p>
-<p>Compresses the input stream using <code class="codehilite"><span class="n">gzip</span></code> utility. If the compression level increases, more resources will be used to compress and more compressed the file should result (it may not compress any further if increasing it to 9).</p>
+<p>Compresses the input stream using <code class="codehilite"><span class="err">gzip</span></code> utility. If the compression level increases, more resources will be used to compress and more compressed the file should result (it may not compress any further if increasing it to 9).</p>
 <p>This compression algorithm is rather fast and good-balanced in resources consumption. It may not be really good compressing binary files.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>Requires <code class="codehilite"><span class="n">gzip</span></code> to be installed in the system. In most distros and in macOS it is included by default.</p>
+<p>Requires <code class="codehilite"><span class="err">gzip</span></code> to be installed in the system. In most distros and in macOS it is included by default.</p>
 </div>
 <div class="admonition example">
 <p class="admonition-title">Example</p>
-<p>Compresses a file using <code class="codehilite"><span class="n">gzip</span></code></p>
+<p>Compresses a file using <code class="codehilite"><span class="err">gzip</span></code></p>
 <div class="codehilite"><pre><span></span><span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gzip task example</span>
   <span class="nt">actions</span><span class="p">:</span>
     <span class="p p-Indicator">-</span> <span class="nt">from-file</span><span class="p">:</span> <span class="s">&#39;/big/compressible/file&#39;</span>
@@ -863,7 +863,7 @@
 </pre></div>
 
 </div>
-<h2 id="compress-bz2"><code class="codehilite"><span class="n">compress</span><span class="o">-</span><span class="n">bz2</span></code><a class="headerlink" href="#compress-bz2" title="Permanent link">&para;</a></h2>
+<h2 id="compress-bz2"><code class="codehilite"><span class="err">compress-bz2</span></code><a class="headerlink" href="#compress-bz2" title="Permanent link">&para;</a></h2>
 <p><strong>Input</strong>: stream</p>
 <p><strong>Output</strong>: stream</p>
 <p><strong>Unaction</strong>: yes</p>
@@ -879,23 +879,23 @@
 </thead>
 <tbody>
 <tr>
-<td><code class="codehilite"><span class="n">compressionLevel</span></code></td>
-<td><code class="codehilite"><span class="err">ì</span><span class="n">nt</span></code></td>
+<td><code class="codehilite"><span class="err">compressionLevel</span></code></td>
+<td><code class="codehilite"><span class="err">ìnt</span></code></td>
 <td>Compression level from 1 to 9 (default 6)</td>
 <td>Yes</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Description</strong></p>
-<p>Compresses the input stream using <code class="codehilite"><span class="n">bzip2</span></code> utility. If the compression level increases, more resources will be used to compress and more compressed the file should result (it may not compress any further if increasing it to 9).</p>
-<p>This compression algorithm is rather fast and good-balanced in resources consumption (is similar to <code class="codehilite"><span class="n">gzip</span></code>).</p>
+<p>Compresses the input stream using <code class="codehilite"><span class="err">bzip2</span></code> utility. If the compression level increases, more resources will be used to compress and more compressed the file should result (it may not compress any further if increasing it to 9).</p>
+<p>This compression algorithm is rather fast and good-balanced in resources consumption (is similar to <code class="codehilite"><span class="err">gzip</span></code>).</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>Requires <code class="codehilite"><span class="n">bzip2</span></code> to be installed in the system. In most distros and in macOS it is included by default.</p>
+<p>Requires <code class="codehilite"><span class="err">bzip2</span></code> to be installed in the system. In most distros and in macOS it is included by default.</p>
 </div>
 <div class="admonition example">
 <p class="admonition-title">Example</p>
-<p>Compresses a file using <code class="codehilite"><span class="n">bzip2</span></code></p>
+<p>Compresses a file using <code class="codehilite"><span class="err">bzip2</span></code></p>
 <div class="codehilite"><pre><span></span><span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bz task example</span>
   <span class="nt">actions</span><span class="p">:</span>
     <span class="p p-Indicator">-</span> <span class="nt">from-file</span><span class="p">:</span> <span class="s">&#39;/big/compressible/file&#39;</span>
@@ -906,7 +906,7 @@
 </pre></div>
 
 </div>
-<h2 id="compress-br"><code class="codehilite"><span class="n">compress</span><span class="o">-</span><span class="n">br</span></code><a class="headerlink" href="#compress-br" title="Permanent link">&para;</a></h2>
+<h2 id="compress-br"><code class="codehilite"><span class="err">compress-br</span></code><a class="headerlink" href="#compress-br" title="Permanent link">&para;</a></h2>
 <p><strong>Input</strong>: stream</p>
 <p><strong>Output</strong>: stream</p>
 <p><strong>Unaction</strong>: yes</p>
@@ -922,23 +922,23 @@
 </thead>
 <tbody>
 <tr>
-<td><code class="codehilite"><span class="n">compressionLevel</span></code></td>
-<td><code class="codehilite"><span class="err">ì</span><span class="n">nt</span></code></td>
+<td><code class="codehilite"><span class="err">compressionLevel</span></code></td>
+<td><code class="codehilite"><span class="err">ìnt</span></code></td>
 <td>Compression level from 1 to 9 (default 6)</td>
 <td>Yes</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Description</strong></p>
-<p>Compresses the input stream using <code class="codehilite"><span class="n">brotli</span></code> utility. If the compression level increases, more resources will be used to compress and more compressed the file should result (it may not compress any further if increasing it to 9).</p>
+<p>Compresses the input stream using <code class="codehilite"><span class="err">brotli</span></code> utility. If the compression level increases, more resources will be used to compress and more compressed the file should result (it may not compress any further if increasing it to 9).</p>
 <p>This compression algorithm is fast and good-balanced in resources consumption. Can be used as a fast compression algorithm for text and binary files.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>Requires <code class="codehilite"><span class="n">brotli</span></code> to be installed in the system. On Debian-based distros use <code class="codehilite"><span class="n">apt</span> <span class="n">install</span> <span class="n">brotli</span></code>, on Arch-based distros use <code class="codehilite"><span class="n">pacman</span> <span class="o">-</span><span class="n">S</span> <span class="n">brotli</span></code>, on macOS use <code class="codehilite"><span class="n">brew</span> <span class="n">install</span> <span class="n">brotli</span></code>.</p>
+<p>Requires <code class="codehilite"><span class="err">brotli</span></code> to be installed in the system. On Debian-based distros use <code class="codehilite"><span class="err">apt install brotli</span></code>, on Arch-based distros use <code class="codehilite"><span class="err">pacman -S brotli</span></code>, on macOS use <code class="codehilite"><span class="err">brew install brotli</span></code>.</p>
 </div>
 <div class="admonition example">
 <p class="admonition-title">Example</p>
-<p>Compresses a file using <code class="codehilite"><span class="n">brotli</span></code></p>
+<p>Compresses a file using <code class="codehilite"><span class="err">brotli</span></code></p>
 <div class="codehilite"><pre><span></span><span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">br task example</span>
   <span class="nt">actions</span><span class="p">:</span>
     <span class="p p-Indicator">-</span> <span class="nt">from-file</span><span class="p">:</span> <span class="s">&#39;/big/compressible/file&#39;</span>
@@ -949,7 +949,7 @@
 </pre></div>
 
 </div>
-<h2 id="compress-zst"><code class="codehilite"><span class="n">compress</span><span class="o">-</span><span class="n">zst</span></code><a class="headerlink" href="#compress-zst" title="Permanent link">&para;</a></h2>
+<h2 id="compress-zst"><code class="codehilite"><span class="err">compress-zst</span></code><a class="headerlink" href="#compress-zst" title="Permanent link">&para;</a></h2>
 <p><strong>Input</strong>: stream</p>
 <p><strong>Output</strong>: stream</p>
 <p><strong>Unaction</strong>: yes</p>
@@ -965,23 +965,23 @@
 </thead>
 <tbody>
 <tr>
-<td><code class="codehilite"><span class="n">compressionLevel</span></code></td>
-<td><code class="codehilite"><span class="err">ì</span><span class="n">nt</span></code></td>
+<td><code class="codehilite"><span class="err">compressionLevel</span></code></td>
+<td><code class="codehilite"><span class="err">ìnt</span></code></td>
 <td>Compression level from 1 to 19 (default 3)</td>
 <td>Yes</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Description</strong></p>
-<p>Compresses the input stream using <code class="codehilite"><span class="n">zstd</span></code> utility. If the compression level increases, more resources will be used to compress and more compressed the file should result (it may not compress any further if increasing it to 19).</p>
-<p>This compression algorithm is blazing fast and good in compression (similar to <code class="codehilite"><span class="n">xz</span></code> but faster). Can be used as a fast compression algorithm for text and binary files.</p>
+<p>Compresses the input stream using <code class="codehilite"><span class="err">zstd</span></code> utility. If the compression level increases, more resources will be used to compress and more compressed the file should result (it may not compress any further if increasing it to 19).</p>
+<p>This compression algorithm is blazing fast and good in compression (similar to <code class="codehilite"><span class="err">xz</span></code> but faster). Can be used as a fast compression algorithm for text and binary files.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>Requires <code class="codehilite"><span class="n">zstd</span></code> to be installed in the system. On Debian-based distros use <code class="codehilite"><span class="n">apt</span> <span class="n">install</span> <span class="n">zstd</span></code>, on Arch-based distros use <code class="codehilite"><span class="n">pacman</span> <span class="o">-</span><span class="n">S</span> <span class="n">zstd</span></code>, on macOS use <code class="codehilite"><span class="n">brew</span> <span class="n">install</span> <span class="n">zstd</span></code>.</p>
+<p>Requires <code class="codehilite"><span class="err">zstd</span></code> to be installed in the system. On Debian-based distros use <code class="codehilite"><span class="err">apt install zstd</span></code>, on Arch-based distros use <code class="codehilite"><span class="err">pacman -S zstd</span></code>, on macOS use <code class="codehilite"><span class="err">brew install zstd</span></code>.</p>
 </div>
 <div class="admonition example">
 <p class="admonition-title">Example</p>
-<p>Compresses a file using <code class="codehilite"><span class="n">zstd</span></code></p>
+<p>Compresses a file using <code class="codehilite"><span class="err">zstd</span></code></p>
 <div class="codehilite"><pre><span></span><span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">zst task example</span>
   <span class="nt">actions</span><span class="p">:</span>
     <span class="p p-Indicator">-</span> <span class="nt">from-file</span><span class="p">:</span> <span class="s">&#39;/big/compressible/file&#39;</span>

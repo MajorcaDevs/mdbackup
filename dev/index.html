@@ -723,32 +723,32 @@
 <a href="https://jenkins.majorcadevs.com/job/mdbackup2/job/dev/"><img alt="Build Status" src="https://jenkins.majorcadevs.com/buildStatus/icon?job=mdbackup2%2Fdev&amp;subject=dev%20build" /></a></p>
 <p>Small but customizable utility to create backups and store them in cloud storage providers.</p>
 <h2 id="how-to-install">How to install<a class="headerlink" href="#how-to-install" title="Permanent link">&para;</a></h2>
-<p>Download from releases the latest <code class="codehilite"><span class="n">wheel</span></code> package and install it. It is recommended to use a virtual environment to do that. We will show you this way.</p>
+<p>Download from releases the latest <code class="codehilite"><span class="err">wheel</span></code> package and install it. It is recommended to use a virtual environment to do that. We will show you this way.</p>
 <p><strong>What do yo need?</strong>:</p>
 <ul>
 <li>An OS different from Windows (Windows is unsupported) :(</li>
 <li>Python 3.7 or higher</li>
 </ul>
 <p>First select a folder where all the needed files will be stored. It is important not to move (or rename) this folder after installation.</p>
-<p>Run one of those commands. If both fail, try to install <code class="codehilite"><span class="n">python3</span><span class="o">-</span><span class="n">virtualenv</span></code> (debian based) or <code class="codehilite"><span class="n">pip3</span> <span class="n">install</span> <span class="n">virtualenv</span></code> (on macOS).</p>
+<p>Run one of those commands. If both fail, try to install <code class="codehilite"><span class="err">python3-virtualenv</span></code> (debian based) or <code class="codehilite"><span class="err">pip3 install virtualenv</span></code> (on macOS).</p>
 <div class="codehilite"><pre><span></span>python3 -m venv .venv
 python3 -m virtualenv .venv
 </pre></div>
 
-<p>When you have the virtual environment created, you have to activate it. With this, you can run python commands and everything you do, will alter the virtual env, not the real one (and so, you don&rsquo;t need <code class="codehilite"><span class="n">sudo</span></code> to do things).</p>
+<p>When you have the virtual environment created, you have to activate it. With this, you can run python commands and everything you do, will alter the virtual env, not the real one (and so, you don&rsquo;t need <code class="codehilite"><span class="err">sudo</span></code> to do things).</p>
 <div class="codehilite"><pre><span></span>. .venv/bin/activate
 <span class="c1"># Download the .whl package</span>
 pip install --upgrade setuptools wheel
 pip install mdbackup*.whl
 </pre></div>
 
-<p>Now you can run the utility (only if you have enabled the virtual env) with <code class="codehilite"><span class="n">mdbackup</span></code>. In this folder it is recommended to store the <code class="codehilite"><span class="n">config</span></code> folder.</p>
+<p>Now you can run the utility (only if you have enabled the virtual env) with <code class="codehilite"><span class="err">mdbackup</span></code>. In this folder it is recommended to store the <code class="codehilite"><span class="err">config</span></code> folder.</p>
 <blockquote>
 <p><strong>Note:</strong> to be able to use some of the cloud storage and secrets backends, you will be requested to install some packages. Go to the documentation to see what is needed.</p>
 </blockquote>
 <h2 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h2>
 <p>Can be found at <a href="https://mdbackup.majorcadevs.com/">mdbackup.majorcadevs.com</a> or at the docs folder.</p>
-<p>To make the documentation, install the requirements in <code class="codehilite"><span class="n">docs</span><span class="o">/</span><span class="n">requirements</span><span class="p">.</span><span class="n">txt</span></code> and run <code class="codehilite"><span class="n">mkdocs</span> <span class="n">build</span> <span class="c1">--config-file=mkdocs.yaml</span></code>.</p>
+<p>To make the documentation, install the requirements in <code class="codehilite"><span class="err">docs/requirements.txt</span></code> and run <code class="codehilite"><span class="err">mkdocs build --config-file=mkdocs.yaml</span></code>.</p>
                 
                   
                 

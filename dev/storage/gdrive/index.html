@@ -720,14 +720,14 @@
                 
                 <h1 id="google-drive">Google Drive<a class="headerlink" href="#google-drive" title="Permanent link">&para;</a></h1>
 <p><a href="https://drive.google.com">Google Drive</a> is a cloud storage for all your files, like your USB or external hard-drive where you store stuff, but in the cloud.</p>
-<p>To be able to use Google Drive as storage provider, You will need the <code class="codehilite"><span class="n">client_secrets</span><span class="p">.</span><span class="n">json</span></code>. You should get them from the <a href="https://console.developers.google.com/apis/credentials">Google Developer&rsquo;s Console</a>, by going to <em>Credentials</em> and creating a new <em>OAuth 2.0 Client IDs</em> or using an existing one. Every OAuth 2.0 entry have a download icon, this will download that file. The file must be stored somewhere in the local file system (for example, in the <code class="codehilite"><span class="n">config</span></code> folder). The only drawback is that the JSON cannot be stored in-place, inside the configuration.</p>
-<p>The <code class="codehilite"><span class="n">auth_tokens</span><span class="p">.</span><span class="n">json</span></code> is created when a user logs in. You must use a path accessible from the tool to write the file. If the file does not exist, run the utility manually and (in some point) it will ask you to go to an URL. Here is where you log in with an account and Google will give you a token. Copy and paste it into the terminal. Now you will see the files uploading to Google Drive and the auth tokens file created.</p>
-<p>The <code class="codehilite"><span class="n">backupsFolder</span></code> <strong>must exist</strong> before running the tool.</p>
+<p>To be able to use Google Drive as storage provider, You will need the <code class="codehilite"><span class="err">client_secrets.json</span></code>. You should get them from the <a href="https://console.developers.google.com/apis/credentials">Google Developer&rsquo;s Console</a>, by going to <em>Credentials</em> and creating a new <em>OAuth 2.0 Client IDs</em> or using an existing one. Every OAuth 2.0 entry have a download icon, this will download that file. The file must be stored somewhere in the local file system (for example, in the <code class="codehilite"><span class="err">config</span></code> folder). The only drawback is that the JSON cannot be stored in-place, inside the configuration.</p>
+<p>The <code class="codehilite"><span class="err">auth_tokens.json</span></code> is created when a user logs in. You must use a path accessible from the tool to write the file. If the file does not exist, run the utility manually and (in some point) it will ask you to go to an URL. Here is where you log in with an account and Google will give you a token. Copy and paste it into the terminal. Now you will see the files uploading to Google Drive and the auth tokens file created.</p>
+<p>The <code class="codehilite"><span class="err">backupsFolder</span></code> <strong>must exist</strong> before running the tool.</p>
 <h2 id="dependencies">Dependencies<a class="headerlink" href="#dependencies" title="Permanent link">&para;</a></h2>
 <p>In order to use Google Drive, you must install the following python packages:</p>
 <ul>
-<li><code class="codehilite"><span class="n">boto3</span></code></li>
-<li><code class="codehilite"><span class="n">python</span><span class="o">-</span><span class="n">magic</span></code></li>
+<li><code class="codehilite"><span class="err">boto3</span></code></li>
+<li><code class="codehilite"><span class="err">python-magic</span></code></li>
 </ul>
 <h2 id="configuration-schema">Configuration schema<a class="headerlink" href="#configuration-schema" title="Permanent link">&para;</a></h2>
 <div class="codehilite"><pre><span></span><span class="p">{</span>

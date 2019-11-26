@@ -503,20 +503,20 @@
                 
                 <h1 id="arguments">Arguments<a class="headerlink" href="#arguments" title="Permanent link">&para;</a></h1>
 <p>The tool has a few arguments, in general you may not use them, but to test some parts, could be really useful.</p>
-<div class="codehilite"><pre><span></span><span class="nv">usage</span>: <span class="nv">mdbackup</span> [<span class="o">-</span><span class="nv">h</span>] [<span class="o">-</span><span class="nv">c</span> <span class="nv">CONFIG</span>] [<span class="o">--</span><span class="nv">backup</span><span class="o">-</span><span class="nv">only</span>] [<span class="o">--</span><span class="nv">upload</span><span class="o">-</span><span class="nv">current</span><span class="o">-</span><span class="nv">only</span>]
-                [<span class="o">--</span><span class="nv">cleanup</span><span class="o">-</span><span class="nv">only</span>]
+<div class="codehilite"><pre><span></span><span class="n">usage</span><span class="o">:</span> <span class="n">mdbackup</span> <span class="o">[-</span><span class="n">h</span><span class="o">]</span> <span class="o">[-</span><span class="n">c</span> <span class="n">CONFIG</span><span class="o">]</span> <span class="o">[--</span><span class="n">backup</span><span class="o">-</span><span class="n">only</span><span class="o">]</span> <span class="o">[--</span><span class="n">upload</span><span class="o">-</span><span class="n">current</span><span class="o">-</span><span class="n">only</span><span class="o">]</span>
+                <span class="o">[--</span><span class="n">cleanup</span><span class="o">-</span><span class="n">only</span><span class="o">]</span>
 
-<span class="nv">Small</span> <span class="nv">but</span> <span class="nv">customizable</span> <span class="nv">utility</span> <span class="nv">to</span> <span class="nv">create</span> <span class="nv">backups</span> <span class="nv">and</span> <span class="nv">store</span> <span class="nv">them</span> <span class="nv">in</span> <span class="nv">cloud</span>
-<span class="nv">storage</span> <span class="nv">providers</span>
+<span class="n">Small</span> <span class="n">but</span> <span class="n">customizable</span> <span class="n">utility</span> <span class="n">to</span> <span class="n">create</span> <span class="n">backups</span> <span class="n">and</span> <span class="n">store</span> <span class="n">them</span> <span class="k">in</span> <span class="n">cloud</span>
+<span class="n">storage</span> <span class="n">providers</span>
 
-<span class="nv">optional</span> <span class="nv">arguments</span>:
-  <span class="o">-</span><span class="nv">h</span>, <span class="o">--</span><span class="nv">help</span>            <span class="k">show</span> <span class="nv">this</span> <span class="nv">help</span> <span class="nv">message</span> <span class="nv">and</span> <span class="k">exit</span>
-  <span class="o">-</span><span class="nv">c</span> <span class="nv">CONFIG</span>, <span class="o">--</span><span class="nv">config</span> <span class="nv">CONFIG</span>
-                        <span class="nv">Path</span> <span class="nv">to</span> <span class="nv">configuration</span> <span class="ss">(</span><span class="nv">default</span>: <span class="nv">config</span><span class="o">/</span><span class="nv">config</span>.<span class="nv">json</span><span class="ss">)</span>
-  <span class="o">--</span><span class="nv">backup</span><span class="o">-</span><span class="nv">only</span>         <span class="nv">Only</span> <span class="nv">does</span> <span class="nv">the</span> <span class="nv">backup</span> <span class="nv">actions</span>
-  <span class="o">--</span><span class="nv">upload</span><span class="o">-</span><span class="nv">current</span><span class="o">-</span><span class="nv">only</span>
-                        <span class="nv">Only</span> <span class="nv">uploads</span> <span class="nv">the</span> <span class="nv">last</span> <span class="nv">backup</span>
-  <span class="o">--</span><span class="nv">cleanup</span><span class="o">-</span><span class="nv">only</span>        <span class="nv">Only</span> <span class="nv">does</span> <span class="nv">the</span> <span class="nv">backup</span> <span class="nv">cleanup</span>
+<span class="n">optional</span> <span class="k">arguments</span><span class="o">:</span>
+  <span class="o">-</span><span class="n">h</span><span class="o">,</span> <span class="o">--</span><span class="n">help</span>            <span class="n">show</span> <span class="k">this</span> <span class="n">help</span> <span class="n">message</span> <span class="n">and</span> <span class="n">exit</span>
+  <span class="o">-</span><span class="n">c</span> <span class="n">CONFIG</span><span class="o">,</span> <span class="o">--</span><span class="n">config</span> <span class="n">CONFIG</span>
+                        <span class="n">Path</span> <span class="n">to</span> <span class="n">configuration</span> <span class="o">(</span><span class="k">default</span><span class="o">:</span> <span class="n">config</span><span class="o">/</span><span class="n">config</span><span class="o">.</span><span class="na">json</span><span class="o">)</span>
+  <span class="o">--</span><span class="n">backup</span><span class="o">-</span><span class="n">only</span>         <span class="n">Only</span> <span class="n">does</span> <span class="n">the</span> <span class="n">backup</span> <span class="n">actions</span>
+  <span class="o">--</span><span class="n">upload</span><span class="o">-</span><span class="n">current</span><span class="o">-</span><span class="n">only</span>
+                        <span class="n">Only</span> <span class="n">uploads</span> <span class="n">the</span> <span class="n">last</span> <span class="n">backup</span>
+  <span class="o">--</span><span class="n">cleanup</span><span class="o">-</span><span class="n">only</span>        <span class="n">Only</span> <span class="n">does</span> <span class="n">the</span> <span class="n">backup</span> <span class="n">cleanup</span>
 </pre></div>
                 
                   

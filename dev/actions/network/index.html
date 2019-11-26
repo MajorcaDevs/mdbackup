@@ -724,7 +724,7 @@
 <blockquote>
 <p>Network refers here to network devices like switches, routers, NAS&hellip;</p>
 </blockquote>
-<h2 id="asuswrt"><code class="codehilite"><span class="n">asuswrt</span></code><a class="headerlink" href="#asuswrt" title="Permanent link">&para;</a></h2>
+<h2 id="asuswrt"><code class="codehilite"><span class="err">asuswrt</span></code><a class="headerlink" href="#asuswrt" title="Permanent link">&para;</a></h2>
 <p><strong>Input</strong>: Nothing</p>
 <p><strong>Output</strong>: stream</p>
 <p><strong>Unaction</strong>: No</p>
@@ -740,27 +740,27 @@
 </thead>
 <tbody>
 <tr>
-<td><code class="codehilite"><span class="k">host</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">host</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>IP (or hostname) of the Asus router</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="k">user</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">user</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Router&rsquo;s user</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">password</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">password</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Router&rsquo;s password</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">backupType</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
-<td>Type of the backup: <code class="codehilite"><span class="n">configuration</span></code> or <code class="codehilite"><span class="n">jffs</span></code></td>
+<td><code class="codehilite"><span class="err">backupType</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
+<td>Type of the backup: <code class="codehilite"><span class="err">configuration</span></code> or <code class="codehilite"><span class="err">jffs</span></code></td>
 <td>No</td>
 </tr>
 </tbody>
@@ -773,7 +773,7 @@
 </div>
 <div class="admonition warning">
 <p class="admonition-title">requests package required</p>
-<p>In order to use this action, the <code class="codehilite"><span class="n">requests</span></code> package must be installed manually.</p>
+<p>In order to use this action, the <code class="codehilite"><span class="err">requests</span></code> package must be installed manually.</p>
 </div>
 <div class="admonition example">
 <p class="admonition-title">Example</p>
@@ -806,7 +806,7 @@
 </pre></div>
 
 </div>
-<h2 id="mikrotik"><code class="codehilite"><span class="n">mikrotik</span></code><a class="headerlink" href="#mikrotik" title="Permanent link">&para;</a></h2>
+<h2 id="mikrotik"><code class="codehilite"><span class="err">mikrotik</span></code><a class="headerlink" href="#mikrotik" title="Permanent link">&para;</a></h2>
 <p><strong>Input</strong>: Nothing</p>
 <p><strong>Output</strong>: stream</p>
 <p><strong>Unaction</strong>: No</p>
@@ -822,20 +822,20 @@
 </thead>
 <tbody>
 <tr>
-<td><code class="codehilite"><span class="n">backupType</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">backupType</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Type of the backup (see description)</td>
 <td>Yes</td>
 </tr>
 </tbody>
 </table>
-<p>It also accepts any of the parameters of <a href="../command#ssh"><code class="codehilite"><span class="n">ssh</span></code></a> and <a href="../file#from-file-ssh"><code class="codehilite"><span class="k">from</span><span class="o">-</span><span class="n">file</span><span class="o">-</span><span class="n">ssh</span></code></a>.</p>
+<p>It also accepts any of the parameters of <a href="../command#ssh"><code class="codehilite"><span class="err">ssh</span></code></a> and <a href="../file#from-file-ssh"><code class="codehilite"><span class="err">from-file-ssh</span></code></a>.</p>
 <div class="admonition note">
 <p class="admonition-title">Important parameters</p>
-<p>Even though not all parameters are listed, required parameters are <code class="codehilite"><span class="k">host</span></code>, <code class="codehilite"><span class="k">user</span></code> and either <code class="codehilite"><span class="n">password</span></code> or <code class="codehilite"><span class="n">identityFile</span></code>.</p>
+<p>Even though not all parameters are listed, required parameters are <code class="codehilite"><span class="err">host</span></code>, <code class="codehilite"><span class="err">user</span></code> and either <code class="codehilite"><span class="err">password</span></code> or <code class="codehilite"><span class="err">identityFile</span></code>.</p>
 </div>
 <p><strong>Description</strong></p>
-<p>Does a backup of a Mikrotik device with RouterOS. The type of backup can be <code class="codehilite"><span class="k">full</span><span class="o">-</span><span class="n">backup</span></code>, <code class="codehilite"><span class="n">scripts</span></code>, <code class="codehilite"><span class="k">system</span><span class="o">-</span><span class="n">config</span></code> or <code class="codehilite"><span class="k">global</span><span class="o">-</span><span class="n">config</span></code>. The action first runs the command to make the backup and then runs the action <a href="../file#from-file-ssh"><code class="codehilite"><span class="k">from</span><span class="o">-</span><span class="n">file</span><span class="o">-</span><span class="n">ssh</span></code></a> which will download the file from the device.</p>
+<p>Does a backup of a Mikrotik device with RouterOS. The type of backup can be <code class="codehilite"><span class="err">full-backup</span></code>, <code class="codehilite"><span class="err">scripts</span></code>, <code class="codehilite"><span class="err">system-config</span></code> or <code class="codehilite"><span class="err">global-config</span></code>. The action first runs the command to make the backup and then runs the action <a href="../file#from-file-ssh"><code class="codehilite"><span class="err">from-file-ssh</span></code></a> which will download the file from the device.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>The action writes files into the device storage but it does not remove them. They can be removed using a post task hook.</p>

@@ -899,9 +899,9 @@
                 
                 
                 <h1 id="hooks">Hooks<a class="headerlink" href="#hooks" title="Permanent link">&para;</a></h1>
-<p>Hooks are scripts that run when some event is going to happen or just happened. It is useful to define custom actions with your own scripts, including one-liner scrips. The hook is run with <code class="codehilite"><span class="n">sh</span></code> so scripts can be defined inlined. If a hook is not defined, won&rsquo;t run anything.</p>
+<p>Hooks are scripts that run when some event is going to happen or just happened. It is useful to define custom actions with your own scripts, including one-liner scrips. The hook is run with <code class="codehilite"><span class="err">sh</span></code> so scripts can be defined inlined. If a hook is not defined, won&rsquo;t run anything.</p>
 <p>To define the hooks, see <a href="../configuration/#hooks">hooks in the configuration</a>.</p>
-<p>The output of the script is redirected to the logger using the <code class="codehilite"><span class="n">DEBUG</span></code> level. If you have some issues with your hook script, set the log level to <code class="codehilite"><span class="n">DEBUG</span></code>.</p>
+<p>The output of the script is redirected to the logger using the <code class="codehilite"><span class="err">DEBUG</span></code> level. If you have some issues with your hook script, set the log level to <code class="codehilite"><span class="err">DEBUG</span></code>.</p>
 <h2 id="backupbefore">backup:before<a class="headerlink" href="#backupbefore" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>When</strong>: Before starting doing backups.</li>
@@ -939,7 +939,7 @@
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p><code class="codehilite"><span class="cp">${</span><span class="n">tasks_name</span><span class="cp">}</span></code> must be the name of the tasks definition, defined in the <code class="codehilite"><span class="n">name</span></code> section of the file.</p>
+<p><code class="codehilite"><span class="cp">${</span><span class="n">tasks_name</span><span class="cp">}</span></code> must be the name of the tasks definition, defined in the <code class="codehilite"><span class="err">name</span></code> section of the file.</p>
 </div>
 <h2 id="backuptaskstasks_nameafter">backup:tasks:${tasks_name}:after<a class="headerlink" href="#backuptaskstasks_nameafter" title="Permanent link">&para;</a></h2>
 <ul>
@@ -952,7 +952,7 @@
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p><code class="codehilite"><span class="cp">${</span><span class="n">tasks_name</span><span class="cp">}</span></code> must be the name of the tasks definition, defined in the <code class="codehilite"><span class="n">name</span></code> section of the file.</p>
+<p><code class="codehilite"><span class="cp">${</span><span class="n">tasks_name</span><span class="cp">}</span></code> must be the name of the tasks definition, defined in the <code class="codehilite"><span class="err">name</span></code> section of the file.</p>
 </div>
 <h2 id="backuptaskstasks_nameerror">backup:tasks:${tasks_name}:error<a class="headerlink" href="#backuptaskstasks_nameerror" title="Permanent link">&para;</a></h2>
 <ul>
@@ -966,7 +966,7 @@
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p><code class="codehilite"><span class="cp">${</span><span class="n">tasks_name</span><span class="cp">}</span></code> must be the name of the tasks definition, defined in the <code class="codehilite"><span class="n">name</span></code> section of the file.</p>
+<p><code class="codehilite"><span class="cp">${</span><span class="n">tasks_name</span><span class="cp">}</span></code> must be the name of the tasks definition, defined in the <code class="codehilite"><span class="err">name</span></code> section of the file.</p>
 </div>
 <h2 id="backuptaskstasks_nametasktasks_nametaskbefore">backup:tasks:<span task_name="task_name"><span class="MathJax_Preview">{tasks_name}:task:</span><script type="math/tex">{tasks_name}:task:</script></span>:before<a class="headerlink" href="#backuptaskstasks_nametasktasks_nametaskbefore" title="Permanent link">&para;</a></h2>
 <ul>
@@ -980,7 +980,7 @@
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p><code class="codehilite"><span class="cp">${</span><span class="n">tasks_name</span><span class="cp">}</span></code> must be the name of the tasks definition, defined in the <code class="codehilite"><span class="n">name</span></code> section of the file. The <code class="codehilite"><span class="cp">${</span><span class="n">task_name</span><span class="cp">}</span></code> must be the name of the task, defined in the <code class="codehilite"><span class="n">name</span></code> section of the task.</p>
+<p><code class="codehilite"><span class="cp">${</span><span class="n">tasks_name</span><span class="cp">}</span></code> must be the name of the tasks definition, defined in the <code class="codehilite"><span class="err">name</span></code> section of the file. The <code class="codehilite"><span class="cp">${</span><span class="n">task_name</span><span class="cp">}</span></code> must be the name of the task, defined in the <code class="codehilite"><span class="err">name</span></code> section of the task.</p>
 </div>
 <h2 id="backuptaskstasks_nametasktasks_nametaskafter">backup:tasks:<span task_name="task_name"><span class="MathJax_Preview">{tasks_name}:task:</span><script type="math/tex">{tasks_name}:task:</script></span>:after<a class="headerlink" href="#backuptaskstasks_nametasktasks_nametaskafter" title="Permanent link">&para;</a></h2>
 <ul>
@@ -994,11 +994,11 @@
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p><code class="codehilite"><span class="cp">${</span><span class="n">tasks_name</span><span class="cp">}</span></code> must be the name of the tasks definition, defined in the <code class="codehilite"><span class="n">name</span></code> section of the file. The <code class="codehilite"><span class="cp">${</span><span class="n">task_name</span><span class="cp">}</span></code> must be the name of the task, defined in the <code class="codehilite"><span class="n">name</span></code> section of the task.</p>
+<p><code class="codehilite"><span class="cp">${</span><span class="n">tasks_name</span><span class="cp">}</span></code> must be the name of the tasks definition, defined in the <code class="codehilite"><span class="err">name</span></code> section of the file. The <code class="codehilite"><span class="cp">${</span><span class="n">task_name</span><span class="cp">}</span></code> must be the name of the task, defined in the <code class="codehilite"><span class="err">name</span></code> section of the task.</p>
 </div>
 <h2 id="backuptaskstasks_nametasktasks_nametaskerror">backup:tasks:<span task_name="task_name"><span class="MathJax_Preview">{tasks_name}:task:</span><script type="math/tex">{tasks_name}:task:</script></span>:error<a class="headerlink" href="#backuptaskstasks_nametasktasks_nametaskerror" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>When</strong>: When a task run has failed, even with <code class="codehilite"><span class="n">stopOnFail</span></code> is set to false.</li>
+<li><strong>When</strong>: When a task run has failed, even with <code class="codehilite"><span class="err">stopOnFail</span></code> is set to false.</li>
 <li><strong>Parameters</strong>:<ol>
 <li>The error message.</li>
 <li>The folder where the backups are going to be stored during the process.</li>
@@ -1009,7 +1009,7 @@
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p><code class="codehilite"><span class="cp">${</span><span class="n">tasks_name</span><span class="cp">}</span></code> must be the name of the tasks definition, defined in the <code class="codehilite"><span class="n">name</span></code> section of the file. The <code class="codehilite"><span class="cp">${</span><span class="n">task_name</span><span class="cp">}</span></code> must be the name of the task, defined in the <code class="codehilite"><span class="n">name</span></code> section of the task.</p>
+<p><code class="codehilite"><span class="cp">${</span><span class="n">tasks_name</span><span class="cp">}</span></code> must be the name of the tasks definition, defined in the <code class="codehilite"><span class="err">name</span></code> section of the file. The <code class="codehilite"><span class="cp">${</span><span class="n">task_name</span><span class="cp">}</span></code> must be the name of the task, defined in the <code class="codehilite"><span class="err">name</span></code> section of the task.</p>
 </div>
 <h2 id="uploadbefore">upload:before<a class="headerlink" href="#uploadbefore" title="Permanent link">&para;</a></h2>
 <ul>

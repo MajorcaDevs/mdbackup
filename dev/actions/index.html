@@ -811,7 +811,7 @@
 </div>
 <div class="admonition info">
 <p class="admonition-title">Initial or transformer actions</p>
-<p>For example, <code class="codehilite"><span class="n">command</span></code>, <code class="codehilite"><span class="n">ssh</span></code> and <code class="codehilite"><span class="n">docker</span></code> actions can be either an initial or transformer actions, it just depends if the command to run needs an input from another source or not. For example the command <code class="codehilite"><span class="n">echo</span> <span class="n">hello</span> <span class="n">world</span></code> don&rsquo;t need an input, but <code class="codehilite"><span class="n">cat</span></code> needs one.</p>
+<p>For example, <code class="codehilite"><span class="err">command</span></code>, <code class="codehilite"><span class="err">ssh</span></code> and <code class="codehilite"><span class="err">docker</span></code> actions can be either an initial or transformer actions, it just depends if the command to run needs an input from another source or not. For example the command <code class="codehilite"><span class="err">echo hello world</span></code> don&rsquo;t need an input, but <code class="codehilite"><span class="err">cat</span></code> needs one.</p>
 </div>
 <p>Not yet mentioned, but <strong>unactions</strong> also exist. Think of <em>unactions</em> as a reversed action. If an action is to compress some data, its <em>unaction</em> will be decompress the data. <em>unactions</em> are like actions in all senses, but the behaviour is to revert an action (in general used in restores).</p>
 <h2 id="builtin-actions">Builtin actions<a class="headerlink" href="#builtin-actions" title="Permanent link">&para;</a></h2>
@@ -827,9 +827,9 @@
 <li><a href="./network">Network</a></li>
 </ul>
 <h2 id="implementing-actions">Implementing actions<a class="headerlink" href="#implementing-actions" title="Permanent link">&para;</a></h2>
-<p>In python, an action (and <em>unaction</em>) is just a function that receives two arguments and returns something. An initial action will receive <code class="codehilite"><span class="k">None</span></code> and the parameters as arguments and should return a data stream or a <code class="codehilite"><span class="n">DirEntry</span></code> iterator. A transformer action will receive a data stream or a <code class="codehilite"><span class="n">DirEntry</span></code> iterator (depending on the expected input) and the parameters as arguments and will return a data stream or a <code class="codehilite"><span class="n">DirEntry</span></code> iterator. A final action will receive a data stream or a <code class="codehilite"><span class="n">DirEntry</span></code> iterator and must return the relative path of the file or folder that the action has created. An action can use another action internally to make a composition of actions.</p>
+<p>In python, an action (and <em>unaction</em>) is just a function that receives two arguments and returns something. An initial action will receive <code class="codehilite"><span class="err">None</span></code> and the parameters as arguments and should return a data stream or a <code class="codehilite"><span class="err">DirEntry</span></code> iterator. A transformer action will receive a data stream or a <code class="codehilite"><span class="err">DirEntry</span></code> iterator (depending on the expected input) and the parameters as arguments and will return a data stream or a <code class="codehilite"><span class="err">DirEntry</span></code> iterator. A final action will receive a data stream or a <code class="codehilite"><span class="err">DirEntry</span></code> iterator and must return the relative path of the file or folder that the action has created. An action can use another action internally to make a composition of actions.</p>
 <div class="admonition info">
-<p class="admonition-title"><code class="codehilite"><span class="n">DirEntry</span></code></p>
+<p class="admonition-title"><code class="codehilite"><span class="err">DirEntry</span></code></p>
 <p>Is a data structure used internally to represent a entry of a folder. The object is defined like this:</p>
 <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">DirEntry</span><span class="p">:</span>
     <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span>
@@ -839,14 +839,14 @@
     <span class="n">link_content</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
     <span class="n">real_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">link_content</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">real_path</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">link_content</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">real_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">pass</span>
 </pre></div>
 
 </div>
-<p>In actions, a <strong>data stream</strong> means a <code class="codehilite"><span class="n">io</span><span class="p">.</span><span class="n">FileIO</span></code>, <code class="codehilite"><span class="n">io</span><span class="p">.</span><span class="n">BufferedIOBase</span></code> or <code class="codehilite"><span class="n">io</span><span class="p">.</span><span class="n">TextIOBase</span></code> object that has a file descriptor associated to the stream, or a <code class="codehilite"><span class="n">subprocess</span><span class="p">.</span><span class="n">Popen</span></code> object with <code class="codehilite"><span class="n">PIPE</span></code> mode set to <code class="codehilite"><span class="k">stdout</span></code> and <code class="codehilite"><span class="n">stderr</span></code>. Currently, the <em>file descriptor</em>-thing is important because they are used to be used in external processes efficently (without using internal pipes). <code class="codehilite"><span class="n">mdbackup</span></code> checks if a data stream is invalid and raises an error for it.</p>
-<p>On the other hand, the <code class="codehilite"><span class="n">DirEntry</span></code> iterator is implemented using a generator function that returns <code class="codehilite"><span class="n">DirEntry</span></code> objects for each entry found in the folder. The type of a entry can be <code class="codehilite"><span class="n">dir</span></code>, <code class="codehilite"><span class="n">symlink</span></code> or <code class="codehilite"><span class="n">file</span></code>. A file will have the <code class="codehilite"><span class="n">stream</span></code> attribute filled pointing to the contents of the file.
-A symlink will have the <code class="codehilite"><span class="n">link_content</span></code> attribute set with the contents of the symlink. In all types, the <code class="codehilite"><span class="n">path</span></code> must be filled with a relative path to the entry, as well as <code class="codehilite"><span class="n">stats</span></code>, requiring <code class="codehilite"><span class="n">st_mode</span></code>, <code class="codehilite"><span class="n">st_uid</span></code>, <code class="codehilite"><span class="n">st_gid</span></code>, <code class="codehilite"><span class="n">st_mtime</span></code>, <code class="codehilite"><span class="n">st_size</span></code> properties to be filled.</p>
+<p>In actions, a <strong>data stream</strong> means a <code class="codehilite"><span class="err">io.FileIO</span></code>, <code class="codehilite"><span class="err">io.BufferedIOBase</span></code> or <code class="codehilite"><span class="err">io.TextIOBase</span></code> object that has a file descriptor associated to the stream, or a <code class="codehilite"><span class="err">subprocess.Popen</span></code> object with <code class="codehilite"><span class="err">PIPE</span></code> mode set to <code class="codehilite"><span class="err">stdout</span></code> and <code class="codehilite"><span class="err">stderr</span></code>. Currently, the <em>file descriptor</em>-thing is important because they are used to be used in external processes efficently (without using internal pipes). <code class="codehilite"><span class="err">mdbackup</span></code> checks if a data stream is invalid and raises an error for it.</p>
+<p>On the other hand, the <code class="codehilite"><span class="err">DirEntry</span></code> iterator is implemented using a generator function that returns <code class="codehilite"><span class="err">DirEntry</span></code> objects for each entry found in the folder. The type of a entry can be <code class="codehilite"><span class="err">dir</span></code>, <code class="codehilite"><span class="err">symlink</span></code> or <code class="codehilite"><span class="err">file</span></code>. A file will have the <code class="codehilite"><span class="err">stream</span></code> attribute filled pointing to the contents of the file.
+A symlink will have the <code class="codehilite"><span class="err">link_content</span></code> attribute set with the contents of the symlink. In all types, the <code class="codehilite"><span class="err">path</span></code> must be filled with a relative path to the entry, as well as <code class="codehilite"><span class="err">stats</span></code>, requiring <code class="codehilite"><span class="err">st_mode</span></code>, <code class="codehilite"><span class="err">st_uid</span></code>, <code class="codehilite"><span class="err">st_gid</span></code>, <code class="codehilite"><span class="err">st_mtime</span></code>, <code class="codehilite"><span class="err">st_size</span></code> properties to be filled.</p>
 <details class="example"><summary>Example of initial action</summary><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">action_read_file</span><span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">io</span><span class="o">.</span><span class="n">FileIO</span><span class="p">:</span>
     <span class="k">return</span> <span class="nb">open</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">],</span> <span class="s1">&#39;rb&#39;</span><span class="p">,</span> <span class="n">buffering</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
@@ -856,8 +856,8 @@ A symlink will have the <code class="codehilite"><span class="n">link_content</s
     <span class="n">compression_level</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;compressionLevel&#39;</span><span class="p">)</span>
 
     <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;gzip&#39;</span><span class="p">,</span> <span class="s1">&#39;-c&#39;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="n">compression_level</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-        <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;-{compression_level}&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">compression_level</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;-</span><span class="si">{compression_level}</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="c1"># Composition of actions: using command action to create the compress-gz action</span>
     <span class="k">return</span> <span class="n">action_command</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="n">args</span><span class="p">})</span>
@@ -877,7 +877,7 @@ A symlink will have the <code class="codehilite"><span class="n">link_content</s
     <span class="n">file_object</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">full_path</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">,</span> <span class="n">buffering</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">chunk_size</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;chunkSize&#39;</span><span class="p">,</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">8</span><span class="p">)</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">inp</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">chunk_size</span><span class="p">)</span>
-    <span class="k">while</span> <span class="n">data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">while</span> <span class="n">data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">file_object</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">inp</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">chunk_size</span><span class="p">)</span>
     <span class="n">file_object</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
@@ -887,8 +887,8 @@ A symlink will have the <code class="codehilite"><span class="n">link_content</s
 
 </details>
 <h2 id="registring-actions">Registring actions<a class="headerlink" href="#registring-actions" title="Permanent link">&para;</a></h2>
-<p>Using the <code class="codehilite"><span class="n">register_action</span></code> function, an action (and its <em>unaction</em> counterpart) will be registered in the system and could be used in the tasks. There is also a quick way to register actions and <em>unactions</em> which is using the <code class="codehilite"><span class="n">action</span></code> and <code class="codehilite"><span class="n">unaction</span></code> decorators. For user-defined actions, those functions will be received in the function called when registering from a module.</p>
-<h3 id="register_action"><code class="codehilite"><span class="n">register_action</span></code><a class="headerlink" href="#register_action" title="Permanent link">&para;</a></h3>
+<p>Using the <code class="codehilite"><span class="err">register_action</span></code> function, an action (and its <em>unaction</em> counterpart) will be registered in the system and could be used in the tasks. There is also a quick way to register actions and <em>unactions</em> which is using the <code class="codehilite"><span class="err">action</span></code> and <code class="codehilite"><span class="err">unaction</span></code> decorators. For user-defined actions, those functions will be received in the function called when registering from a module.</p>
+<h3 id="register_action"><code class="codehilite"><span class="err">register_action</span></code><a class="headerlink" href="#register_action" title="Permanent link">&para;</a></h3>
 <p>The function registers an action into the actions container in order to be used when running tasks.</p>
 <table>
 <thead>
@@ -902,46 +902,46 @@ A symlink will have the <code class="codehilite"><span class="n">link_content</s
 </thead>
 <tbody>
 <tr>
-<td><code class="codehilite"><span class="n">identifier</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">identifier</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Defines the identifier to be used to refer the action in the yaml files</td>
 <td>No</td>
 <td></td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">action</span></code></td>
-<td><code class="codehilite"><span class="n">callable</span></code></td>
+<td><code class="codehilite"><span class="err">action</span></code></td>
+<td><code class="codehilite"><span class="err">callable</span></code></td>
 <td>The function that implements the action</td>
 <td>No</td>
 <td></td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">unaction</span></code></td>
-<td><code class="codehilite"><span class="n">callable</span></code></td>
+<td><code class="codehilite"><span class="err">unaction</span></code></td>
+<td><code class="codehilite"><span class="err">callable</span></code></td>
 <td>The function that implements the <em>unaction</em></td>
 <td>Yes</td>
-<td><code class="codehilite"><span class="k">None</span></code></td>
+<td><code class="codehilite"><span class="err">None</span></code></td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">expected_input</span></code></td>
+<td><code class="codehilite"><span class="err">expected_input</span></code></td>
 <td><code class="codehilite"><span class="n">Optional</span><span class="o">[</span><span class="n">str</span><span class="o">]</span><span class="w"></span></code></td>
 <td>The expected input for the action</td>
 <td>Yes</td>
-<td><code class="codehilite"><span class="k">None</span></code></td>
+<td><code class="codehilite"><span class="err">None</span></code></td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="k">output</span></code></td>
+<td><code class="codehilite"><span class="err">output</span></code></td>
 <td><code class="codehilite"><span class="n">Optional</span><span class="o">[</span><span class="n">str</span><span class="o">]</span><span class="w"></span></code></td>
 <td>The output for the action</td>
 <td>Yes</td>
-<td><code class="codehilite"><span class="k">None</span></code></td>
+<td><code class="codehilite"><span class="err">None</span></code></td>
 </tr>
 </tbody>
 </table>
-<p>The supported values for <code class="codehilite"><span class="n">expected_input</span></code> are: <code class="codehilite"><span class="n">stream</span></code> or <code class="codehilite"><span class="n">directory</span></code>.</p>
-<p>The supported values for <code class="codehilite"><span class="k">output</span></code> are: <code class="codehilite"><span class="n">stream</span></code> <code class="codehilite"><span class="n">stream</span><span class="o">:</span><span class="n">file</span></code>, <code class="codehilite"><span class="n">stream</span><span class="o">:</span><span class="n">process</span></code>, <code class="codehilite"><span class="n">stream</span><span class="o">:</span><span class="n">pipe</span></code> (only if using <code class="codehilite"><span class="n">os</span><span class="p">.</span><span class="n">pipe</span><span class="p">()</span></code> fds) or <code class="codehilite"><span class="n">directory</span></code>.</p>
-<h3 id="action"><code class="codehilite"><span class="n">action</span></code><a class="headerlink" href="#action" title="Permanent link">&para;</a></h3>
-<p>Decorator for actions that will register them automatically (once the module that contains the implementation is loaded). Is a shortcut for <code class="codehilite"><span class="n">register_action</span></code> and allows in-place registration of actions.</p>
+<p>The supported values for <code class="codehilite"><span class="err">expected_input</span></code> are: <code class="codehilite"><span class="err">stream</span></code> or <code class="codehilite"><span class="err">directory</span></code>.</p>
+<p>The supported values for <code class="codehilite"><span class="err">output</span></code> are: <code class="codehilite"><span class="err">stream</span></code> <code class="codehilite"><span class="n">stream</span><span class="o">:</span><span class="n">file</span></code>, <code class="codehilite"><span class="n">stream</span><span class="o">:</span><span class="n">process</span></code>, <code class="codehilite"><span class="n">stream</span><span class="o">:</span><span class="n">pipe</span></code> (only if using <code class="codehilite"><span class="err">os.pipe()</span></code> fds) or <code class="codehilite"><span class="err">directory</span></code>.</p>
+<h3 id="action"><code class="codehilite"><span class="err">action</span></code><a class="headerlink" href="#action" title="Permanent link">&para;</a></h3>
+<p>Decorator for actions that will register them automatically (once the module that contains the implementation is loaded). Is a shortcut for <code class="codehilite"><span class="err">register_action</span></code> and allows in-place registration of actions.</p>
 <table>
 <thead>
 <tr>
@@ -954,41 +954,41 @@ A symlink will have the <code class="codehilite"><span class="n">link_content</s
 </thead>
 <tbody>
 <tr>
-<td><code class="codehilite"><span class="n">identifier</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">identifier</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Defines the identifier to be used to refer the action in the yaml files</td>
 <td>No</td>
 <td></td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="k">input</span></code></td>
+<td><code class="codehilite"><span class="err">input</span></code></td>
 <td><code class="codehilite"><span class="n">Optional</span><span class="o">[</span><span class="n">str</span><span class="o">]</span><span class="w"></span></code></td>
 <td>The expected input for the action</td>
 <td>Yes</td>
-<td><code class="codehilite"><span class="k">None</span></code></td>
+<td><code class="codehilite"><span class="err">None</span></code></td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="k">output</span></code></td>
+<td><code class="codehilite"><span class="err">output</span></code></td>
 <td><code class="codehilite"><span class="n">Optional</span><span class="o">[</span><span class="n">str</span><span class="o">]</span><span class="w"></span></code></td>
 <td>The output for the action</td>
 <td>Yes</td>
-<td><code class="codehilite"><span class="k">None</span></code></td>
+<td><code class="codehilite"><span class="err">None</span></code></td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">unaction</span></code></td>
-<td><code class="codehilite"><span class="n">callable</span></code></td>
-<td>The function that implements the <em>unaction</em> (use it only if <code class="codehilite"><span class="nv">@unaction</span><span class="p">()</span><span class="w"></span></code> won&rsquo;t be used)</td>
+<td><code class="codehilite"><span class="err">unaction</span></code></td>
+<td><code class="codehilite"><span class="err">callable</span></code></td>
+<td>The function that implements the <em>unaction</em> (use it only if <code class="codehilite"><span class="err">@unaction()</span></code> won&rsquo;t be used)</td>
 <td>Yes</td>
-<td><code class="codehilite"><span class="k">None</span></code></td>
+<td><code class="codehilite"><span class="err">None</span></code></td>
 </tr>
 </tbody>
 </table>
 <div class="admonition note">
 <p class="admonition-title">Parameters</p>
-<p><code class="codehilite"><span class="k">input</span></code> is the same as <code class="codehilite"><span class="n">expected_input</span></code> from the <code class="codehilite"><span class="n">register_action</span></code>. All parameters expect the same as in <code class="codehilite"><span class="n">register_action</span></code>.</p>
+<p><code class="codehilite"><span class="err">input</span></code> is the same as <code class="codehilite"><span class="err">expected_input</span></code> from the <code class="codehilite"><span class="err">register_action</span></code>. All parameters expect the same as in <code class="codehilite"><span class="err">register_action</span></code>.</p>
 </div>
-<h3 id="unaction"><code class="codehilite"><span class="n">unaction</span></code><a class="headerlink" href="#unaction" title="Permanent link">&para;</a></h3>
-<p>Decorator for <em>unactions</em> that will register them automatically (once the module that contains the implementation is loaded). Is a shortcut for <code class="codehilite"><span class="n">register_action</span></code> and allows in-place registration of <em>unactions</em> once its action counterpart is registered.</p>
+<h3 id="unaction"><code class="codehilite"><span class="err">unaction</span></code><a class="headerlink" href="#unaction" title="Permanent link">&para;</a></h3>
+<p>Decorator for <em>unactions</em> that will register them automatically (once the module that contains the implementation is loaded). Is a shortcut for <code class="codehilite"><span class="err">register_action</span></code> and allows in-place registration of <em>unactions</em> once its action counterpart is registered.</p>
 <table>
 <thead>
 <tr>
@@ -1001,8 +1001,8 @@ A symlink will have the <code class="codehilite"><span class="n">link_content</s
 </thead>
 <tbody>
 <tr>
-<td><code class="codehilite"><span class="n">identifier</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">identifier</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Defines the identifier to be used to refer the action in the yaml files</td>
 <td>No</td>
 <td></td>
@@ -1014,9 +1014,9 @@ A symlink will have the <code class="codehilite"><span class="n">link_content</s
 <p>An <em>unaction</em> can be registered after the action has been registered. If the order is inverted, the <em>unaction</em> register will fail.</p>
 </div>
 <h2 id="creating-user-defined-actions">Creating user-defined actions<a class="headerlink" href="#creating-user-defined-actions" title="Permanent link">&para;</a></h2>
-<p>As mentioned in the <a href="../configuration">configuration</a>, the user-defined actions must be modules that can be loaded from python using the <code class="codehilite"><span class="n">import</span></code> syntax. The value in the configuration was <code class="codehilite"><span class="k">module</span><span class="c1">#function</span></code> where <code class="codehilite"><span class="k">module</span></code> is the module to import and <code class="codehilite"><span class="k">function</span></code> is the name of the callable object that will register all actions.</p>
-<p>The function (or callable object) will receive some keyword arguments (aka <code class="codehilite"><span class="n">kwargs</span></code>) with the <code class="codehilite"><span class="n">register_action</span></code> function and <code class="codehilite"><span class="n">action</span></code> and <code class="codehilite"><span class="n">unaction</span></code> decorators to be used quickly without the need to import them. You can also import them directly by importing the module <code class="codehilite"><span class="n">mdbackup</span><span class="p">.</span><span class="n">actions</span><span class="p">.</span><span class="n">container</span></code>. The function will also receive <code class="codehilite"><span class="n">get_action</span></code> and <code class="codehilite"><span class="n">get_unaction</span></code> that retrieves the implementation for the action/<em>unaction</em> for the given identifier (the first parameter of both functions). And lastly, the <em>kwarg</em> <code class="codehilite"><span class="n">dir_entry</span></code> will be passed with the class <code class="codehilite"><span class="n">DirEntry</span></code> if needed.</p>
-<p>The function must register all actions by either using the function or the decorator. If anything fails, your function should raise an exception to notify the failure, and put some <code class="codehilite"><span class="n">debug</span></code> logs will also help.</p>
+<p>As mentioned in the <a href="../configuration">configuration</a>, the user-defined actions must be modules that can be loaded from python using the <code class="codehilite"><span class="err">import</span></code> syntax. The value in the configuration was <code class="codehilite"><span class="err">module#function</span></code> where <code class="codehilite"><span class="err">module</span></code> is the module to import and <code class="codehilite"><span class="k">function</span></code> is the name of the callable object that will register all actions.</p>
+<p>The function (or callable object) will receive some keyword arguments (aka <code class="codehilite"><span class="err">kwargs</span></code>) with the <code class="codehilite"><span class="err">register_action</span></code> function and <code class="codehilite"><span class="err">action</span></code> and <code class="codehilite"><span class="err">unaction</span></code> decorators to be used quickly without the need to import them. You can also import them directly by importing the module <code class="codehilite"><span class="err">mdbackup.actions.container</span></code>. The function will also receive <code class="codehilite"><span class="err">get_action</span></code> and <code class="codehilite"><span class="err">get_unaction</span></code> that retrieves the implementation for the action/<em>unaction</em> for the given identifier (the first parameter of both functions). And lastly, the <em>kwarg</em> <code class="codehilite"><span class="err">dir_entry</span></code> will be passed with the class <code class="codehilite"><span class="err">DirEntry</span></code> if needed.</p>
+<p>The function must register all actions by either using the function or the decorator. If anything fails, your function should raise an exception to notify the failure, and put some <code class="codehilite"><span class="err">debug</span></code> logs will also help.</p>
 <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">register_my_actions</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">unaction</span><span class="p">,</span> <span class="n">get_action</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="n">action_ssh</span> <span class="o">=</span> <span class="n">get_action</span><span class="p">(</span><span class="s1">&#39;ssh&#39;</span><span class="p">)</span>
 
@@ -1031,7 +1031,7 @@ A symlink will have the <code class="codehilite"><span class="n">link_content</s
             <span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="s1">&#39;pi&#39;</span><span class="p">,</span>
             <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="s1">&#39;raspberrypi&#39;</span><span class="p">,</span>
             <span class="s1">&#39;knownHostsPolicy&#39;</span><span class="p">:</span> <span class="s1">&#39;ignore&#39;</span><span class="p">,</span>  <span class="c1"># You should never do this</span>
-            <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;bash&#39;</span><span class="p">,</span> <span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="n">f</span><span class="s1">&#39;if [[ -f &quot;{params[&quot;path&quot;]}&quot; ]]; then cat &quot;{params[&quot;path&quot;]}&quot;; else cd &quot;{params[&quot;path&quot;]}&quot;; tar -c .; fi&#39;</span><span class="p">]</span>
+            <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;bash&#39;</span><span class="p">,</span> <span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;if [[ -f &quot;</span><span class="si">{params[&quot;path&quot;]}</span><span class="s1">&quot; ]]; then cat &quot;</span><span class="si">{params[&quot;path&quot;]}</span><span class="s1">&quot;; else cd &quot;</span><span class="si">{params[&quot;path&quot;]}</span><span class="s1">&quot;; tar -c .; fi&#39;</span><span class="p">]</span>
         <span class="p">})</span>
 </pre></div>
                 

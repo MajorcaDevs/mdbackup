@@ -735,13 +735,13 @@
                 
                 
                 <h1 id="actions-command">Actions: Command<a class="headerlink" href="#actions-command" title="Permanent link">&para;</a></h1>
-<h2 id="command"><code class="codehilite"><span class="n">command</span></code><a class="headerlink" href="#command" title="Permanent link">&para;</a></h2>
+<h2 id="command"><code class="codehilite"><span class="err">command</span></code><a class="headerlink" href="#command" title="Permanent link">&para;</a></h2>
 <p><strong>Input</strong>: Nothing or stream</p>
 <p><strong>Output</strong>: stream</p>
 <p><strong>Unaction</strong>:</p>
-<p>Yes, but to make it work, you need to defined the reverse command. To do so, just define a new section called <code class="codehilite"><span class="n">reverse</span></code> with <code class="codehilite"><span class="n">args</span></code> or <code class="codehilite"><span class="n">command</span></code> (see example below). If trying to do a restore with no <code class="codehilite"><span class="n">reverse</span><span class="p">.</span><span class="n">args</span></code> nor <code class="codehilite"><span class="n">reverse</span><span class="p">.</span><span class="n">command</span></code> will result in a failure.</p>
+<p>Yes, but to make it work, you need to defined the reverse command. To do so, just define a new section called <code class="codehilite"><span class="err">reverse</span></code> with <code class="codehilite"><span class="err">args</span></code> or <code class="codehilite"><span class="err">command</span></code> (see example below). If trying to do a restore with no <code class="codehilite"><span class="err">reverse.args</span></code> nor <code class="codehilite"><span class="err">reverse.command</span></code> will result in a failure.</p>
 <p><strong>Parameters</strong></p>
-<p>Can be a <code class="codehilite"><span class="n">str</span></code> or an object. The string will be interpreted as a sh-like command, the object with the folliwing structure:</p>
+<p>Can be a <code class="codehilite"><span class="err">str</span></code> or an object. The string will be interpreted as a sh-like command, the object with the folliwing structure:</p>
 <table>
 <thead>
 <tr>
@@ -753,27 +753,27 @@
 </thead>
 <tbody>
 <tr>
-<td><code class="codehilite"><span class="n">args</span></code></td>
+<td><code class="codehilite"><span class="err">args</span></code></td>
 <td><code class="codehilite"><span class="n">List</span><span class="o">[</span><span class="n">str</span><span class="o">]</span><span class="w"></span></code></td>
 <td>List of arguments (including the program) to run</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">command</span></code> </td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">command</span></code> </td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>sh-like command string to run</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">env</span></code></td>
-<td><code class="codehilite"><span class="n">Dict</span><span class="p">[</span><span class="n">str</span><span class="p">,</span> <span class="n">str</span><span class="p">]</span></code></td>
+<td><code class="codehilite"><span class="err">env</span></code></td>
+<td><code class="codehilite"><span class="err">Dict[str, str]</span></code></td>
 <td>Additional environment variables to set when running the program</td>
 <td>Yes</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Description</strong></p>
-<p>Executes the command that produces an output, and may receive an input. The command can be defined by either using <code class="codehilite"><span class="n">args</span></code> or <code class="codehilite"><span class="n">command</span></code> parameter. If needed, the command can run with extra environment variables defined in the <code class="codehilite"><span class="n">env</span></code> parameter. The current working directory will be the backup path. The parameter can also be a string, in this case will be interpreted as <code class="codehilite"><span class="n">command</span></code> parameter.</p>
+<p>Executes the command that produces an output, and may receive an input. The command can be defined by either using <code class="codehilite"><span class="err">args</span></code> or <code class="codehilite"><span class="err">command</span></code> parameter. If needed, the command can run with extra environment variables defined in the <code class="codehilite"><span class="err">env</span></code> parameter. The current working directory will be the backup path. The parameter can also be a string, in this case will be interpreted as <code class="codehilite"><span class="err">command</span></code> parameter.</p>
 <div class="admonition example">
 <p class="admonition-title">Example of command as initial action</p>
 <p>Does a backup of a partition and then compresses it.</p>
@@ -788,7 +788,7 @@
 </div>
 <div class="admonition example">
 <p class="admonition-title">Example of command as transform action</p>
-<p>Does a backup of a file transforming all instances of <code class="codehilite"><span class="n">A</span></code> to <code class="codehilite"><span class="n">a</span></code> (using <code class="codehilite"><span class="n">sed</span></code>).</p>
+<p>Does a backup of a file transforming all instances of <code class="codehilite"><span class="err">A</span></code> to <code class="codehilite"><span class="err">a</span></code> (using <code class="codehilite"><span class="err">sed</span></code>).</p>
 <div class="codehilite"><pre><span></span><span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">command task example 2</span>
   <span class="nt">actions</span><span class="p">:</span>
     <span class="p p-Indicator">-</span> <span class="nt">from-file</span><span class="p">:</span> <span class="s">&#39;/path/to/a/file/to/backup.txt&#39;</span>
@@ -799,7 +799,7 @@
 
 </div>
 <div class="admonition example">
-<p class="admonition-title">Example of command with <code class="codehilite"><span class="n">reverse</span></code></p>
+<p class="admonition-title">Example of command with <code class="codehilite"><span class="err">reverse</span></code></p>
 <p>Does a backup of some program that exports its data using a CLI tool, but also defining how to restore the data.</p>
 <div class="codehilite"><pre><span></span><span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">command task example 3</span>
   <span class="nt">actions</span><span class="p">:</span>
@@ -813,7 +813,7 @@
 </pre></div>
 
 </div>
-<h2 id="ssh"><code class="codehilite"><span class="n">ssh</span></code><a class="headerlink" href="#ssh" title="Permanent link">&para;</a></h2>
+<h2 id="ssh"><code class="codehilite"><span class="err">ssh</span></code><a class="headerlink" href="#ssh" title="Permanent link">&para;</a></h2>
 <p><strong>Input</strong>: Nothing or stream</p>
 <p><strong>Output</strong>: stream</p>
 <p><strong>Unaction</strong>: See <a href="#command">command</a> <em>unaction</em> section.</p>
@@ -829,62 +829,62 @@
 </thead>
 <tbody>
 <tr>
-<td><code class="codehilite"><span class="n">args</span></code></td>
+<td><code class="codehilite"><span class="err">args</span></code></td>
 <td><code class="codehilite"><span class="n">List</span><span class="o">[</span><span class="n">str</span><span class="o">]</span><span class="w"></span></code></td>
 <td>List of arguments (including the program) to run</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">command</span></code> </td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">command</span></code> </td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>sh-like command string to run</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="k">host</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">host</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Hostname to connect to via ssh</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="k">user</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">user</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Username for the ssh session</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">password</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">password</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Password, if required</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">port</span></code></td>
-<td><code class="codehilite"><span class="nb">int</span></code></td>
+<td><code class="codehilite"><span class="err">port</span></code></td>
+<td><code class="codehilite"><span class="err">int</span></code></td>
 <td>Port of the ssh server</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">knownHostsPolicy</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
-<td>If set to <code class="codehilite"><span class="k">ignore</span></code>, will ignore any unknown hosts error</td>
+<td><code class="codehilite"><span class="err">knownHostsPolicy</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
+<td>If set to <code class="codehilite"><span class="err">ignore</span></code>, will ignore any unknown hosts error</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">forwardAgent</span></code></td>
-<td><code class="codehilite"><span class="n">bool</span></code></td>
-<td>If set to <code class="codehilite"><span class="k">true</span></code>, will forward the local ssh agent</td>
+<td><code class="codehilite"><span class="err">forwardAgent</span></code></td>
+<td><code class="codehilite"><span class="err">bool</span></code></td>
+<td>If set to <code class="codehilite"><span class="err">true</span></code>, will forward the local ssh agent</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">identityFile</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">identityFile</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>If defined, this identity file will be used</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">configFile</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">configFile</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Defines a custom config file to be used</td>
 <td>Yes</td>
 </tr>
@@ -892,11 +892,11 @@
 </table>
 <div class="admonition warning">
 <p class="admonition-title">Use of password in ssh</p>
-<p>It is not recommended to use the password authentication method with ssh in scripts like this. If you need the password method, ensure the host (where <code class="codehilite"><span class="n">mdbackup</span></code> runs) has installed <code class="codehilite"><span class="n">sshpass</span></code>.</p>
-<p>A properly authentication using ssh is made by configuring an <code class="codehilite"><span class="n">ssh</span><span class="o">-</span><span class="n">agent</span></code> before running <code class="codehilite"><span class="n">mdbackup</span></code> with the keys preloaded so the tool can run without issues.</p>
+<p>It is not recommended to use the password authentication method with ssh in scripts like this. If you need the password method, ensure the host (where <code class="codehilite"><span class="err">mdbackup</span></code> runs) has installed <code class="codehilite"><span class="err">sshpass</span></code>.</p>
+<p>A properly authentication using ssh is made by configuring an <code class="codehilite"><span class="err">ssh-agent</span></code> before running <code class="codehilite"><span class="err">mdbackup</span></code> with the keys preloaded so the tool can run without issues.</p>
 </div>
 <p><strong>Description</strong></p>
-<p>Executes the command through ssh, in another host, which must produce an output and it may receive some input. The command can be defined by either using <code class="codehilite"><span class="n">args</span></code> or <code class="codehilite"><span class="n">command</span></code> parameter. The current working directory will be the backup path.</p>
+<p>Executes the command through ssh, in another host, which must produce an output and it may receive some input. The command can be defined by either using <code class="codehilite"><span class="err">args</span></code> or <code class="codehilite"><span class="err">command</span></code> parameter. The current working directory will be the backup path.</p>
 <div class="admonition example">
 <p class="admonition-title">Example</p>
 <p>Does a backup of a file from another server.</p>
@@ -912,7 +912,7 @@
 </pre></div>
 
 </div>
-<h2 id="docker"><code class="codehilite"><span class="n">docker</span></code><a class="headerlink" href="#docker" title="Permanent link">&para;</a></h2>
+<h2 id="docker"><code class="codehilite"><span class="err">docker</span></code><a class="headerlink" href="#docker" title="Permanent link">&para;</a></h2>
 <p><strong>Input</strong>: Nothing or stream</p>
 <p><strong>Output</strong>: stream</p>
 <p><strong>Unaction</strong>: See <a href="#command">command</a> <em>unaction</em> section.</p>
@@ -928,69 +928,69 @@
 </thead>
 <tbody>
 <tr>
-<td><code class="codehilite"><span class="n">args</span></code></td>
+<td><code class="codehilite"><span class="err">args</span></code></td>
 <td><code class="codehilite"><span class="n">List</span><span class="o">[</span><span class="n">str</span><span class="o">]</span><span class="w"></span></code></td>
 <td>List of arguments (including the program) to run</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">command</span></code> </td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">command</span></code> </td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>sh-like command string to run</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">image</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">image</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>The image to use to run the container</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">env</span></code></td>
+<td><code class="codehilite"><span class="err">env</span></code></td>
 <td><code class="codehilite"><span class="ow">Union</span><span class="o">[</span><span class="n">Dict[str, str</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">[</span><span class="n">str</span><span class="o">]</span><span class="err">]</span><span class="w"></span></code></td>
 <td>Additional environment variables to set when running the program</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">volumes</span></code></td>
+<td><code class="codehilite"><span class="err">volumes</span></code></td>
 <td><code class="codehilite"><span class="n">List</span><span class="o">[</span><span class="n">str</span><span class="o">]</span><span class="w"></span></code></td>
-<td>List of volumes defined as <code class="codehilite"><span class="k">host</span><span class="o">-</span><span class="n">path</span><span class="p">:</span><span class="n">container</span><span class="o">-</span><span class="n">path</span></code> or <code class="codehilite"><span class="n">volume</span><span class="o">:</span><span class="n">container</span><span class="o">-</span><span class="n">path</span></code></td>
+<td>List of volumes defined as <code class="codehilite"><span class="c">host-path:container-path</span></code> or <code class="codehilite"><span class="n">volume</span><span class="o">:</span><span class="n">container</span><span class="o">-</span><span class="n">path</span></code></td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="k">user</span></code></td>
-<td><code class="codehilite"><span class="k">Union</span><span class="p">[</span><span class="n">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span></code></td>
+<td><code class="codehilite"><span class="err">user</span></code></td>
+<td><code class="codehilite"><span class="err">Union[str, int]</span></code></td>
 <td>UID or user name from which the container will run</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="k">group</span></code></td>
-<td><code class="codehilite"><span class="k">Union</span><span class="p">[</span><span class="n">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span></code></td>
+<td><code class="codehilite"><span class="err">group</span></code></td>
+<td><code class="codehilite"><span class="err">Union[str, int]</span></code></td>
 <td>GID or group name from which the container will run</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">network</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
-<td>Network to attach to (default is <code class="codehilite"><span class="k">host</span></code>)</td>
+<td><code class="codehilite"><span class="err">network</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
+<td>Network to attach to (default is <code class="codehilite"><span class="err">host</span></code>)</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">workdir</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">workdir</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Changes the WorkDir of the container</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">pull</span></code></td>
-<td><code class="codehilite"><span class="n">bool</span></code></td>
+<td><code class="codehilite"><span class="err">pull</span></code></td>
+<td><code class="codehilite"><span class="err">bool</span></code></td>
 <td>Pulls the image before running the container (it can also be used to update the image)</td>
 <td>Yes</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Description</strong></p>
-<p>Executes the command inside a Docker container, in the same host, which must produce an output and it may receive some input. The command can be defined by either using <code class="codehilite"><span class="n">args</span></code> or <code class="codehilite"><span class="n">command</span></code> parameter. If needed, the command can run with extra environment variables defined in the <code class="codehilite"><span class="n">env</span></code> parameter. The <code class="codehilite"><span class="n">volumes</span></code> list uses the same syntax as in docker container run <a href="https://docs.docker.com/storage/volumes/#start-a-container-with-a-volume">-v argument</a>. If <code class="codehilite"><span class="n">pull</span></code> is set to true, then the image will be pulled always, and will stop all the pipeline until the image has been pulled.</p>
+<p>Executes the command inside a Docker container, in the same host, which must produce an output and it may receive some input. The command can be defined by either using <code class="codehilite"><span class="err">args</span></code> or <code class="codehilite"><span class="err">command</span></code> parameter. If needed, the command can run with extra environment variables defined in the <code class="codehilite"><span class="err">env</span></code> parameter. The <code class="codehilite"><span class="err">volumes</span></code> list uses the same syntax as in docker container run <a href="https://docs.docker.com/storage/volumes/#start-a-container-with-a-volume">-v argument</a>. If <code class="codehilite"><span class="err">pull</span></code> is set to true, then the image will be pulled always, and will stop all the pipeline until the image has been pulled.</p>
 <div class="admonition example">
 <p class="admonition-title">Example</p>
 <p>Does a backup of a file from a volume.</p>

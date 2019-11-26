@@ -1125,14 +1125,14 @@
                 
                 
                 <h1 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h1>
-<p>You have available under <code class="codehilite"><span class="n">config</span><span class="o">/</span><span class="n">config</span><span class="p">.</span><span class="k">schema</span><span class="p">.</span><span class="n">json</span></code> the JSON schema of the configuration file. You can use it like this on an app like Visual Studio Code or PyCharm:</p>
+<p>You have available under <code class="codehilite"><span class="err">config/config.schema.json</span></code> the JSON schema of the configuration file. You can use it like this on an app like Visual Studio Code or PyCharm:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
     <span class="nt">&quot;$schema&quot;</span><span class="p">:</span> <span class="s2">&quot;./config.schema.json&quot;</span>
 <span class="p">}</span>
 </pre></div>
 
 <blockquote>
-<p>If you are going to use the <code class="codehilite"><span class="err">$</span><span class="k">schema</span></code>, you should download it or reference the URL of the file from the repository directly.</p>
+<p>If you are going to use the <code class="codehilite"><span class="err">$schema</span></code>, you should download it or reference the URL of the file from the repository directly.</p>
 </blockquote>
 <p>This allows you to auto-complete with the elements available in the configuration. But in case you cannot use an app with schema support, here&rsquo;s it is the (maybe not updated) list of options:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
@@ -1214,24 +1214,24 @@
 <span class="p">}</span>
 </pre></div>
 
-<p>The configuration file must be located in <code class="codehilite"><span class="n">config</span><span class="o">/</span><span class="n">config</span><span class="p">.</span><span class="n">json</span></code>. It is recommended to put inside <code class="codehilite"><span class="n">config</span></code> folder other configuration files (like API tokens) or use a secret provider directly.</p>
+<p>The configuration file must be located in <code class="codehilite"><span class="err">config/config.json</span></code>. It is recommended to put inside <code class="codehilite"><span class="err">config</span></code> folder other configuration files (like API tokens) or use a secret provider directly.</p>
 <h2 id="backupspath">backupsPath<a class="headerlink" href="#backupspath" title="Permanent link">&para;</a></h2>
 <p>The path where all the backups will be stored locally. It will contain all the past backups plus the in-process (if any).</p>
-<p>When a backup is being done, it will create a <code class="codehilite"><span class="na">.partial</span></code> folder inside <code class="codehilite"><span class="n">backupsPath</span></code> and inside the folder, all the copied files and directories will be stored.</p>
-<p>After a backup, the folder will be renamed to <code class="codehilite"><span class="n">YYYY</span><span class="o">-</span><span class="n">MM</span><span class="o">-</span><span class="n">DDThh</span><span class="p">:</span><span class="n">mm</span></code>, matching the time when the backup was completed.</p>
+<p>When a backup is being done, it will create a <code class="codehilite"><span class="na">.partial</span></code> folder inside <code class="codehilite"><span class="err">backupsPath</span></code> and inside the folder, all the copied files and directories will be stored.</p>
+<p>After a backup, the folder will be renamed to <code class="codehilite"><span class="c">YYYY-MM-DDThh:mm</span></code>, matching the time when the backup was completed.</p>
 <h2 id="loglevel">logLevel<a class="headerlink" href="#loglevel" title="Permanent link">&para;</a></h2>
-<p>Configures the log level. Every log issued to the logger that is below the configured log level will be ignored. By default is set to <code class="codehilite"><span class="n">INFO</span></code>. The available levels, ordered by importance, are:</p>
+<p>Configures the log level. Every log issued to the logger that is below the configured log level will be ignored. By default is set to <code class="codehilite"><span class="err">INFO</span></code>. The available levels, ordered by importance, are:</p>
 <ul>
-<li><code class="codehilite"><span class="n">CRITICAL</span></code></li>
-<li><code class="codehilite"><span class="n">ERROR</span></code></li>
-<li><code class="codehilite"><span class="n">WARNING</span></code></li>
-<li><code class="codehilite"><span class="n">INFO</span></code></li>
-<li><code class="codehilite"><span class="n">DEBUG</span></code></li>
+<li><code class="codehilite"><span class="err">CRITICAL</span></code></li>
+<li><code class="codehilite"><span class="err">ERROR</span></code></li>
+<li><code class="codehilite"><span class="err">WARNING</span></code></li>
+<li><code class="codehilite"><span class="err">INFO</span></code></li>
+<li><code class="codehilite"><span class="err">DEBUG</span></code></li>
 </ul>
 <h2 id="customutilsscript">customUtilsScript<a class="headerlink" href="#customutilsscript" title="Permanent link">&para;</a></h2>
-<p>If defined, this script will be included using <code class="codehilite">source <span class="cp">${</span><span class="n">customUtilsScript</span><span class="cp">}</span></code> in every <a href="../steps/">step</a>. Useful to include custom functions to your flow. The script must be compatible with <code class="codehilite"><span class="n">bash</span></code>.</p>
+<p>If defined, this script will be included using <code class="codehilite">source <span class="cp">${</span><span class="n">customUtilsScript</span><span class="cp">}</span></code> in every <a href="../steps/">step</a>. Useful to include custom functions to your flow. The script must be compatible with <code class="codehilite"><span class="err">bash</span></code>.</p>
 <h2 id="maxbackupskept">maxBackupsKept<a class="headerlink" href="#maxbackupskept" title="Permanent link">&para;</a></h2>
-<p>Defines how many backups will be kept in the local folder. By default is set to 7. To disable the cleanup, use <code class="codehilite"><span class="mi">0</span></code> or <code class="codehilite"><span class="k">null</span></code> as value of this setting.</p>
+<p>Defines how many backups will be kept in the local folder. By default is set to 7. To disable the cleanup, use <code class="codehilite"><span class="err">0</span></code> or <code class="codehilite"><span class="err">null</span></code> as value of this setting.</p>
 <h2 id="env">env<a class="headerlink" href="#env" title="Permanent link">&para;</a></h2>
 <p>This section defines environment variables that will be available when running the steps scripts. It have some predefined (see below), but feel free to fill with any variables you want. The values must be string, int, float or bool. Lists and dictionaries will have undesired behaviours when used.</p>
 <p>The predefined environment variables, that are used in the predefined functions for the <a href="../steps/">steps</a> are the following:</p>
@@ -1239,21 +1239,21 @@
 <p><em>Optional</em> If set, some of the function utilities will run in a docker container instead of using native commands.</p>
 <p>See their <a href="../steps/">documentation</a> to check which functions can be run inside a container.</p>
 <h3 id="pgnetwork">pgnetwork<a class="headerlink" href="#pgnetwork" title="Permanent link">&para;</a></h3>
-<p><em>Docker, Optional</em> Defines which network will use to connect to the PostgreSQL database server (by default <code class="codehilite"><span class="k">host</span></code>).</p>
+<p><em>Docker, Optional</em> Defines which network will use to connect to the PostgreSQL database server (by default <code class="codehilite"><span class="err">host</span></code>).</p>
 <h3 id="pgimage">pgimage<a class="headerlink" href="#pgimage" title="Permanent link">&para;</a></h3>
-<p><em>Docker, Optional</em> Defines which image will use to run the container to connect to PostgreSQL database server (by default <code class="codehilite"><span class="n">postgres</span></code>).</p>
+<p><em>Docker, Optional</em> Defines which image will use to run the container to connect to PostgreSQL database server (by default <code class="codehilite"><span class="err">postgres</span></code>).</p>
 <h3 id="pghost">pghost<a class="headerlink" href="#pghost" title="Permanent link">&para;</a></h3>
-<p><em>Optional</em> The host of the PostgreSQL database server (by default <code class="codehilite"><span class="n">localhost</span></code>).</p>
+<p><em>Optional</em> The host of the PostgreSQL database server (by default <code class="codehilite"><span class="err">localhost</span></code>).</p>
 <h3 id="pguser">pguser<a class="headerlink" href="#pguser" title="Permanent link">&para;</a></h3>
-<p><em>Optional</em> The user to connect to the PostgreSQL server (by default <code class="codehilite"><span class="n">postgres</span></code>).</p>
+<p><em>Optional</em> The user to connect to the PostgreSQL server (by default <code class="codehilite"><span class="err">postgres</span></code>).</p>
 <h3 id="pgpassword">pgpassword<a class="headerlink" href="#pgpassword" title="Permanent link">&para;</a></h3>
 <p><em>Optional</em> If set, will use this as password for connecting to the PostgreSQL server.</p>
 <h3 id="mysqlnetwork">mysqlnetwork<a class="headerlink" href="#mysqlnetwork" title="Permanent link">&para;</a></h3>
-<p><em>Docker, Optional</em> Defines which network will use to connect to the MySQL/MariaDB database (by default <code class="codehilite"><span class="k">host</span></code>).</p>
+<p><em>Docker, Optional</em> Defines which network will use to connect to the MySQL/MariaDB database (by default <code class="codehilite"><span class="err">host</span></code>).</p>
 <h3 id="mysqlimage">mysqlimage<a class="headerlink" href="#mysqlimage" title="Permanent link">&para;</a></h3>
-<p><em>Docker, Optional</em> Defines which image will use to run the container to connect to the MySQL/MariaDB (default <code class="codehilite"><span class="n">mariadb</span></code>).</p>
+<p><em>Docker, Optional</em> Defines which image will use to run the container to connect to the MySQL/MariaDB (default <code class="codehilite"><span class="err">mariadb</span></code>).</p>
 <h3 id="mysqlhost">mysqlhost<a class="headerlink" href="#mysqlhost" title="Permanent link">&para;</a></h3>
-<p><em>Optional</em> The host of the MySQL/MariaDB database server (by default <code class="codehilite"><span class="mi">127</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span></code>).</p>
+<p><em>Optional</em> The host of the MySQL/MariaDB database server (by default <code class="codehilite"><span class="err">127.0.0.1</span></code>).</p>
 <h3 id="mysqluser">mysqluser<a class="headerlink" href="#mysqluser" title="Permanent link">&para;</a></h3>
 <p><em>Mandatory</em> The username to connect to the MySQL/MariaDB server.</p>
 <h3 id="mysqlpassword">mysqlpassword<a class="headerlink" href="#mysqlpassword" title="Permanent link">&para;</a></h3>
@@ -1263,7 +1263,7 @@
 <h3 id="mikrotiksshkey">mikrotiksshkey<a class="headerlink" href="#mikrotiksshkey" title="Permanent link">&para;</a></h3>
 <p><em>Optional</em> If set, will use this SSH Identity Key to connect to the Mikrotik devices.</p>
 <h3 id="mikrotikpass">mikrotikpass<a class="headerlink" href="#mikrotikpass" title="Permanent link">&para;</a></h3>
-<p><em>Optional</em> If set, will use this password to connect to the Mikrotik device (<strong>requires</strong> to have installed <code class="codehilite"><span class="n">sshpass</span></code>).</p>
+<p><em>Optional</em> If set, will use this password to connect to the Mikrotik device (<strong>requires</strong> to have installed <code class="codehilite"><span class="err">sshpass</span></code>).</p>
 <h3 id="mikrotikfullbackup">mikrotikfullbackup<a class="headerlink" href="#mikrotikfullbackup" title="Permanent link">&para;</a></h3>
 <p>If set, will do a full backup of the Mikrotik devices.</p>
 <h3 id="mikrotikexportscripts">mikrotikexportscripts<a class="headerlink" href="#mikrotikexportscripts" title="Permanent link">&para;</a></h3>
@@ -1274,7 +1274,7 @@
 <p>If set, will do a global config backup of the Mikrotik devices.</p>
 <h2 id="secrets">secrets<a class="headerlink" href="#secrets" title="Permanent link">&para;</a></h2>
 <p>Defines all secrets providers available to run the tool. Can obtain values for environment and storage providers from the secret providers in runtime, improving security by having in different places all the secrets. It is optional, but it is recommended to use any secret provider.</p>
-<p>Every type of secret provider is defined inside the <code class="codehilite"><span class="n">secrets</span></code> section, where the key of the object is the type, and the object contains the configuration of the provider and what to inject from it.</p>
+<p>Every type of secret provider is defined inside the <code class="codehilite"><span class="err">secrets</span></code> section, where the key of the object is the type, and the object contains the configuration of the provider and what to inject from it.</p>
 <h3 id="config">config<a class="headerlink" href="#config" title="Permanent link">&para;</a></h3>
 <p>The configuration section contains provider-specific configuration which allows the provider to work. See <a href="../secrets/">secret providers</a> documentation to see the available providers and their configuration.</p>
 <h3 id="env_1">env<a class="headerlink" href="#env_1" title="Permanent link">&para;</a></h3>
@@ -1285,35 +1285,35 @@
 <p>If defined, some function utilities for the <a href="../steps/">steps</a> will generate a compressed file using the configuration defined in this setting. Also, if the backups are uploaded to a storage provider, folders will be compressed using this configuration.</p>
 <p>Can be used with or without <a href="#cypher">cyphering</a>.</p>
 <h3 id="strategy">strategy<a class="headerlink" href="#strategy" title="Permanent link">&para;</a></h3>
-<p>The strategy defines which compression algorithm is going to be used. Currently, the algorithms supported are <code class="codehilite"><span class="n">gzip</span></code> (which requires <code class="codehilite"><span class="n">gzip</span></code> to be installed) and <code class="codehilite"><span class="n">xz</span></code> (which requires <code class="codehilite"><span class="n">xz</span></code> to be installed).</p>
+<p>The strategy defines which compression algorithm is going to be used. Currently, the algorithms supported are <code class="codehilite"><span class="err">gzip</span></code> (which requires <code class="codehilite"><span class="err">gzip</span></code> to be installed) and <code class="codehilite"><span class="err">xz</span></code> (which requires <code class="codehilite"><span class="err">xz</span></code> to be installed).</p>
 <p>In general, a lot of Linux distributions includes these commands, as well as in macOS. But it&rsquo;s worth to check their existence before using them.</p>
 <h3 id="level">level<a class="headerlink" href="#level" title="Permanent link">&para;</a></h3>
-<p>The compression level. Higher values indicates better but slower compressions. Values accepted for <code class="codehilite"><span class="n">gzip</span></code> are from 1 to 9. Values accepted for <code class="codehilite"><span class="n">xz</span></code> are from 0 to 9 (by default is 6, 7-9 are not recommended).</p>
+<p>The compression level. Higher values indicates better but slower compressions. Values accepted for <code class="codehilite"><span class="err">gzip</span></code> are from 1 to 9. Values accepted for <code class="codehilite"><span class="err">xz</span></code> are from 0 to 9 (by default is 6, 7-9 are not recommended).</p>
 <h2 id="cypher">cypher<a class="headerlink" href="#cypher" title="Permanent link">&para;</a></h2>
 <p>If defined, some function utilities for the <a href="../steps/">steps</a> will generate a encrypted file using the configuration defined in this setting. Also, if the backups are uploaded to a storage provider, folders will be encrypted using this configuration.</p>
 <p>Can be used with or without <a href="#compression">compression</a>.</p>
 <h3 id="strategy_1">strategy<a class="headerlink" href="#strategy_1" title="Permanent link">&para;</a></h3>
 <p>Defines which strategy to use to encrypt the data. Currently the supported cypher strategies are:</p>
 <ul>
-<li><code class="codehilite"><span class="n">gpg</span><span class="o">-</span><span class="n">passphrase</span></code> - Uses a passphrase to encrypt and decrypt the data (requires <code class="codehilite"><span class="n">gpg2</span></code>). The <code class="codehilite"><span class="n">passphrase</span></code> setting will be used as passphrase.</li>
-<li><code class="codehilite"><span class="n">gpg</span><span class="o">-</span><span class="n">keys</span></code> - Uses the keys associated to the list of emails to encrypt the data (requires <code class="codehilite"><span class="n">gpg2</span></code>). The <code class="codehilite"><span class="n">keys</span></code> list will be used as recipients/emails list that will be used to protect the data. The people in the list will be able to decrypt the data and no one else. <strong>Recommended over passphrase</strong>.</li>
+<li><code class="codehilite"><span class="err">gpg-passphrase</span></code> - Uses a passphrase to encrypt and decrypt the data (requires <code class="codehilite"><span class="err">gpg2</span></code>). The <code class="codehilite"><span class="err">passphrase</span></code> setting will be used as passphrase.</li>
+<li><code class="codehilite"><span class="err">gpg-keys</span></code> - Uses the keys associated to the list of emails to encrypt the data (requires <code class="codehilite"><span class="err">gpg2</span></code>). The <code class="codehilite"><span class="err">keys</span></code> list will be used as recipients/emails list that will be used to protect the data. The people in the list will be able to decrypt the data and no one else. <strong>Recommended over passphrase</strong>.</li>
 </ul>
 <h3 id="algorithm">algorithm<a class="headerlink" href="#algorithm" title="Permanent link">&para;</a></h3>
-<p>If defined, will use this algorithm to encrypt the data. The supported algorithms and the default algorithm can be found in <code class="codehilite"><span class="n">gpg</span> <span class="c1">--version</span></code> <code class="codehilite"><span class="n">gpg2</span> <span class="c1">--version</span></code>.</p>
+<p>If defined, will use this algorithm to encrypt the data. The supported algorithms and the default algorithm can be found in <code class="codehilite"><span class="err">gpg --version</span></code> <code class="codehilite"><span class="err">gpg2 --version</span></code>.</p>
 <h2 id="storage_1">storage<a class="headerlink" href="#storage_1" title="Permanent link">&para;</a></h2>
-<p>If defined, the last backup will be uploaded to the configured <a href="../storage/">storage providers</a>. Each provider must define the <code class="codehilite"><span class="k">type</span></code>, the <code class="codehilite"><span class="n">backupsPath</span></code> and <code class="codehilite"><span class="n">maxBackupsKept</span></code>, as well as the provider specific configuration. Unknown types will be ignored.</p>
+<p>If defined, the last backup will be uploaded to the configured <a href="../storage/">storage providers</a>. Each provider must define the <code class="codehilite"><span class="err">type</span></code>, the <code class="codehilite"><span class="err">backupsPath</span></code> and <code class="codehilite"><span class="err">maxBackupsKept</span></code>, as well as the provider specific configuration. Unknown types will be ignored.</p>
 <h3 id="type">type<a class="headerlink" href="#type" title="Permanent link">&para;</a></h3>
 <p>Defines the type of the storage provider for the entry. The list of <a href="../storage/">storage providers</a> can be found in the &lsquo;Storage providers&rsquo; section.</p>
 <h3 id="backupspath_1">backupsPath<a class="headerlink" href="#backupspath_1" title="Permanent link">&para;</a></h3>
-<p>Path in the storage provider where to save the backups. Is the same concept as the <a href="#backupspath"><code class="codehilite"><span class="n">backupsPath</span></code></a> from above.</p>
+<p>Path in the storage provider where to save the backups. Is the same concept as the <a href="#backupspath"><code class="codehilite"><span class="err">backupsPath</span></code></a> from above.</p>
 <blockquote>
 <p>Some providers need this folder to exist, while others no. If possible, try to ensure that the folder is created before uploading any backup.</p>
 </blockquote>
 <h3 id="maxbackupskept_1">maxBackupsKept<a class="headerlink" href="#maxbackupskept_1" title="Permanent link">&para;</a></h3>
-<p>Defines how many backups will be kept in the storage provider. If set to <code class="codehilite"><span class="mi">0</span></code> or <code class="codehilite"><span class="k">null</span></code> will not clean anything. There&rsquo;s no default value for this, so a value must be always provided.</p>
+<p>Defines how many backups will be kept in the storage provider. If set to <code class="codehilite"><span class="err">0</span></code> or <code class="codehilite"><span class="err">null</span></code> will not clean anything. There&rsquo;s no default value for this, so a value must be always provided.</p>
 <h2 id="hooks">hooks<a class="headerlink" href="#hooks" title="Permanent link">&para;</a></h2>
 <p>Hooks run a script or program when something is going to happen or just happened. Can be useful to trigger some post-action things, to send messages through Slack or to manipulate the output of a backup.</p>
-<p>Each key defines the hook type, and their values is the script, program or one-line script that will be run in when the hook is triggered. The hooks run on a <code class="codehilite"><span class="n">sh</span></code> shell, so hooks like <code class="codehilite"><span class="n">echo</span> <span class="err">$</span><span class="o">@</span></code> will work out of the box.</p>
+<p>Each key defines the hook type, and their values is the script, program or one-line script that will be run in when the hook is triggered. The hooks run on a <code class="codehilite"><span class="err">sh</span></code> shell, so hooks like <code class="codehilite"><span class="err">echo $@</span></code> will work out of the box.</p>
 <p>See <a href="../hooks/">hooks</a> section.</p>
                 
                   

@@ -707,7 +707,7 @@
                 
                 
                 <h1 id="actions-encrypt">Actions: Encrypt<a class="headerlink" href="#actions-encrypt" title="Permanent link">&para;</a></h1>
-<h2 id="encrypt-gpg"><code class="codehilite"><span class="n">encrypt</span><span class="o">-</span><span class="n">gpg</span></code><a class="headerlink" href="#encrypt-gpg" title="Permanent link">&para;</a></h2>
+<h2 id="encrypt-gpg"><code class="codehilite"><span class="err">encrypt-gpg</span></code><a class="headerlink" href="#encrypt-gpg" title="Permanent link">&para;</a></h2>
 <p><strong>Input</strong>: stream</p>
 <p><strong>Output</strong>: stream</p>
 <p><strong>Unaction</strong>: yes</p>
@@ -723,26 +723,26 @@
 </thead>
 <tbody>
 <tr>
-<td><code class="codehilite"><span class="n">passphrase</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">passphrase</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Defines a passphrase that will be used to decrypt the data</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">recipients</span></code></td>
+<td><code class="codehilite"><span class="err">recipients</span></code></td>
 <td><code class="codehilite"><span class="n">List</span><span class="o">[</span><span class="n">str</span><span class="o">]</span><span class="w"></span></code></td>
 <td>List of emails that will be able to decrypt the data</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">cipherAlgorithm</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">cipherAlgorithm</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Changes the cypher algorithm</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">compressAlgorithm</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">compressAlgorithm</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Changes the compress algorithm</td>
 <td>Yes</td>
 </tr>
@@ -750,7 +750,7 @@
 </table>
 <p>At least one recipient must be defined. If no recipients are defined, a passphrase must be provided. Both can be defined.</p>
 <p><strong>Description</strong></p>
-<p>Encrypts the data using <code class="codehilite"><span class="n">gpg</span></code> (gpg 2) command. If recipients are defined, then the users that own that keys will be able to decrypt the data. If passphrase is defined, then this passphrase will be used to encrypt the data. Both can be defined so if a user owns a key and is able to decrypt the data, the passphrase will be asked as well. The cipher and compress valid algorithms can be queried by issuing the command <code class="codehilite"><span class="n">gpg</span> <span class="c1">--version</span></code>. By default the compress algorithm is <code class="codehilite"><span class="n">uncompressed</span></code>.</p>
+<p>Encrypts the data using <code class="codehilite"><span class="err">gpg</span></code> (gpg 2) command. If recipients are defined, then the users that own that keys will be able to decrypt the data. If passphrase is defined, then this passphrase will be used to encrypt the data. Both can be defined so if a user owns a key and is able to decrypt the data, the passphrase will be asked as well. The cipher and compress valid algorithms can be queried by issuing the command <code class="codehilite"><span class="err">gpg --version</span></code>. By default the compress algorithm is <code class="codehilite"><span class="err">uncompressed</span></code>.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>The recipient keys must be imported previously. The action will not import any key.</p>

@@ -723,27 +723,27 @@
 <p>SSH File Transfer Protocol</p>
 </blockquote>
 <p><a href="https://en.wikipedia.org/wiki/SSH_File_Transfer_Protocol">SFTP</a> is a protocol that works over <a href="https://en.wikipedia.org/wiki/Secure_Shell">SSH</a> to transfer and manage files over the network. Is not the same as FTP or FTPS, but its similar. Most servers have enabled the SFTP mode if they have a SSH server. <a href="https://en.wikipedia.org/wiki/OpenSSH">OpenSSH</a> implementation have the SFTP module and can be enabled if desired.</p>
-<p>In order to connect to a SFTP server and use it as provider, the <code class="codehilite"><span class="k">host</span></code> and <code class="codehilite"><span class="k">user</span></code> must be defined, and use one of the following authentication methods.</p>
-<p>The <code class="codehilite"><span class="n">backupPath</span></code> must exist in the server, and the user must have write permissions on it.</p>
+<p>In order to connect to a SFTP server and use it as provider, the <code class="codehilite"><span class="err">host</span></code> and <code class="codehilite"><span class="err">user</span></code> must be defined, and use one of the following authentication methods.</p>
+<p>The <code class="codehilite"><span class="err">backupPath</span></code> must exist in the server, and the user must have write permissions on it.</p>
 <p>The authentication is attempted using the following order:</p>
 <ul>
-<li>If <code class="codehilite"><span class="n">privateKey</span></code> or <code class="codehilite"><span class="n">privateKeyFile</span></code> is defined, then this method will be used. If the private key is cyphered, use <code class="codehilite"><span class="n">password</span></code> as the passphrase of the key.</li>
-<li>If <code class="codehilite"><span class="n">allowAgent</span></code> is true, then will use the SSH Agent to connect to the server.</li>
-<li>Any key found in <code class="codehilite"><span class="o">~/</span><span class="p">.</span><span class="n">ssh</span></code>.</li>
-<li>If the <code class="codehilite"><span class="n">password</span></code> is defined, then the classic username/password login will be used (discouraged).</li>
+<li>If <code class="codehilite"><span class="err">privateKey</span></code> or <code class="codehilite"><span class="err">privateKeyFile</span></code> is defined, then this method will be used. If the private key is cyphered, use <code class="codehilite"><span class="err">password</span></code> as the passphrase of the key.</li>
+<li>If <code class="codehilite"><span class="err">allowAgent</span></code> is true, then will use the SSH Agent to connect to the server.</li>
+<li>Any key found in <code class="codehilite"><span class="err">~/.ssh</span></code>.</li>
+<li>If the <code class="codehilite"><span class="err">password</span></code> is defined, then the classic username/password login will be used (discouraged).</li>
 </ul>
-<p>The known-hosts list is loaded by default from the default location <code class="codehilite"><span class="o">~/</span><span class="p">.</span><span class="n">ssh</span><span class="o">/</span><span class="n">known_hosts</span></code>. If <code class="codehilite"><span class="n">hostKeysFilePath</span></code> is defined, then this file will be used instead. If <code class="codehilite"><span class="n">enableHostKeys</span></code> is set to false, then no known-hosts will be loaded.</p>
-<p>The <code class="codehilite"><span class="n">knownHostsPolicy</span></code> will set the policy that will be used when the SSH connection is set, but the host is being checked as a known or not-known host. The following policies are allowed:</p>
+<p>The known-hosts list is loaded by default from the default location <code class="codehilite"><span class="err">~/.ssh/known_hosts</span></code>. If <code class="codehilite"><span class="err">hostKeysFilePath</span></code> is defined, then this file will be used instead. If <code class="codehilite"><span class="err">enableHostKeys</span></code> is set to false, then no known-hosts will be loaded.</p>
+<p>The <code class="codehilite"><span class="err">knownHostsPolicy</span></code> will set the policy that will be used when the SSH connection is set, but the host is being checked as a known or not-known host. The following policies are allowed:</p>
 <ul>
-<li><code class="codehilite"><span class="n">reject</span></code> will close the connection if the host is not-known (default behaviour).</li>
-<li><code class="codehilite"><span class="n">auto</span><span class="o">-</span><span class="k">add</span></code> will add to the list of known-hosts if the host is not-known.</li>
-<li><code class="codehilite"><span class="k">ignore</span></code> will print a warning if the host is not-known.</li>
+<li><code class="codehilite"><span class="err">reject</span></code> will close the connection if the host is not-known (default behaviour).</li>
+<li><code class="codehilite"><span class="err">auto-add</span></code> will add to the list of known-hosts if the host is not-known.</li>
+<li><code class="codehilite"><span class="err">ignore</span></code> will print a warning if the host is not-known.</li>
 </ul>
-<p><strong>Note</strong>: if the <code class="codehilite"><span class="n">knownHostsPolicy</span></code> is <code class="codehilite"><span class="n">auto</span><span class="o">-</span><span class="k">add</span></code> and <code class="codehilite"><span class="n">hostKeysFilePath</span></code> is defined, then the new host will be saved into the file.</p>
+<p><strong>Note</strong>: if the <code class="codehilite"><span class="err">knownHostsPolicy</span></code> is <code class="codehilite"><span class="err">auto-add</span></code> and <code class="codehilite"><span class="err">hostKeysFilePath</span></code> is defined, then the new host will be saved into the file.</p>
 <h2 id="dependencies">Dependencies<a class="headerlink" href="#dependencies" title="Permanent link">&para;</a></h2>
 <p>In order to use SFTP, you must install the following python packages:</p>
 <ul>
-<li><code class="codehilite"><span class="n">paramiko</span></code></li>
+<li><code class="codehilite"><span class="err">paramiko</span></code></li>
 </ul>
 <h2 id="configuration-schema">Configuration schema<a class="headerlink" href="#configuration-schema" title="Permanent link">&para;</a></h2>
 <div class="codehilite"><pre><span></span><span class="p">{</span>

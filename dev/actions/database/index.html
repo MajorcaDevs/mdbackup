@@ -735,7 +735,7 @@
                 
                 
                 <h1 id="actions-database">Actions: Database<a class="headerlink" href="#actions-database" title="Permanent link">&para;</a></h1>
-<h2 id="postgres-database"><code class="codehilite"><span class="n">postgres</span><span class="o">-</span><span class="k">database</span></code><a class="headerlink" href="#postgres-database" title="Permanent link">&para;</a></h2>
+<h2 id="postgres-database"><code class="codehilite"><span class="err">postgres-database</span></code><a class="headerlink" href="#postgres-database" title="Permanent link">&para;</a></h2>
 <p><strong>Input</strong>: Nothing</p>
 <p><strong>Output</strong>: stream</p>
 <p><strong>Unaction</strong>: To be implemented&hellip;</p>
@@ -751,61 +751,61 @@
 </thead>
 <tbody>
 <tr>
-<td><code class="codehilite"><span class="k">database</span></code> </td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">database</span></code> </td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Database to connect to and make a backup</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="k">user</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">user</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>User for the database connection</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">password</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">password</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Password for the database connection</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="k">host</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">host</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Hostname of the psql server</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">port</span></code></td>
-<td><code class="codehilite"><span class="nb">int</span></code></td>
+<td><code class="codehilite"><span class="err">port</span></code></td>
+<td><code class="codehilite"><span class="err">int</span></code></td>
 <td>Port of the server</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">docker</span></code></td>
-<td><code class="codehilite"><span class="n">bool</span></code></td>
-<td>If set to <code class="codehilite"><span class="k">true</span></code>, will use a container instead of native tools</td>
+<td><code class="codehilite"><span class="err">docker</span></code></td>
+<td><code class="codehilite"><span class="err">bool</span></code></td>
+<td>If set to <code class="codehilite"><span class="err">true</span></code>, will use a container instead of native tools</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">runAs</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
-<td>If running outside docker, runs the command with <code class="codehilite"><span class="n">sudo</span></code> as the user provided</td>
+<td><code class="codehilite"><span class="err">runAs</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
+<td>If running outside docker, runs the command with <code class="codehilite"><span class="err">sudo</span></code> as the user provided</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">image</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">image</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Changes the image to be used in the container</td>
 <td>Yes</td>
 </tr>
 </tbody>
 </table>
-<p>When <code class="codehilite"><span class="n">docker</span></code> is <code class="codehilite"><span class="k">true</span></code>, accepts any of the parameters of the <a href="../command#docker">docker</a> action, except for <code class="codehilite"><span class="n">args</span></code> and <code class="codehilite"><span class="n">command</span></code> which is set automatically by this action.</p>
+<p>When <code class="codehilite"><span class="err">docker</span></code> is <code class="codehilite"><span class="err">true</span></code>, accepts any of the parameters of the <a href="../command#docker">docker</a> action, except for <code class="codehilite"><span class="err">args</span></code> and <code class="codehilite"><span class="err">command</span></code> which is set automatically by this action.</p>
 <p><strong>Description</strong></p>
-<p>Uses <code class="codehilite"><span class="n">pg_dump</span></code> to make a full backup of a PostgreSQL database into a SQL file. By default uses the local unix socket to connect to the server, but it can be changed by setting the <code class="codehilite"><span class="k">host</span></code> parameter. By default, the tool runs as the current user, but it can be changed by setting the <code class="codehilite"><span class="n">runAs</span></code> parameter to the desired user (useful for unix socket connections). This action requires to have installed <code class="codehilite"><span class="n">pg_dump</span></code> on the host, but to avoid this, docker can be used instead. When using docker, the backup will be done in a container based on the <code class="codehilite"><span class="n">postgres</span><span class="o">:</span><span class="n">alpine</span></code> image.</p>
+<p>Uses <code class="codehilite"><span class="err">pg_dump</span></code> to make a full backup of a PostgreSQL database into a SQL file. By default uses the local unix socket to connect to the server, but it can be changed by setting the <code class="codehilite"><span class="err">host</span></code> parameter. By default, the tool runs as the current user, but it can be changed by setting the <code class="codehilite"><span class="err">runAs</span></code> parameter to the desired user (useful for unix socket connections). This action requires to have installed <code class="codehilite"><span class="err">pg_dump</span></code> on the host, but to avoid this, docker can be used instead. When using docker, the backup will be done in a container based on the <code class="codehilite"><span class="n">postgres</span><span class="o">:</span><span class="n">alpine</span></code> image.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>If not using docker, <code class="codehilite"><span class="n">pg_dump</span></code> must be installed on the host.</p>
+<p>If not using docker, <code class="codehilite"><span class="err">pg_dump</span></code> must be installed on the host.</p>
 <p>If using docker, docker must be installed on the host and the user running the backups must have access to the docker socket.</p>
 </div>
 <div class="admonition example">
@@ -838,7 +838,7 @@
 </pre></div>
 
 </div>
-<h2 id="mysql-database"><code class="codehilite"><span class="n">mysql</span><span class="o">-</span><span class="k">database</span></code><a class="headerlink" href="#mysql-database" title="Permanent link">&para;</a></h2>
+<h2 id="mysql-database"><code class="codehilite"><span class="err">mysql-database</span></code><a class="headerlink" href="#mysql-database" title="Permanent link">&para;</a></h2>
 <p><strong>Input</strong>: Nothing</p>
 <p><strong>Output</strong>: stream</p>
 <p><strong>Unaction</strong>: To be implemented&hellip;</p>
@@ -854,55 +854,55 @@
 </thead>
 <tbody>
 <tr>
-<td><code class="codehilite"><span class="k">host</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">host</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Hostname of the mysql/mariadb server</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="k">database</span></code> </td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">database</span></code> </td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Database to connect to and make a backup</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="k">user</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">user</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>User for the database connection</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">password</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">password</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Password for the database connection</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">port</span></code></td>
-<td><code class="codehilite"><span class="nb">int</span></code></td>
+<td><code class="codehilite"><span class="err">port</span></code></td>
+<td><code class="codehilite"><span class="err">int</span></code></td>
 <td>Port of the server</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">docker</span></code></td>
-<td><code class="codehilite"><span class="n">bool</span></code></td>
-<td>If set to <code class="codehilite"><span class="k">true</span></code>, will use a container instead of native tools</td>
+<td><code class="codehilite"><span class="err">docker</span></code></td>
+<td><code class="codehilite"><span class="err">bool</span></code></td>
+<td>If set to <code class="codehilite"><span class="err">true</span></code>, will use a container instead of native tools</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">image</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">image</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Changes the image to be used in the container</td>
 <td>Yes</td>
 </tr>
 </tbody>
 </table>
-<p>When <code class="codehilite"><span class="n">docker</span></code> is <code class="codehilite"><span class="k">true</span></code>, accepts any of the parameters of the <a href="../command#docker">docker</a> action, except for <code class="codehilite"><span class="n">args</span></code> and <code class="codehilite"><span class="n">command</span></code> which is set automatically by this action.</p>
+<p>When <code class="codehilite"><span class="err">docker</span></code> is <code class="codehilite"><span class="err">true</span></code>, accepts any of the parameters of the <a href="../command#docker">docker</a> action, except for <code class="codehilite"><span class="err">args</span></code> and <code class="codehilite"><span class="err">command</span></code> which is set automatically by this action.</p>
 <p><strong>Description</strong></p>
-<p>Uses <code class="codehilite"><span class="n">mysqldump</span></code> to make a full backup of a MySQL/MariaDB database into a SQL file. By default, uses the current user as login user for the database connection. This action requires to have installed <code class="codehilite"><span class="n">mysqldump</span></code> on the host, but docker can be used to run the tool inside a container. By default uses <code class="codehilite"><span class="n">mariadb</span><span class="o">:</span><span class="n">alpine</span></code> image.</p>
+<p>Uses <code class="codehilite"><span class="err">mysqldump</span></code> to make a full backup of a MySQL/MariaDB database into a SQL file. By default, uses the current user as login user for the database connection. This action requires to have installed <code class="codehilite"><span class="err">mysqldump</span></code> on the host, but docker can be used to run the tool inside a container. By default uses <code class="codehilite"><span class="n">mariadb</span><span class="o">:</span><span class="n">alpine</span></code> image.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>If not using docker, <code class="codehilite"><span class="n">mysqldump</span></code> must be installed on the host.</p>
+<p>If not using docker, <code class="codehilite"><span class="err">mysqldump</span></code> must be installed on the host.</p>
 <p>If using docker, docker must be installed on the host and the user running the backups must have access to the docker socket.</p>
 </div>
 <div class="admonition example">
@@ -939,7 +939,7 @@
 </pre></div>
 
 </div>
-<h2 id="influxdb"><code class="codehilite"><span class="n">influxdb</span></code><a class="headerlink" href="#influxdb" title="Permanent link">&para;</a></h2>
+<h2 id="influxdb"><code class="codehilite"><span class="err">influxdb</span></code><a class="headerlink" href="#influxdb" title="Permanent link">&para;</a></h2>
 <p><strong>Input</strong>: Nothing</p>
 <p><strong>Output</strong>: Nothing</p>
 <p><strong>Unaction</strong>: To be implemented&hellip;</p>
@@ -955,72 +955,72 @@
 </thead>
 <tbody>
 <tr>
-<td><code class="codehilite"><span class="k">host</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">host</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Host:Port to the influxdb server</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="k">to</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">to</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Folder where to place the backup inside the backup folder</td>
 <td>No</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="k">database</span></code> </td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">database</span></code> </td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Database to backup (if not set, will backup all databases)</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">retention</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">retention</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Retention policy for the backup (uses all by default)</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">shard</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
-<td>If <code class="codehilite"><span class="n">retention</span></code> is defined, will backup the selected shard (by ID)</td>
+<td><code class="codehilite"><span class="err">shard</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
+<td>If <code class="codehilite"><span class="err">retention</span></code> is defined, will backup the selected shard (by ID)</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="k">start</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">start</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Include all points starting with the specified timestamp (<a href="https://www.ietf.org/rfc/rfc3339.txt">RFC3339 format</a>)</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="k">end</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">end</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Exclude all points after the specified timestamp (<a href="https://www.ietf.org/rfc/rfc3339.txt">RFC3339 format</a>)</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">docker</span></code></td>
-<td><code class="codehilite"><span class="n">bool</span></code></td>
-<td>If set to <code class="codehilite"><span class="k">true</span></code>, will use a container instead of native tools</td>
+<td><code class="codehilite"><span class="err">docker</span></code></td>
+<td><code class="codehilite"><span class="err">bool</span></code></td>
+<td>If set to <code class="codehilite"><span class="err">true</span></code>, will use a container instead of native tools</td>
 <td>Yes</td>
 </tr>
 <tr>
-<td><code class="codehilite"><span class="n">image</span></code></td>
-<td><code class="codehilite"><span class="n">str</span></code></td>
+<td><code class="codehilite"><span class="err">image</span></code></td>
+<td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Changes the image to be used in the container</td>
 <td>Yes</td>
 </tr>
 </tbody>
 </table>
-<p>When <code class="codehilite"><span class="n">docker</span></code> is <code class="codehilite"><span class="k">true</span></code>, accepts any of the parameters of the <a href="../command#docker">docker</a> action, except for <code class="codehilite"><span class="n">args</span></code> and <code class="codehilite"><span class="n">command</span></code> which is set automatically by this action.</p>
+<p>When <code class="codehilite"><span class="err">docker</span></code> is <code class="codehilite"><span class="err">true</span></code>, accepts any of the parameters of the <a href="../command#docker">docker</a> action, except for <code class="codehilite"><span class="err">args</span></code> and <code class="codehilite"><span class="err">command</span></code> which is set automatically by this action.</p>
 <p><strong>Description</strong></p>
-<p>Uses <code class="codehilite"><span class="n">influxd</span></code> to make a backup of one or all databases into a folder located in the current backup folder. The action requires <code class="codehilite"><span class="n">influxd</span></code> to be installed in the host, or instead docker can be used. Using docker, the <code class="codehilite"><span class="n">influxdb</span><span class="o">:</span><span class="n">alpine</span></code> image will be used by default. See <a href="https://docs.influxdata.com/influxdb/v1.7/administration/backup_and_restore/#backup" target="_blank" rel="noreferer">Backup up and restoring in InfluxDB OSS (external)</a> for more details for the parameters.</p>
+<p>Uses <code class="codehilite"><span class="err">influxd</span></code> to make a backup of one or all databases into a folder located in the current backup folder. The action requires <code class="codehilite"><span class="err">influxd</span></code> to be installed in the host, or instead docker can be used. Using docker, the <code class="codehilite"><span class="n">influxdb</span><span class="o">:</span><span class="n">alpine</span></code> image will be used by default. See <a href="https://docs.influxdata.com/influxdb/v1.7/administration/backup_and_restore/#backup" target="_blank" rel="noreferer">Backup up and restoring in InfluxDB OSS (external)</a> for more details for the parameters.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>If not using docker, <code class="codehilite"><span class="n">influxd</span></code> must be installed on the host.</p>
+<p>If not using docker, <code class="codehilite"><span class="err">influxd</span></code> must be installed on the host.</p>
 <p>If using docker, docker must be installed on the host and the user running the backups must have access to the docker socket.</p>
 </div>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
-<p>The backups uses the new backup format, which is compatible with the enterprise version of influxdb (<code class="codehilite"><span class="o">-</span><span class="n">portable</span></code>).</p>
+<p>The backups uses the new backup format, which is compatible with the enterprise version of influxdb (<code class="codehilite"><span class="err">-portable</span></code>).</p>
 </div>
 <div class="admonition example">
 <p class="admonition-title">Example</p>

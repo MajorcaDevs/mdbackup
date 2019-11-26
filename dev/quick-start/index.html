@@ -774,23 +774,23 @@
                 
                 <h1 id="quick-start-guide">Quick start guide<a class="headerlink" href="#quick-start-guide" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p><code class="codehilite"><span class="n">mdbackup</span></code> is tested under Linux and macOS, but it should work on any platform where Python has support and has <code class="codehilite"><span class="n">bash</span></code>, except for Windows.</p>
+<p><code class="codehilite"><span class="err">mdbackup</span></code> is tested under Linux and macOS, but it should work on any platform where Python has support and has <code class="codehilite"><span class="err">bash</span></code>, except for Windows.</p>
 </blockquote>
-<p>Before installing the tool, make sure to have installed at least <code class="codehilite"><span class="n">rsync</span></code> and <code class="codehilite"><span class="n">bash</span></code>. Most Linux distributions have  both installed, some only <code class="codehilite"><span class="n">bash</span></code>. On macOS, both come installed by default. Also check that Python 3.6 or higher is installed (use [<code class="codehilite"><span class="n">brew</span></code>] on macOS for that).</p>
+<p>Before installing the tool, make sure to have installed at least <code class="codehilite"><span class="err">rsync</span></code> and <code class="codehilite"><span class="err">bash</span></code>. Most Linux distributions have  both installed, some only <code class="codehilite"><span class="err">bash</span></code>. On macOS, both come installed by default. Also check that Python 3.6 or higher is installed (use [<code class="codehilite"><span class="err">brew</span></code>] on macOS for that).</p>
 <p>In this guide, a virtual environment will be used to install and use the tool. It is not recommended to install it directly in the system.</p>
-<p>First prepare the virtual environment. You can use <code class="codehilite"><span class="n">venv</span></code> or <code class="codehilite"><span class="n">virtualenv</span></code>, but the first will be used.</p>
+<p>First prepare the virtual environment. You can use <code class="codehilite"><span class="err">venv</span></code> or <code class="codehilite"><span class="err">virtualenv</span></code>, but the first will be used.</p>
 <div class="codehilite"><pre><span></span>python -m venv .venv
 python -m virtualenv .venv
 </pre></div>
 
 <blockquote>
-<p>Note: <code class="codehilite"><span class="n">python</span></code> here it is referred to the python 3 executable. In some platforms will be <code class="codehilite"><span class="n">python3</span></code>.</p>
+<p>Note: <code class="codehilite"><span class="err">python</span></code> here it is referred to the python 3 executable. In some platforms will be <code class="codehilite"><span class="err">python3</span></code>.</p>
 </blockquote>
 <p>Once the environment is created, we must &ldquo;activate&rdquo; it:</p>
 <div class="codehilite"><pre><span></span>. .venv/bin/activate
 </pre></div>
 
-<p>Now you can use <code class="codehilite"><span class="n">python</span></code> and <code class="codehilite"><span class="n">pip</span></code> and everything will work from and install to the virtual environment. Now you can download the tool and install it:</p>
+<p>Now you can use <code class="codehilite"><span class="err">python</span></code> and <code class="codehilite"><span class="err">pip</span></code> and everything will work from and install to the virtual environment. Now you can download the tool and install it:</p>
 <div class="codehilite"><pre><span></span><span class="c1">#Download using curl...</span>
 curl -sSL https://github.com/MajorcaDevs/mdbackup/releases/latest/download/mdbackup.whl &gt; mdbackup.whl
 <span class="c1">#...or wget</span>
@@ -811,8 +811,8 @@ mdbackup --help
 <p>In order to get your first backup, the tool must be configured properly. To achieve this, you will learn the core concepts used in the tool and how to use them to fit your needs.</p>
 <p>The tool needs three folders to work:</p>
 <ul>
-<li><code class="codehilite"><span class="n">config</span></code>: a folder where the configuration, and other files related to configuration, tokens or cookies are going to be stored.</li>
-<li><code class="codehilite"><span class="n">config</span><span class="o">/</span><span class="n">tasks</span></code>: a folder where the backup logic is stored in form of yaml or json files.</li>
+<li><code class="codehilite"><span class="err">config</span></code>: a folder where the configuration, and other files related to configuration, tokens or cookies are going to be stored.</li>
+<li><code class="codehilite"><span class="err">config/tasks</span></code>: a folder where the backup logic is stored in form of yaml or json files.</li>
 <li>*put a full path here*: the folder, placed in some folder, where the backups are going to be stored.</li>
 </ul>
 <p>The folder in where you are right now should have the following structure:</p>
@@ -821,18 +821,18 @@ mdbackup --help
 <li>&hellip;</li>
 </ul>
 </li>
-<li><code class="codehilite"><span class="n">config</span><span class="o">/</span></code><ul>
-<li><code class="codehilite"><span class="n">config</span><span class="p">.</span><span class="n">json</span></code></li>
-<li><code class="codehilite"><span class="n">tasks</span><span class="o">/</span></code><ul>
-<li><code class="codehilite"><span class="mi">01</span><span class="p">.</span><span class="n">yaml</span></code></li>
+<li><code class="codehilite"><span class="err">config/</span></code><ul>
+<li><code class="codehilite"><span class="err">config.json</span></code></li>
+<li><code class="codehilite"><span class="err">tasks/</span></code><ul>
+<li><code class="codehilite"><span class="err">01.yaml</span></code></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><code class="codehilite"><span class="n">mdbackup</span><span class="p">.</span><span class="n">whl</span></code></li>
+<li><code class="codehilite"><span class="err">mdbackup.whl</span></code></li>
 </ul>
-<p>And the third folder, it does not matter where is placed, but it will be used soon to store backups. It can be a network storage, an external drive or a partition in some local drive. It is recommended to store them outside the root partition (<code class="codehilite"><span class="o">/</span></code>), if possible.</p>
-<p>Did you notice the <code class="codehilite"><span class="n">config</span><span class="p">.</span><span class="n">json</span></code>? This file holds the <a href="../configuration/">configuration</a> of the tool. Write in it the following:</p>
+<p>And the third folder, it does not matter where is placed, but it will be used soon to store backups. It can be a network storage, an external drive or a partition in some local drive. It is recommended to store them outside the root partition (<code class="codehilite"><span class="err">/</span></code>), if possible.</p>
+<p>Did you notice the <code class="codehilite"><span class="err">config.json</span></code>? This file holds the <a href="../configuration/">configuration</a> of the tool. Write in it the following:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;backupsPath&quot;</span><span class="p">:</span> <span class="s2">&quot;/the/path/to/the/folder/where/the/backups/are/going/to/be/stored&quot;</span><span class="p">,</span>
   <span class="nt">&quot;logLevel&quot;</span><span class="p">:</span> <span class="s2">&quot;DEBUG&quot;</span><span class="p">,</span>
@@ -842,15 +842,15 @@ mdbackup --help
 
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>You can download the <a href="https://github.com/MajorcaDevs/mdbackup/releases/latest/download/config.schema.json">JSON Schema</a> and use it to validate the structure: <code class="codehilite"><span class="ss">&quot;$schema&quot;</span><span class="p">:</span> <span class="ss">&quot;./config.schema.json&quot;</span><span class="p">,</span></code>. You can grab it from the latest release.</p>
+<p>You can download the <a href="https://github.com/MajorcaDevs/mdbackup/releases/latest/download/config.schema.json">JSON Schema</a> and use it to validate the structure: <code class="codehilite"><span class="err">&quot;$schema&quot;: &quot;./config.schema.json&quot;,</span></code>. You can grab it from the latest release.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">yaml is an option</p>
-<p>You can also use <code class="codehilite"><span class="n">yaml</span></code> for configuration and tasks file, if you prefer.</p>
+<p>You can also use <code class="codehilite"><span class="err">yaml</span></code> for configuration and tasks file, if you prefer.</p>
 </div>
 <p>This configuration is really basic and tells the tool where to place the backups, which log level to use (will be very verbose, but it is OK for now) and to inject no extra environment variables.</p>
-<p>Now we need to define the logic to create backups. We use the term <a href="../tasks">tasks</a> to refer a group of <a href="../actions">actions</a> that will run in order to backup something. Tasks can be grouped in a tasks definition file and stored in a json or yaml file inside the <code class="codehilite"><span class="n">config</span><span class="o">/</span><span class="n">tasks</span></code> folder. An action is just something that accepts an input and some parameters and transforms the input to something else, but it can be also something that writes the input to a file or a folder, or a source of data that does not receive any input and writes data as output.</p>
-<p>The steps are executed following the natural order (alphanumeric order) of the names of the files. For example, <code class="codehilite"><span class="mi">01</span><span class="p">.</span><span class="n">json</span></code> will run before <code class="codehilite"><span class="mi">02</span><span class="p">.</span><span class="n">json</span></code>. It can be as many files as desired, or just one. It does not matter. So now we will give some contents to <code class="codehilite"><span class="mi">01</span><span class="p">.</span><span class="n">yaml</span></code> (the file shown in the tree).</p>
+<p>Now we need to define the logic to create backups. We use the term <a href="../tasks">tasks</a> to refer a group of <a href="../actions">actions</a> that will run in order to backup something. Tasks can be grouped in a tasks definition file and stored in a json or yaml file inside the <code class="codehilite"><span class="err">config/tasks</span></code> folder. An action is just something that accepts an input and some parameters and transforms the input to something else, but it can be also something that writes the input to a file or a folder, or a source of data that does not receive any input and writes data as output.</p>
+<p>The steps are executed following the natural order (alphanumeric order) of the names of the files. For example, <code class="codehilite"><span class="err">01.json</span></code> will run before <code class="codehilite"><span class="err">02.json</span></code>. It can be as many files as desired, or just one. It does not matter. So now we will give some contents to <code class="codehilite"><span class="err">01.yaml</span></code> (the file shown in the tree).</p>
 <div class="superfences-tabs">
 <input name="__tabs_1" type="radio" id="__tab_1_0" checked="checked" />
 <label for="__tab_1_0">YAML syntax</label>
@@ -883,17 +883,17 @@ mdbackup --help
 </pre></div></div>
 </div>
 <p>This task will copy your home directory and all its contents into the backup folder. You can use any other folder you want just to try, this is an example.</p>
-<p>Now try running the tool: <code class="codehilite"><span class="n">mdbackup</span></code>. If everything is well configured, you will have a new folder in the backups folder with the date and time of now and with your folder copied. Well, try now to make a backup again. If the folder being copied is large enough, you will notice that this time, the backup took less time than the first time. This is because the action <code class="codehilite"><span class="k">to</span><span class="o">-</span><span class="n">directory</span></code> takes into account the previous backup and will try to do an incremental backup: if the file to copy already exists in the previous backup and has not been modified since the last time, then it will do a <code class="codehilite"><span class="n">hard</span><span class="o">-</span><span class="n">link</span></code> instead of a copy. This trick only works for some of the actions, check their documentation to know what are the ones doing this.</p>
-<p>Note that <code class="codehilite"><span class="k">current</span></code> folder is always present and is a soft link to the latest backup. So it&rsquo;s easy to access to the latest backup from the file explorer or from the command line :)</p>
+<p>Now try running the tool: <code class="codehilite"><span class="err">mdbackup</span></code>. If everything is well configured, you will have a new folder in the backups folder with the date and time of now and with your folder copied. Well, try now to make a backup again. If the folder being copied is large enough, you will notice that this time, the backup took less time than the first time. This is because the action <code class="codehilite"><span class="err">to-directory</span></code> takes into account the previous backup and will try to do an incremental backup: if the file to copy already exists in the previous backup and has not been modified since the last time, then it will do a <code class="codehilite"><span class="err">hard-link</span></code> instead of a copy. This trick only works for some of the actions, check their documentation to know what are the ones doing this.</p>
+<p>Note that <code class="codehilite"><span class="err">current</span></code> folder is always present and is a soft link to the latest backup. So it&rsquo;s easy to access to the latest backup from the file explorer or from the command line :)</p>
 <p>Now you have backups of whatever you want! Just configure the tool and write the right scripts to fit your needs.</p>
 <div class="admonition warning">
 <p class="admonition-title">SuperUser rights may be needed</p>
-<p>It is possible that you will need to run the tool as root to access some system folders. Remember that the virtual environment is not inherited when using <code class="codehilite"><span class="n">sudo</span></code>. Make your own script, or checkout one of <a href="https://github.com/MajorcaDevs/mdbackup/tree/master/contrib">the contrib folder</a>.</p>
+<p>It is possible that you will need to run the tool as root to access some system folders. Remember that the virtual environment is not inherited when using <code class="codehilite"><span class="err">sudo</span></code>. Make your own script, or checkout one of <a href="https://github.com/MajorcaDevs/mdbackup/tree/master/contrib">the contrib folder</a>.</p>
 </div>
 <h2 id="injecting-environment-variables">Injecting environment variables<a class="headerlink" href="#injecting-environment-variables" title="Permanent link">&para;</a></h2>
-<p><a href="../actions">Actions</a> receive parameters to be able to do their job. These parameters can be defined previously in <code class="codehilite"><span class="n">env</span></code> sections either in the config file, in the tasks definition file or inside a task. The value of a variable can refer to a secret, which is identified by using a <code class="codehilite"><span class="o">#</span></code> hashtag at the begining of the string. Secrets won&rsquo;t be covered in the quick start, but is good to know :)</p>
-<p>Let&rsquo;s try to make a backup from a postgres database with the predefined action. For this example, <code class="codehilite"><span class="n">pg_dump</span></code> must be installed on the system.</p>
-<p>Time to add a new tasks file called <code class="codehilite"><span class="mi">02</span><span class="p">.</span><span class="n">yaml</span></code> with the following contents:</p>
+<p><a href="../actions">Actions</a> receive parameters to be able to do their job. These parameters can be defined previously in <code class="codehilite"><span class="err">env</span></code> sections either in the config file, in the tasks definition file or inside a task. The value of a variable can refer to a secret, which is identified by using a <code class="codehilite"><span class="err">#</span></code> hashtag at the begining of the string. Secrets won&rsquo;t be covered in the quick start, but is good to know :)</p>
+<p>Let&rsquo;s try to make a backup from a postgres database with the predefined action. For this example, <code class="codehilite"><span class="err">pg_dump</span></code> must be installed on the system.</p>
+<p>Time to add a new tasks file called <code class="codehilite"><span class="err">02.yaml</span></code> with the following contents:</p>
 <div class="superfences-tabs">
 <input name="__tabs_2" type="radio" id="__tab_2_0" checked="checked" />
 <label for="__tab_2_0">YAML syntax</label>
@@ -961,7 +961,7 @@ mdbackup --help
 </pre></div></div>
 </div>
 <p>The tool will read the environment variables, and inject them in the actions parameters.</p>
-<p>If everything went well, you now will have a <code class="codehilite"><span class="n">test1</span><span class="p">.</span><span class="k">sql</span></code> and <code class="codehilite"><span class="n">test2</span><span class="p">.</span><span class="k">sql</span></code> files in the backup folder.</p>
+<p>If everything went well, you now will have a <code class="codehilite"><span class="err">test1.sql</span></code> and <code class="codehilite"><span class="err">test2.sql</span></code> files in the backup folder.</p>
 <div class="admonition info">
 <p class="admonition-title">YAML is better for tasks</p>
 <p>Check the YAML and JSON syntax in the examples for the tasks&hellip; We think that YAML is better for writing tasks, lesser to write and easier to understand.</p>
@@ -978,8 +978,8 @@ mdbackup --help
 <span class="nn">...</span>
 </pre></div>
 
-<p>The <a href="../actions/compress#compress-gz"><code class="codehilite"><span class="n">compress</span><span class="o">-</span><span class="n">gz</span></code></a> action receives data as input and compresses it using <code class="codehilite"><span class="n">gzip</span></code> command. And that&rsquo;s how you compress some data.</p>
-<p>In addition, when uploading folders to a storage provider, they automatically are archived into a <code class="codehilite"><span class="n">tar</span></code> file. If you want to save some bits, you can also compress them by adding the following configuration in the configuration file:</p>
+<p>The <a href="../actions/compress#compress-gz"><code class="codehilite"><span class="err">compress-gz</span></code></a> action receives data as input and compresses it using <code class="codehilite"><span class="err">gzip</span></code> command. And that&rsquo;s how you compress some data.</p>
+<p>In addition, when uploading folders to a storage provider, they automatically are archived into a <code class="codehilite"><span class="err">tar</span></code> file. If you want to save some bits, you can also compress them by adding the following configuration in the configuration file:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;...&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">,</span>
   <span class="nt">&quot;compression&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -991,7 +991,7 @@ mdbackup --help
 
 <h2 id="encrypt">Encrypt<a class="headerlink" href="#encrypt" title="Permanent link">&para;</a></h2>
 <p>You need <strong>OpenGPG 2</strong> in order to cypher files. And as well as the compression, will be used automatically to upload to storage providers.</p>
-<p>Most Linux distributions have installed <code class="codehilite"><span class="n">gpg</span></code> tools, but you must check the version. On macOS, install <a href="https://gpgtools.org">GPGTools</a>.</p>
+<p>Most Linux distributions have installed <code class="codehilite"><span class="err">gpg</span></code> tools, but you must check the version. On macOS, install <a href="https://gpgtools.org">GPGTools</a>.</p>
 <p>There&rsquo;s two ways to encrypt data, in this guide will be using the passphrase. Here is a configuration example:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;...&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">,</span>
@@ -1015,7 +1015,7 @@ mdbackup --help
 <span class="nn">...</span>
 </pre></div>
 
-<p>The <a href="../actions/encrypt#encrypt-gpg"><code class="codehilite"><span class="n">encrypt</span><span class="o">-</span><span class="n">gpg</span></code></a> action will use <code class="codehilite"><span class="n">gpg</span></code> to encrypt the input data. You may even compress and encrypt the data in a task (preferible in this order):</p>
+<p>The <a href="../actions/encrypt#encrypt-gpg"><code class="codehilite"><span class="err">encrypt-gpg</span></code></a> action will use <code class="codehilite"><span class="err">gpg</span></code> to encrypt the input data. You may even compress and encrypt the data in a task (preferible in this order):</p>
 <div class="codehilite"><pre><span></span><span class="nn">...</span>
     <span class="nt">actions</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">postgres-database</span><span class="p">:</span>
@@ -1030,11 +1030,11 @@ mdbackup --help
 
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The algorithm changes between distributions. Check the available in <code class="codehilite"><span class="n">gpg</span> <span class="c1">--version</span></code>. In this guide we will be using AES256.</p>
+<p>The algorithm changes between distributions. Check the available in <code class="codehilite"><span class="err">gpg --version</span></code>. In this guide we will be using AES256.</p>
 </div>
 <h2 id="upload-to-the-cloud">Upload to the cloud<a class="headerlink" href="#upload-to-the-cloud" title="Permanent link">&para;</a></h2>
 <p>Well, you can also use an FTP server for this, but it&rsquo;s cool to say <em>&ldquo;TO THE CLOUD&rdquo;</em>.</p>
-<p>If desired, the backups can be uploaded to what we call &ldquo;storage provider&rdquo;. It can be a FTP or SFTP server, or a Cloud Storage (like S3 or Google Drive). This is run after the backup is done, and can be uploaded to one or more storage providers. Also to speed up the upload, the folders are written into a <code class="codehilite"><span class="n">tar</span></code> file, compressed (if configured) and encrypted (if configured).</p>
+<p>If desired, the backups can be uploaded to what we call &ldquo;storage provider&rdquo;. It can be a FTP or SFTP server, or a Cloud Storage (like S3 or Google Drive). This is run after the backup is done, and can be uploaded to one or more storage providers. Also to speed up the upload, the folders are written into a <code class="codehilite"><span class="err">tar</span></code> file, compressed (if configured) and encrypted (if configured).</p>
 <blockquote>
 <p>It is recommended to, at least, configure the compression in order to save some storage at the cloud.</p>
 </blockquote>
@@ -1053,7 +1053,7 @@ mdbackup --help
 <span class="p">}</span>
 </pre></div>
 
-<p>This will upload the files to the FTP server <code class="codehilite"><span class="n">ftp</span><span class="p">.</span><span class="k">local</span></code>, in the folder <code class="codehilite"><span class="o">/</span><span class="n">backups</span></code> using the <code class="codehilite"><span class="n">anonymous</span></code> user and no password.</p>
+<p>This will upload the files to the FTP server <code class="codehilite"><span class="err">ftp.local</span></code>, in the folder <code class="codehilite"><span class="err">/backups</span></code> using the <code class="codehilite"><span class="err">anonymous</span></code> user and no password.</p>
 <h2 id="the-end">The end<a class="headerlink" href="#the-end" title="Permanent link">&para;</a></h2>
 <p>There&rsquo;s more to learn about the tool, but this is a rather good introduction to it. Take a look to the other sections of this documentation to learn and discover new stuff of the tool.</p>
 <p>Concerned about too much hardcoded credentials in the configuration file? Check out the <a href="../secrets">Secret backends</a>.</p>

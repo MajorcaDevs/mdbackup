@@ -701,9 +701,9 @@
                 
                 
                 <h1 id="hooks">Hooks<a class="headerlink" href="#hooks" title="Permanent link">&para;</a></h1>
-<p>Hooks are scripts that run when some event is going to happen or just happened. It is useful to define custom actions with your own scripts, including one-liner scrips. The hook is run with <code class="codehilite"><span class="n">sh</span></code> so scripts can be defined inlined. If a hook is not defined, won&rsquo;t run anything.</p>
+<p>Hooks are scripts that run when some event is going to happen or just happened. It is useful to define custom actions with your own scripts, including one-liner scrips. The hook is run with <code class="codehilite"><span class="err">sh</span></code> so scripts can be defined inlined. If a hook is not defined, won&rsquo;t run anything.</p>
 <p>To define the hooks, see <a href="../configuration/#hooks">hooks in the configuration</a>.</p>
-<p>The output of the script is redirected to the logger using the <code class="codehilite"><span class="n">DEBUG</span></code> level. If you have some issues with your hook script, set the log level to <code class="codehilite"><span class="n">DEBUG</span></code>.</p>
+<p>The output of the script is redirected to the logger using the <code class="codehilite"><span class="err">DEBUG</span></code> level. If you have some issues with your hook script, set the log level to <code class="codehilite"><span class="err">DEBUG</span></code>.</p>
 <h2 id="backupbefore">backup:before<a class="headerlink" href="#backupbefore" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>When</strong>: Before starting doing backups.</li>
@@ -732,7 +732,7 @@
 </ul>
 <h2 id="backupstepstep_namebefore">backup:step:${step_name}:before<a class="headerlink" href="#backupstepstep_namebefore" title="Permanent link">&para;</a></h2>
 <blockquote>
-<p>Note: <code class="codehilite"><span class="cp">${</span><span class="n">step_name</span><span class="cp">}</span></code> must be the filename of the step. i.e.: <code class="codehilite"><span class="mi">01</span> <span class="o">-</span> <span class="n">web</span><span class="p">.</span><span class="n">sh</span></code> is a filename and step name.</p>
+<p>Note: <code class="codehilite"><span class="cp">${</span><span class="n">step_name</span><span class="cp">}</span></code> must be the filename of the step. i.e.: <code class="codehilite"><span class="err">01 - web.sh</span></code> is a filename and step name.</p>
 </blockquote>
 <ul>
 <li><strong>When</strong>: Before starting running the step script.</li>
@@ -743,7 +743,7 @@
 </ul>
 <h2 id="backupstepstep_nameafter">backup:step:${step_name}:after<a class="headerlink" href="#backupstepstep_nameafter" title="Permanent link">&para;</a></h2>
 <blockquote>
-<p>Note: <code class="codehilite"><span class="cp">${</span><span class="n">step_name</span><span class="cp">}</span></code> must be the filename of the step. i.e.: <code class="codehilite"><span class="mi">01</span> <span class="o">-</span> <span class="n">web</span><span class="p">.</span><span class="n">sh</span></code> is a filename and step name.</p>
+<p>Note: <code class="codehilite"><span class="cp">${</span><span class="n">step_name</span><span class="cp">}</span></code> must be the filename of the step. i.e.: <code class="codehilite"><span class="err">01 - web.sh</span></code> is a filename and step name.</p>
 </blockquote>
 <ul>
 <li><strong>When</strong>: After running the step script.</li>
@@ -754,7 +754,7 @@
 </ul>
 <h2 id="backupstepstep_nameerror">backup:step:${step_name}:error<a class="headerlink" href="#backupstepstep_nameerror" title="Permanent link">&para;</a></h2>
 <blockquote>
-<p>Note: <code class="codehilite"><span class="cp">${</span><span class="n">step_name</span><span class="cp">}</span></code> must be the filename of the step. i.e.: <code class="codehilite"><span class="mi">01</span> <span class="o">-</span> <span class="n">web</span><span class="p">.</span><span class="n">sh</span></code> is a filename and step name.</p>
+<p>Note: <code class="codehilite"><span class="cp">${</span><span class="n">step_name</span><span class="cp">}</span></code> must be the filename of the step. i.e.: <code class="codehilite"><span class="err">01 - web.sh</span></code> is a filename and step name.</p>
 </blockquote>
 <ul>
 <li><strong>When</strong>: After running the step script but the script failed to run.</li>
