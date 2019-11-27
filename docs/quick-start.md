@@ -21,16 +21,17 @@ Once the environment is created, we must "activate" it:
 . .venv/bin/activate
 ```
 
+!!! Info
+    It may be good idea to upgrade some basic packages after enabling the virtual environment: `pip install --upgrade pip setuptools wheel`
+
 Now you can use `python` and `pip` and everything will work from and install to the virtual environment. Now you can download the tool and install it:
 
 ```sh
-#Download using curl...
-curl -sSL https://github.com/MajorcaDevs/mdbackup/releases/latest/download/mdbackup.whl > mdbackup.whl
-#...or wget
-wget https://github.com/MajorcaDevs/mdbackup/releases/latest/download/mdbackup.whl
-#If they don't work, go to https://github.com/MajorcaDevs/mdbackup/releases and copy the URL from the latest release
+#Install using pip
+pip install mdbackup
 
-pip install mdbackup.whl
+#You can also install the tool using the wheel package from GitHub:
+#Check the latest release at https://github.com/MajorcaDevs/mdbackup/releases
 
 mdbackup --help
 ```
@@ -199,6 +200,71 @@ tasks:
 ```
 
 The tool will read the environment variables, and inject them in the actions parameters.
+
+But wait, there's more: you can even place `${VARIABLE}` tokens in the parameters or other variables inside `env` sections to refer to real environment variables or variables on `env`s. This example will try to access to the database using the user running the tool:
+
+```yaml tab="YAML syntax"
+name: PostgreSQL example
+env:
+  host: localhost
+  user: ${USER}
+tasks:
+  - name: Postgres task example
+    actions:
+      - postgres-database:
+          database: test1
+      - to-file:
+          path: test1.sql
+  - name: Postgres task example 2
+    actions:
+      - postgres-database:
+          database: test2
+      - to-file:
+          path: test2.sql
+```
+
+```json tab="JSON syntax"
+{
+  "name": "PostgreSQL example",
+  "env": {
+    "host": "localhost",
+    "user": "${USER}"
+  },
+  "tasks": [
+    {
+      "name": "Postgres task example",
+      "actions": [
+        {
+          "postgres-database": {
+            "database": "test1"
+          }
+        },
+        {
+          "to-file": {
+            "path": "test1.sql"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Postgres task example 2",
+      "actions": [
+        {
+          "postgres-database": {
+            "database": "test2"
+          }
+        },
+        {
+          "to-file": {
+            "path": "test2.sql"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
 
 If everything went well, you now will have a `test1.sql` and `test2.sql` files in the backup folder.
 
