@@ -8,6 +8,7 @@ COPY ./docker/requirements.txt /mdbackup/requirements.txt
 RUN apk add bash rsync openssh tar xz gnupg gzip musl libffi openssl --no-cache && \
     apk add --virtual .bdeps gcc make libffi-dev openssl-dev musl-dev --no-cache && \
     pip install -r /mdbackup/requirements.txt && \
+    pip install xattr && \
     apk del .bdeps && \
     rm -rf /var/cache/apk/
 
