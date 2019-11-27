@@ -1,5 +1,6 @@
 # Backups utility
 
+[![PyPI version](https://pypip.in/v/mdbackup/badge.png) ![PyPI downloads](https://pypip.in/d/mdbackup/badge.png)](https://pypi.org/project/mdbackup/)
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/MajorcaDevs/mdbackup.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/MajorcaDevs/mdbackup/context:python)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/MajorcaDevs/mdbackup.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/MajorcaDevs/mdbackup/alerts/)
 [![Build Status](https://jenkins.majorcadevs.com/buildStatus/icon?job=mdbackup2%2Fmaster&subject=master%20build)](https://jenkins.majorcadevs.com/job/mdbackup2/job/master/)
@@ -29,9 +30,9 @@ When you have the virtual environment created, you have to activate it. With thi
 
 ```bash
 . .venv/bin/activate
-# Download the .whl package
 pip install --upgrade setuptools wheel
-pip install mdbackup*.whl
+
+pip install mdbackup
 ```
 
 Now you can run the utility (only if you have enabled the virtual env) with `mdbackup`. In this folder it is recommended to store the `config` folder.
@@ -42,4 +43,4 @@ Now you can run the utility (only if you have enabled the virtual env) with `mdb
 
 Can be found at [mdbackup.majorcadevs.com](https://mdbackup.majorcadevs.com/) or at the docs folder.
 
-To make the documentation, install the requirements in `docs/requirements.txt` and run `mkdocs build --config-file=mkdocs.yaml`.
+To make the documentation, install the requirements in `docs/requirements.txt` and run `mkdocs serve`.
