@@ -1,8 +1,10 @@
 # Quick start guide
 
-> `mdbackup` is tested under Linux and macOS, but it should work on any platform where Python has support and has `bash`, except for Windows.
+!!! Note
+    `mdbackup` is tested under Linux and macOS, but it should work on any platform where Python has support on, except for Windows.
 
-Before installing the tool, make sure to have installed at least `rsync` and `bash`. Most Linux distributions have  both installed, some only `bash`. On macOS, both come installed by default. Also check that Python 3.6 or higher is installed (use [`brew`] on macOS for that).
+!!! Warning "Python on macOS"
+    On macOS, python 2 comes installed by default which is unsupported by this tool. On Catalina (10.15) or higher, also Python 3 is bundled. If you need to install an updated python version, [`brew`][5] is your saviour :)
 
 In this guide, a virtual environment will be used to install and use the tool. It is not recommended to install it directly in the system.
 
@@ -13,7 +15,8 @@ python -m venv .venv
 python -m virtualenv .venv
 ```
 
-> Note: `python` here it is referred to the python 3 executable. In some platforms will be `python3`.
+!!! Note
+    `python` here it is referred to the python 3 executable. In some platforms will be `python3`.
 
 Once the environment is created, we must "activate" it:
 
@@ -43,7 +46,8 @@ You can also use the [Docker container](./docker.md). But it is recommended to r
 
 ## First configuration
 
-> Note: this will get through getting an initial configuration for backups. To get in more detail, check out the [Configuration](./configuration.md) page.
+!!! Note
+    This will get through getting an initial configuration for backups. To get in more detail, check out the [Configuration](./configuration.md) page.
 
 In order to get your first backup, the tool must be configured properly. To achieve this, you will learn the core concepts used in the tool and how to use them to fit your needs.
 
@@ -61,7 +65,6 @@ The folder in where you are right now should have the following structure:
     - `config.json`
     - `tasks/`
         - `01.yaml`
-- `mdbackup.whl`
 
 And the third folder, it does not matter where is placed, but it will be used soon to store backups. It can be a network storage, an external drive or a partition in some local drive. It is recommended to store them outside the root partition (`/`), if possible.
 
@@ -118,7 +121,7 @@ tasks:
 
 This task will copy your home directory and all its contents into the backup folder. You can use any other folder you want just to try, this is an example.
 
-Now try running the tool: `mdbackup`. If everything is well configured, you will have a new folder in the backups folder with the date and time of now and with your folder copied. Well, try now to make a backup again. If the folder being copied is large enough, you will notice that this time, the backup took less time than the first time. This is because the action `to-directory` takes into account the previous backup and will try to do an incremental backup: if the file to copy already exists in the previous backup and has not been modified since the last time, then it will do a `hard-link` instead of a copy. This trick only works for some of the actions, check their documentation to know what are the ones doing this.
+Now try running the tool: `mdbackup`. If everything is well configured, you will have a new folder in the backups folder with the current date and time (in UTC) and with your folder copied inside. Well, try now to make a backup again. If the folder being copied is large enough, you will notice that this time, the backup took less time than the first time. This is because the action `to-directory` takes into account the previous backup and will try to do an incremental backup: if the file to copy already exists in the previous backup and has not been modified since the last time, then it will do a `hard-link` instead of a copy. This trick only works for some of the actions, check their documentation to know what are the ones doing this.
 
 Note that `current` folder is always present and is a soft link to the latest backup. So it's easy to access to the latest backup from the file explorer or from the command line :)
 
@@ -301,6 +304,8 @@ In addition, when uploading folders to a storage provider, they automatically ar
 }
 ```
 
+!!! Warning "Extra tools needed for compression"
+    Compression actions and cloud settings need to have installed the corresponding tool. `gzip` can be found in general installed in most Linux distros and macOS, but `xz` may not be installed in your system. Check the action's documentation to know which are the tools needed.
 
 ## Encrypt
 
@@ -363,7 +368,7 @@ If desired, the backups can be uploaded to what we call "storage provider". It c
 
 > It is recommended to, at least, configure the compression in order to save some storage at the cloud.
 
-There are many [storage providers](./storage) to choose. In the guid will be using a FTP server to quickly show how to upload files. *Also because this is the only storage provider that does not need to install any extra packages.*
+There are many [storage providers](./storage) to choose. In the guide FTP will be used to quickly show how to upload files. *Also because this is the only storage provider that does not need to install any extra packages.*
 
 This is the configuration for the FTP:
 
@@ -395,3 +400,4 @@ Concerned about too much hardcoded credentials in the configuration file? Check 
  [2]: https://github.com/MajorcaDevs/mdbackup/releases/latest/download/config.schema.json
  [3]: https://github.com/MajorcaDevs/mdbackup/tree/master/contrib
  [4]: https://gpgtools.org
+ [5]: https://brew.sh

@@ -1,6 +1,6 @@
 # Backups utility
 
-[![PyPI version](https://pypip.in/v/mdbackup/badge.png) ![PyPI downloads](https://pypip.in/d/mdbackup/badge.png)](https://pypi.org/project/mdbackup/)
+[![PyPI version](https://img.shields.io/pypi/v/mdbackup) ![PyPI downloads](https://img.shields.io/pypi/dw/mdbackup)](https://pypi.org/project/mdbackup/)
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/MajorcaDevs/mdbackup.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/MajorcaDevs/mdbackup/context:python)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/MajorcaDevs/mdbackup.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/MajorcaDevs/mdbackup/alerts/)
 [![Build Status](https://jenkins.majorcadevs.com/buildStatus/icon?job=mdbackup2%2Fmaster&subject=master%20build)](https://jenkins.majorcadevs.com/job/mdbackup2/job/master/)
@@ -14,8 +14,8 @@ Download from releases the latest `wheel` package and install it. It is recommen
 
 **What do yo need?**:
 
-  - An OS different from Windows (Windows is unsupported) :(
-  - Python 3.7 or higher
+  - Any OS with Python support and POSIX-like (e.g.: Linux, macOS, *BSD...)
+  - Python 3.6 or higher
 
 First select a folder where all the needed files will be stored. It is important not to move (or rename) this folder after installation.
 

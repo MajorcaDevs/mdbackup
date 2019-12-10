@@ -2,12 +2,34 @@ import sys
 
 import setuptools
 
+version = '0.4.0-beta.4'
+
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 extra_packages = []
 if not sys.platform.startswith('linux'):
     extra_packages.append('xattr')
+
+classifiers = [
+    "Intended Audience :: System Administrators"
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: Unix",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Topic :: System :: Recovery Tools",
+    "Topic :: Utilities",
+]
+
+if '-alpha.' in version:
+    classifiers.append('Development Status :: 3 - Alpha')
+elif '-beta.' in version:
+    classifiers.append('Development Status :: 4 - Beta')
+else:
+    classifiers.append('Development Status :: 5 - Production/Stable')
 
 setuptools.setup(
     name="mdbackup",
@@ -22,15 +44,7 @@ setuptools.setup(
         include=('mdbackup', 'mdbackup.*'),
         exclude=('tests', 'tests.*'),
     ),
-    classifiers=[
-        "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
-        "Operating System :: MacOS :: MacOS X",
-        "Operating System :: Unix",
-        "Operating System :: POSIX :: Linux",
-        "Topic :: System :: Recovery Tools",
-        "Topic :: Utilities",
-    ],
+    classifiers=classifiers,
     entry_points={
         'console_scripts': [
             'mdbackup = mdbackup.__main__:main',
