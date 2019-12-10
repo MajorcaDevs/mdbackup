@@ -80,18 +80,28 @@ def action_asuswrt(_, params: dict):
     user = params['user']
     password = params['password']
     backup_type = params['backupType']
+    port = params.get('port')
+    secure = params.get('secure', False)
+    verify = params.get('verify')
 
     raise_if_type_is_incorrect(host, str, 'host must be a string')
     raise_if_type_is_incorrect(user, str, 'user must be a string')
     raise_if_type_is_incorrect(password, str, 'password must be a string')
+    raise_if_type_is_incorrect(port, int, 'port must be a number')
+    raise_if_type_is_incorrect(secure, bool, 'secure must be boolean')
+    raise_if_type_is_incorrect(verify, (bool, str), 'verify must be string or boolean')
 
     if requests is None:
         raise ModuleNotFoundError('requests must be installed in order to use this action')
 
+    base_url = ('https://' if secure else 'http://') + host
+    if port is not None:
+        base_url += f':{port}'
+
     if backup_type == 'configuration':
-        url = f'http://{host}/Settings_RT-AC68U.CFG?path=1&remove_passwd=0'
+        url = f'{base_url}/Settings_RT-AC68U.CFG?path=1&remove_passwd=0'
     elif backup_type == 'jffs':
-        url = f'http://{host}/backup_jffs.tar'
+        url = f'{base_url}/backup_jffs.tar'
     else:
         raise ValueError(f'Unsupported backup type: {backup_type}')
 
@@ -109,15 +119,15 @@ def action_asuswrt(_, params: dict):
     headers = {
         'Host': host,
         'User-Agent': 'mdbackup via requests (python)',
-        'Referer': f'http://{host}/Main_Login.asp',
+        'Referer': f'{base_url}/Main_Login.asp',
     }
-    res = s.get(f'http://{host}/login.cgi', data=login_data, headers=headers)
+    res = s.get(f'{base_url}/login.cgi', data=login_data, headers=headers, verify=verify)
 
     if res.status_code != 200:
         raise PermissionError(f'[{res.status_code}] Authentication failed: {res.text}')
 
-    headers['Referer'] = f'http://{host}/Advanced_SettingBackup_Content.asp'
-    res = s.get(url, headers=headers, stream=True)
+    headers['Referer'] = f'{base_url}/Advanced_SettingBackup_Content.asp'
+    res = s.get(url, headers=headers, stream=True, verify=verify)
     if res.status_code != 200:
         raise requests.RequestException(f'Could not download backup {backup_type}', response=res)
 
