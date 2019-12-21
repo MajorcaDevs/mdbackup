@@ -12,7 +12,7 @@ if not sys.platform.startswith('linux'):
     extra_packages.append('xattr')
 
 classifiers = [
-    "Intended Audience :: System Administrators"
+    "Intended Audience :: System Administrators",
     "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
     "Operating System :: MacOS :: MacOS X",
     "Operating System :: Unix",
