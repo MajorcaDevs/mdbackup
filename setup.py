@@ -33,7 +33,7 @@ else:
 
 setuptools.setup(
     name="mdbackup",
-    version="0.4.0-beta.4",
+    version=version,
     author="majorcadevs (melchor9000 & amgxv)",
     author_email="melchor9000@gmail.com",
     description="Small but customizable utility to create backups and store them in cloud storage providers",
