@@ -34,7 +34,7 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.5.0">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.6.0">
     
     
       
@@ -52,7 +52,7 @@
     
       
         <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono&display=fallback">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
         <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
       
     
@@ -773,31 +773,38 @@
                 
                 
                 <h1 id="quick-start-guide">Quick start guide<a class="headerlink" href="#quick-start-guide" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p><code class="codehilite"><span class="err">mdbackup</span></code> is tested under Linux and macOS, but it should work on any platform where Python has support and has <code class="codehilite"><span class="err">bash</span></code>, except for Windows.</p>
-</blockquote>
-<p>Before installing the tool, make sure to have installed at least <code class="codehilite"><span class="err">rsync</span></code> and <code class="codehilite"><span class="err">bash</span></code>. Most Linux distributions have  both installed, some only <code class="codehilite"><span class="err">bash</span></code>. On macOS, both come installed by default. Also check that Python 3.6 or higher is installed (use [<code class="codehilite"><span class="err">brew</span></code>] on macOS for that).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="codehilite"><span class="err">mdbackup</span></code> is tested under Linux and macOS, but it should work on any platform where Python has support on, except for Windows.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Python on macOS</p>
+<p>On macOS, python 2 comes installed by default which is unsupported by this tool. On Catalina (10.15) or higher, also Python 3 is bundled. If you need to install an updated python version, <a href="https://brew.sh"><code class="codehilite"><span class="err">brew</span></code></a> is your saviour :)</p>
+</div>
 <p>In this guide, a virtual environment will be used to install and use the tool. It is not recommended to install it directly in the system.</p>
 <p>First prepare the virtual environment. You can use <code class="codehilite"><span class="err">venv</span></code> or <code class="codehilite"><span class="err">virtualenv</span></code>, but the first will be used.</p>
 <div class="codehilite"><pre><span></span>python -m venv .venv
 python -m virtualenv .venv
 </pre></div>
 
-<blockquote>
-<p>Note: <code class="codehilite"><span class="err">python</span></code> here it is referred to the python 3 executable. In some platforms will be <code class="codehilite"><span class="err">python3</span></code>.</p>
-</blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="codehilite"><span class="err">python</span></code> here it is referred to the python 3 executable. In some platforms will be <code class="codehilite"><span class="err">python3</span></code>.</p>
+</div>
 <p>Once the environment is created, we must &ldquo;activate&rdquo; it:</p>
 <div class="codehilite"><pre><span></span>. .venv/bin/activate
 </pre></div>
 
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>It may be good idea to upgrade some basic packages after enabling the virtual environment: <code class="codehilite"><span class="err">pip install --upgrade pip setuptools wheel</span></code></p>
+</div>
 <p>Now you can use <code class="codehilite"><span class="err">python</span></code> and <code class="codehilite"><span class="err">pip</span></code> and everything will work from and install to the virtual environment. Now you can download the tool and install it:</p>
-<div class="codehilite"><pre><span></span><span class="c1">#Download using curl...</span>
-curl -sSL https://github.com/MajorcaDevs/mdbackup/releases/latest/download/mdbackup.whl &gt; mdbackup.whl
-<span class="c1">#...or wget</span>
-wget https://github.com/MajorcaDevs/mdbackup/releases/latest/download/mdbackup.whl
-<span class="c1">#If they don&#39;t work, go to https://github.com/MajorcaDevs/mdbackup/releases and copy the URL from the latest release</span>
+<div class="codehilite"><pre><span></span><span class="c1">#Install using pip</span>
+pip install mdbackup
 
-pip install mdbackup.whl
+<span class="c1">#You can also install the tool using the wheel package from GitHub:</span>
+<span class="c1">#Check the latest release at https://github.com/MajorcaDevs/mdbackup/releases</span>
 
 mdbackup --help
 </pre></div>
@@ -805,9 +812,10 @@ mdbackup --help
 <p>To check if the tool is installed properly, run the help of the tool and you should get something like <a href="../arguments/">this</a>.</p>
 <p>You can also use the <a href="../docker/">Docker container</a>. But it is recommended to read the guide to get an idea.</p>
 <h2 id="first-configuration">First configuration<a class="headerlink" href="#first-configuration" title="Permanent link">&para;</a></h2>
-<blockquote>
-<p>Note: this will get through getting an initial configuration for backups. To get in more detail, check out the <a href="../configuration/">Configuration</a> page.</p>
-</blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This will get through getting an initial configuration for backups. To get in more detail, check out the <a href="../configuration/">Configuration</a> page.</p>
+</div>
 <p>In order to get your first backup, the tool must be configured properly. To achieve this, you will learn the core concepts used in the tool and how to use them to fit your needs.</p>
 <p>The tool needs three folders to work:</p>
 <ul>
@@ -829,7 +837,6 @@ mdbackup --help
 </li>
 </ul>
 </li>
-<li><code class="codehilite"><span class="err">mdbackup.whl</span></code></li>
 </ul>
 <p>And the third folder, it does not matter where is placed, but it will be used soon to store backups. It can be a network storage, an external drive or a partition in some local drive. It is recommended to store them outside the root partition (<code class="codehilite"><span class="err">/</span></code>), if possible.</p>
 <p>Did you notice the <code class="codehilite"><span class="err">config.json</span></code>? This file holds the <a href="../configuration/">configuration</a> of the tool. Write in it the following:</p>
@@ -883,7 +890,7 @@ mdbackup --help
 </pre></div></div>
 </div>
 <p>This task will copy your home directory and all its contents into the backup folder. You can use any other folder you want just to try, this is an example.</p>
-<p>Now try running the tool: <code class="codehilite"><span class="err">mdbackup</span></code>. If everything is well configured, you will have a new folder in the backups folder with the date and time of now and with your folder copied. Well, try now to make a backup again. If the folder being copied is large enough, you will notice that this time, the backup took less time than the first time. This is because the action <code class="codehilite"><span class="err">to-directory</span></code> takes into account the previous backup and will try to do an incremental backup: if the file to copy already exists in the previous backup and has not been modified since the last time, then it will do a <code class="codehilite"><span class="err">hard-link</span></code> instead of a copy. This trick only works for some of the actions, check their documentation to know what are the ones doing this.</p>
+<p>Now try running the tool: <code class="codehilite"><span class="err">mdbackup</span></code>. If everything is well configured, you will have a new folder in the backups folder with the current date and time (in UTC) and with your folder copied inside. Well, try now to make a backup again. If the folder being copied is large enough, you will notice that this time, the backup took less time than the first time. This is because the action <code class="codehilite"><span class="err">to-directory</span></code> takes into account the previous backup and will try to do an incremental backup: if the file to copy already exists in the previous backup and has not been modified since the last time, then it will do a <code class="codehilite"><span class="err">hard-link</span></code> instead of a copy. This trick only works for some of the actions, check their documentation to know what are the ones doing this.</p>
 <p>Note that <code class="codehilite"><span class="err">current</span></code> folder is always present and is a soft link to the latest backup. So it&rsquo;s easy to access to the latest backup from the file explorer or from the command line :)</p>
 <p>Now you have backups of whatever you want! Just configure the tool and write the right scripts to fit your needs.</p>
 <div class="admonition warning">
@@ -961,6 +968,71 @@ mdbackup --help
 </pre></div></div>
 </div>
 <p>The tool will read the environment variables, and inject them in the actions parameters.</p>
+<p>But wait, there&rsquo;s more: you can even place <code class="codehilite"><span class="cp">${</span><span class="n">VARIABLE</span><span class="cp">}</span></code> tokens in the parameters or other variables inside <code class="codehilite"><span class="err">env</span></code> sections to refer to real environment variables or variables on <code class="codehilite"><span class="err">env</span></code>s. This example will try to access to the database using the user running the tool:</p>
+<div class="superfences-tabs">
+<input name="__tabs_3" type="radio" id="__tab_3_0" checked="checked" />
+<label for="__tab_3_0">YAML syntax</label>
+<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">PostgreSQL example</span>
+<span class="nt">env</span><span class="p">:</span>
+  <span class="nt">host</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">localhost</span>
+  <span class="nt">user</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">${USER}</span>
+<span class="nt">tasks</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Postgres task example</span>
+    <span class="nt">actions</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">postgres-database</span><span class="p">:</span>
+          <span class="nt">database</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">test1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">to-file</span><span class="p">:</span>
+          <span class="nt">path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">test1.sql</span>
+  <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Postgres task example 2</span>
+    <span class="nt">actions</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">postgres-database</span><span class="p">:</span>
+          <span class="nt">database</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">test2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">to-file</span><span class="p">:</span>
+          <span class="nt">path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">test2.sql</span>
+</pre></div></div>
+<input name="__tabs_3" type="radio" id="__tab_3_1" />
+<label for="__tab_3_1">JSON syntax</label>
+<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;PostgreSQL example&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;env&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;host&quot;</span><span class="p">:</span> <span class="s2">&quot;localhost&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;user&quot;</span><span class="p">:</span> <span class="s2">&quot;${USER}&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;tasks&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Postgres task example&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;actions&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+          <span class="nt">&quot;postgres-database&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;database&quot;</span><span class="p">:</span> <span class="s2">&quot;test1&quot;</span>
+          <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+          <span class="nt">&quot;to-file&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;test1.sql&quot;</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">]</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Postgres task example 2&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;actions&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+          <span class="nt">&quot;postgres-database&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;database&quot;</span><span class="p">:</span> <span class="s2">&quot;test2&quot;</span>
+          <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+          <span class="nt">&quot;to-file&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;test2.sql&quot;</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">]</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div></div>
+</div>
 <p>If everything went well, you now will have a <code class="codehilite"><span class="err">test1.sql</span></code> and <code class="codehilite"><span class="err">test2.sql</span></code> files in the backup folder.</p>
 <div class="admonition info">
 <p class="admonition-title">YAML is better for tasks</p>
@@ -989,6 +1061,10 @@ mdbackup --help
 <span class="p">}</span>
 </pre></div>
 
+<div class="admonition warning">
+<p class="admonition-title">Extra tools needed for compression</p>
+<p>Compression actions and cloud settings need to have installed the corresponding tool. <code class="codehilite"><span class="err">gzip</span></code> can be found in general installed in most Linux distros and macOS, but <code class="codehilite"><span class="err">xz</span></code> may not be installed in your system. Check the action&rsquo;s documentation to know which are the tools needed.</p>
+</div>
 <h2 id="encrypt">Encrypt<a class="headerlink" href="#encrypt" title="Permanent link">&para;</a></h2>
 <p>You need <strong>OpenGPG 2</strong> in order to cypher files. And as well as the compression, will be used automatically to upload to storage providers.</p>
 <p>Most Linux distributions have installed <code class="codehilite"><span class="err">gpg</span></code> tools, but you must check the version. On macOS, install <a href="https://gpgtools.org">GPGTools</a>.</p>
@@ -1038,7 +1114,7 @@ mdbackup --help
 <blockquote>
 <p>It is recommended to, at least, configure the compression in order to save some storage at the cloud.</p>
 </blockquote>
-<p>There are many <a href="./storage">storage providers</a> to choose. In the guid will be using a FTP server to quickly show how to upload files. <em>Also because this is the only storage provider that does not need to install any extra packages.</em></p>
+<p>There are many <a href="./storage">storage providers</a> to choose. In the guide FTP will be used to quickly show how to upload files. <em>Also because this is the only storage provider that does not need to install any extra packages.</em></p>
 <p>This is the configuration for the FTP:</p>
 <div class="codehilite"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;...&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">,</span>
@@ -1059,6 +1135,7 @@ mdbackup --help
 <p>Concerned about too much hardcoded credentials in the configuration file? Check out the <a href="../secrets">Secret backends</a>.</p>
                 
                   
+                
                 
               
               
@@ -1130,7 +1207,7 @@ mdbackup --help
       
     </div>
     
-      <script src="../assets/javascripts/application.a8b5e56f.js"></script>
+      <script src="../assets/javascripts/application.808e90bb.js"></script>
       
       <script>app.initialize({version:"1.0.4",url:{base:".."}})</script>
       

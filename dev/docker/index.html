@@ -34,7 +34,7 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.5.0">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.6.0">
     
     
       
@@ -52,7 +52,7 @@
     
       
         <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono&display=fallback">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
         <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
       
     
@@ -718,21 +718,29 @@
                 
                 <h1 id="docker">Docker<a class="headerlink" href="#docker" title="Permanent link">&para;</a></h1>
 <h2 id="use-the-image">Use the image<a class="headerlink" href="#use-the-image" title="Permanent link">&para;</a></h2>
-<blockquote>
+<div class="admonition warning">
+<p class="admonition-title">Quick start guide&hellip;</p>
 <p>It is recommended to have a look to the <a href="../quick-start/">Quick Start</a> if you did not do it yet&hellip;</p>
-</blockquote>
+</div>
+<div class="admonition info">
+<p class="admonition-title">Docker Hub page for images</p>
+<p>The images are uploaded to <a href="https://hub.docker.com/repository/docker/majorcadevs/mdbackup">Docker Hub</a> on each release and can be downloaded using <code class="codehilite"><span class="err">majorcadevs/mdbackup:slim</span></code> or <code class="codehilite"><span class="err">majorcadevs/mdbackup:alpine</span></code> images.</p>
+<p>Specific version tags are available and follows these format <code class="codehilite">majorcadevs/mdbackup:<span class="cp">${</span><span class="n">VERSION</span><span class="cp">}</span>-slim</code> and <code class="codehilite">majorcadevs/mdbackup:<span class="cp">${</span><span class="n">VERSION</span><span class="cp">}</span>-alpine</code>.</p>
+<p>Images target to linux/amd64, linux/arm and linux/arm64.</p>
+</div>
 <p><em>To be done&hellip;</em></p>
 <h2 id="build-image">Build image<a class="headerlink" href="#build-image" title="Permanent link">&para;</a></h2>
 <p>There are two flavours for the <code class="codehilite"><span class="err">mdbackup</span></code> image: one based on Alpine Linux and the other based on Debian (slim).</p>
 <p>To build the Debian version, run:</p>
-<div class="codehilite"><pre><span></span>docker image build -t mdbackup:slim -f docker/Dockerfile-slim .
+<div class="codehilite"><pre><span></span>docker image build -t majorcadevs/mdbackup:slim -f docker/Dockerfile-slim .
 </pre></div>
 
 <p>To build the Alpine Linux version, then run:</p>
-<div class="codehilite"><pre><span></span>docker image build -t mdbackup:slim -f docker/Dockerfile-alpine .
+<div class="codehilite"><pre><span></span>docker image build -t majorcadevs/mdbackup:alpine -f docker/Dockerfile-alpine .
 </pre></div>
                 
                   
+                
                 
               
               
@@ -790,7 +798,7 @@
       
     </div>
     
-      <script src="../assets/javascripts/application.a8b5e56f.js"></script>
+      <script src="../assets/javascripts/application.808e90bb.js"></script>
       
       <script>app.initialize({version:"1.0.4",url:{base:".."}})</script>
       

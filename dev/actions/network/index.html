@@ -34,7 +34,7 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.5.0">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.6.0">
     
     
       
@@ -52,7 +52,7 @@
     
       
         <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono&display=fallback">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
         <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
       
     
@@ -746,6 +746,12 @@
 <td>No</td>
 </tr>
 <tr>
+<td><code class="codehilite"><span class="err">port</span></code></td>
+<td><code class="codehilite"><span class="err">int</span></code></td>
+<td>Port where the http server is listening</td>
+<td>Yes</td>
+</tr>
+<tr>
 <td><code class="codehilite"><span class="err">user</span></code></td>
 <td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Router&rsquo;s user</td>
@@ -762,6 +768,18 @@
 <td><code class="codehilite"><span class="err">str</span></code></td>
 <td>Type of the backup: <code class="codehilite"><span class="err">configuration</span></code> or <code class="codehilite"><span class="err">jffs</span></code></td>
 <td>No</td>
+</tr>
+<tr>
+<td><code class="codehilite"><span class="err">secure</span></code></td>
+<td><code class="codehilite"><span class="err">bool</span></code></td>
+<td>If set to true, will use <code class="codehilite"><span class="err">https</span></code> instead of <code class="codehilite"><span class="err">http</span></code></td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code class="codehilite"><span class="err">verify</span></code></td>
+<td><code class="codehilite"><span class="err">bool | str</span></code></td>
+<td><a href="https://2.python-requests.org/en/master/user/advanced/#ssl-cert-verification">See this</a></td>
+<td>Yes</td>
 </tr>
 </tbody>
 </table>
@@ -801,6 +819,23 @@
         <span class="nt">user</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">admin</span>
         <span class="nt">password</span><span class="p">:</span> <span class="s">&#39;WhatPassword?&#39;</span>
         <span class="nt">backupType</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">configuration</span>
+    <span class="p p-Indicator">-</span> <span class="nt">to-file</span><span class="p">:</span>
+        <span class="nt">path</span><span class="p">:</span> <span class="s">&#39;router/asus.cnf&#39;</span>
+</pre></div>
+
+</div>
+<div class="admonition example">
+<p class="admonition-title">Example</p>
+<p>Backup with self-signed certificate and using HTTPS, but not verifying the certificate</p>
+<div class="codehilite"><pre><span></span><span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">asuswrt task example</span>
+  <span class="nt">actions</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="nt">asuswrt</span><span class="p">:</span>
+        <span class="nt">host</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">192.168.1.1</span>
+        <span class="nt">user</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">admin</span>
+        <span class="nt">password</span><span class="p">:</span> <span class="s">&#39;WhatPassword?&#39;</span>
+        <span class="nt">backupType</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">configuration</span>
+        <span class="nt">secure</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+        <span class="nt">verify</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
     <span class="p p-Indicator">-</span> <span class="nt">to-file</span><span class="p">:</span>
         <span class="nt">path</span><span class="p">:</span> <span class="s">&#39;router/asus.cnf&#39;</span>
 </pre></div>
@@ -857,6 +892,7 @@
 </div>
                 
                   
+                
                 
               
               
@@ -928,7 +964,7 @@
       
     </div>
     
-      <script src="../../assets/javascripts/application.a8b5e56f.js"></script>
+      <script src="../../assets/javascripts/application.808e90bb.js"></script>
       
       <script>app.initialize({version:"1.0.4",url:{base:"../.."}})</script>
       
