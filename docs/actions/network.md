@@ -15,9 +15,12 @@
 | Name | Type | Description | Optional |
 |------|------|-------------|----------|
 | `host` | `str` | IP (or hostname) of the Asus router | No |
+| `port` | `int` | Port where the http server is listening | Yes |
 | `user` | `str` | Router's user | No |
 | `password` | `str` | Router's password | No |
 | `backupType` | `str` | Type of the backup: `configuration` or `jffs` | No |
+| `secure` | `bool` | If set to true, will use `https` instead of `http` | Yes |
+| `verify` | `bool | str` | [See this](https://2.python-requests.org/en/master/user/advanced/#ssl-cert-verification) | Yes |
 
 **Description**
 
@@ -56,6 +59,23 @@ Does a backup from an AsusWRT router through its web admin panel. The file is do
             user: admin
             password: 'WhatPassword?'
             backupType: configuration
+        - to-file:
+            path: 'router/asus.cnf'
+    ```
+
+!!! Example
+    Backup with self-signed certificate and using HTTPS, but not verifying the certificate
+
+    ```yaml
+    - name: asuswrt task example
+      actions:
+        - asuswrt:
+            host: 192.168.1.1
+            user: admin
+            password: 'WhatPassword?'
+            backupType: configuration
+            secure: true
+            verify: false
         - to-file:
             path: 'router/asus.cnf'
     ```
