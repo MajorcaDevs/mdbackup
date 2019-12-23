@@ -1,0 +1,37 @@
+actionsModules:
+  - 1#f
+  - 2#g
+
+backupsPath: /
+maxBackupsKept: -1
+logLevel: INFO
+env:
+  a.d.2: ñ
+
+hooks:
+  backup:before: ou yeah
+
+secrets:
+  file:
+    envDefs:
+      ou: yeah
+    config:
+      basePath: /there
+    storageProviders:
+      - "provider-1"
+      - key: provider-2
+        extra: 1
+
+cloud:
+  compression:
+    method: xz
+    level: 8
+  encrypt:
+    strategy: gpg-keys
+    keys:
+      - me@you.org
+    passphrase: '1234'
+    algorithm: AES256
+  providers:
+    - type: gdrive
+      backupsPath: /backups

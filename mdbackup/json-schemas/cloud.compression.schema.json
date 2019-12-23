@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "#/",
+  "type": ["object", "null"],
+  "title": "Configures the compression of things when uploading to a storage provider",
+  "required": [
+    "method"
+  ],
+  "properties": {
+    "method": {
+      "$id": "#/properties/strategy",
+      "type": "string",
+      "title": "Selects the compression method",
+      "enum": [
+        "gz",
+        "xz",
+        "bz2",
+        "br",
+        "zst"
+      ]
+    },
+    "level": {
+      "$id": "#/properties/level",
+      "type": "number",
+      "title": "Selects the compression level",
+      "default": 6,
+      "enum": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ]
+    }
+  }
+}

@@ -1,0 +1,88 @@
+site_name: mdbackup documentation
+repo_url: https://github.com/MajorcaDevs/mdbackup
+repo_name: Github
+edit_uri: blob/master
+site_description: mdbackup documentation
+copyright: MajorcaDevs 2019
+docs_dir: docs
+site_dir: build/docs
+strict: true
+theme:
+  name: material
+  #custom_dir: custom/themes/material
+  #favicon: custom/img/favicon.ico
+  language: 'en'
+extra_css:
+  #- "custom/css/styles.css"
+extra_javascript:
+  #- "custom/js/index.js"
+markdown_extensions:
+ - extra
+ - abbr
+ - attr_list
+ - def_list
+ - fenced_code
+ - footnotes
+ - tables
+ - admonition
+ - codehilite
+ - meta
+ - sane_lists
+ - smarty
+ - toc:
+    permalink: True
+    separator: "-"
+ - wikilinks
+ - pymdownx.arithmatex
+ - pymdownx.betterem:
+    smart_enable: all
+ - pymdownx.caret
+ - pymdownx.critic
+ - pymdownx.details
+ - pymdownx.inlinehilite
+ - pymdownx.magiclink
+ - pymdownx.mark
+ - pymdownx.smartsymbols
+ - pymdownx.superfences
+ - pymdownx.tasklist:
+    custom_checkbox: true
+ - pymdownx.tilde
+ - pymdownx.betterem
+ - pymdownx.superfences
+ - markdown.extensions.footnotes
+ - markdown.extensions.attr_list
+ - markdown.extensions.def_list
+ - markdown.extensions.tables
+ - markdown.extensions.abbr
+ - pymdownx.extrarawhtml
+nav:
+  - Home: 'README.md'
+  - Quick start: 'quick-start.md'
+  - Configuration: 'configuration.md'
+  - Actions:
+    - Actions overview: 'actions/index.md'
+    - Builtin actions:
+      - Archive: 'actions/archive.md'
+      - Command: 'actions/command.md'
+      - Compress: 'actions/compress.md'
+      - Database: 'actions/database.md'
+      - Directory: 'actions/directory.md'
+      - Encrypt: 'actions/encrypt.md'
+      - File: 'actions/file.md'
+      - Network: 'actions/network.md'
+  - Tasks: 'tasks.md'
+  - Storage providers:
+    - Overview: 'storage/index.md'
+    - Google Drive: 'storage/gdrive.md'
+    - S3: 'storage/s3.md'
+    - B2: 'storage/b2.md'
+    - FTP(S): 'storage/ftp.md'
+    - SFTP: 'storage/sftp.md'
+  - Secrets providers:
+      - Overview: 'secrets/index.md'
+      - File: 'secrets/file.md'
+      - Vault: 'secrets/vault.md'
+  - Hooks: 'hooks.md'
+  - Arguments: 'arguments.md'
+  - Run as a service: 'run-as-service.md'
+  - Docker: 'docker.md'

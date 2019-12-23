@@ -2,7 +2,8 @@
 
 [Vault][1] is a production-ready secrets backend, really useful to have credentials stored in a centralized server, but retrievable from any client in a network.
 
- > In order to use Vault backend, you must install `requests`: `pip install requests`
+!!! Warning "Dependency"
+    In order to use Vault backend, you must install `requests`: `pip install requests`.
 
 Currently, it only supports KV backend for reading secrets.
 
@@ -14,11 +15,15 @@ For cloud storage providers, the KV in the path should contain the same structur
 
 ```json
 {
-  "env": {
-    "pguser": "secret/backups/env/pg#user",
-    "pgpassword": "secret/backups/env/pg#password",
-    "mysqluser": "secret/backups/env/mysql#user",
-    "mysqlpassword": "secret/backups/env/mysql#password"
+  "envDefs": {
+    "pg": {
+      "user": "secret/backups/env/pg#user",
+      "password": "secret/backups/env/pg#password"
+    },
+    "mysql": {
+      "user": "secret/backups/env/mysql#user",
+      "password": "secret/backups/env/mysql#password"
+    }
   },
   "config": {
     "apiBaseUrl": "http://localhost:8200",

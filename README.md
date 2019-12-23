@@ -1,7 +1,10 @@
 # Backups utility
 
+[![PyPI version](https://img.shields.io/pypi/v/mdbackup) ![PyPI downloads](https://img.shields.io/pypi/dw/mdbackup)](https://pypi.org/project/mdbackup/)
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/MajorcaDevs/mdbackup.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/MajorcaDevs/mdbackup/context:python)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/MajorcaDevs/mdbackup.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/MajorcaDevs/mdbackup/alerts/)
+[![Build Status](https://jenkins.majorcadevs.com/buildStatus/icon?job=mdbackup2%2Fmaster&subject=master%20build)](https://jenkins.majorcadevs.com/job/mdbackup2/job/master/)
+[![Build Status](https://jenkins.majorcadevs.com/buildStatus/icon?job=mdbackup2%2Fdev&subject=dev%20build)](https://jenkins.majorcadevs.com/job/mdbackup2/job/dev/)
 
 Small but customizable utility to create backups and store them in cloud storage providers.
 
@@ -11,10 +14,8 @@ Download from releases the latest `wheel` package and install it. It is recommen
 
 **What do yo need?**:
 
-  - An OS different from Windows (Windows is unsupported) :(
+  - Any OS with Python support and POSIX-like (e.g.: Linux, macOS, *BSD...)
   - Python 3.6 or higher
-  - `rsync` and `ssh` installed (on macOS they are in general installed by default, on Linux distros you may need to install them)
-  - `bash` must be installed, used to run the scripts
 
 First select a folder where all the needed files will be stored. It is important not to move (or rename) this folder after installation.
 
@@ -29,17 +30,17 @@ When you have the virtual environment created, you have to activate it. With thi
 
 ```bash
 . .venv/bin/activate
-# Download the .whl package
 pip install --upgrade setuptools wheel
-pip install mdbackup*.whl
+
+pip install mdbackup
 ```
 
-Now you can run the utility (only if you have enabled the virtual env) with `mdbackup`. In this folder it is recommended to store the `config` and `steps` folders.
+Now you can run the utility (only if you have enabled the virtual env) with `mdbackup`. In this folder it is recommended to store the `config` folder.
 
  > **Note:** to be able to use some of the cloud storage and secrets backends, you will be requested to install some packages. Go to the documentation to see what is needed.
 
 ## Documentation
 
-Can be found at docs folder.
+Can be found at [mdbackup.majorcadevs.com](https://mdbackup.majorcadevs.com/) or at the docs folder.
 
-To make the documentation, install the requirements in `docs/requirements.txt` and run `mkdocs build --config-file=mkdocs.yaml`.
+To make the documentation, install the requirements in `docs/requirements.txt` and run `mkdocs serve`.

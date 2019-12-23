@@ -1,33 +1,16 @@
-# Small but customizable utility to create backups and store them in
-# cloud storage providers
-# Copyright (C) 2019  Melchor Alejo Garau Madrigal / Andrés Mateos García
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
 import logging
 from pathlib import Path
 import subprocess
 from threading import Thread
-from typing import Optional, List, Dict
+from typing import Dict, List, Optional
 
 
-hooks_config: Dict[str, List[str]] = {}
+_hooks_config: Dict[str, List[str]] = {}
 
 
 def run_hook(hook_name: str, *args: str, cwd: Optional[str] = None):
     logger = logging.getLogger(__name__)
-    if hook_name not in hooks_config:
+    if hook_name not in _hooks_config:
         logger.debug(f'The hook {hook_name} is not defined, not running it')
         return
 
@@ -42,7 +25,7 @@ def run_hook(hook_name: str, *args: str, cwd: Optional[str] = None):
 
     logger.info(f'Running hook {hook_name}')
     joins = [(_hook_runner(hook_name, hook, hook_name, *args, cwd=cwd, shell=True), hook)
-             for hook in hooks_config[hook_name]]
+             for hook in _hooks_config[hook_name]]
     for join, hook in joins:
         try:
             join()
@@ -77,7 +60,7 @@ def _hook_runner(name: str, path: str, *args: str, cwd: Optional[str] = None, sh
 
 
 def define_hook(hook_name: str, hook_script: str):
-    if hook_name not in hooks_config:
-        hooks_config[hook_name] = []
+    if hook_name not in _hooks_config:
+        _hooks_config[hook_name] = []
 
-    hooks_config[hook_name].append(hook_script)
+    _hooks_config[hook_name].append(hook_script)

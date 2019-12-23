@@ -15,7 +15,7 @@ The authentication is attempted using the following order:
 - Any key found in `~/.ssh`.
 - If the `password` is defined, then the classic username/password login will be used (discouraged).
 
-The known-hosts list is loaded by default from the default location `~/.ssh/known_hosts`. If `hostKeysFilePath` is defined, then this file will be used instead. If `disableHostKeys` is set to false, then no known-hosts will be loaded.
+The known-hosts list is loaded by default from the default location `~/.ssh/known_hosts`. If `hostKeysFilePath` is defined, then this file will be used instead. If `enableHostKeys` is set to false, then no known-hosts will be loaded.
 
 The `knownHostsPolicy` will set the policy that will be used when the SSH connection is set, but the host is being checked as a known or not-known host. The following policies are allowed:
 
@@ -48,7 +48,7 @@ In order to use SFTP, you must install the following python packages:
   "compress": "(optional) if true, then the connection is compressed (false by default)",
   "knownHostsPolicy": "(optional) Changes the Known Hosts Policy. 'reject' will reject any connection to a server that is not known (default behaviour), 'auto-add' will add to the known-hosts list this server, 'ignore' will print a warning but it will let you connect.",
   "hostKeysFilePath": "(optional) Path to the known-hosts file",
-  "disableHostKeys": "(optional) If set to false, it won't load any known-hosts file (by default is true)"
+  "enableHostKeys": "(optional) If set to false, it won't load any known-hosts file (by default is true)"
 }
 ```
 

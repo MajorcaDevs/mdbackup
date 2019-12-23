@@ -6,10 +6,12 @@
 build/
 dist/
 *.egg-info
-/steps/
 
 config/*
-!config/config.schema.json
 
 Pipfile
 __pycache__
+
+.coverage
+coverage_report.xml
+tests/.report

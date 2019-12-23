@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "#/",
+  "type": "object",
+  "title": "Configuration for Backblaze storage provider",
+  "allOf": [
+    { "$ref": "cloud.providers.base.schema.json#/" },
+    {
+      "required": [
+        "type",
+        "backupsPath",
+        "keyId",
+        "appKey",
+        "bucket"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [ "gdrive" ]
+        },
+        "keyId": {
+          "type": "string",
+          "title": "Key ID"
+        },
+        "appKey": {
+          "type": "string",
+          "title": "App Key"
+        },
+        "bucket": {
+          "type": "string",
+          "title": "Name of the bucket"
+        },
+        "password": {
+          "type": "string",
+          "title": "Stores the files encrypted using this password"
+        }
+      }
+    }
+  ]
+}

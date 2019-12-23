@@ -1,27 +1,9 @@
-# Small but customizable utility to create backups and store them in
-# cloud storage providers
-# Copyright (C) 2018  Melchor Alejo Garau Madrigal
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
 import logging
 from pathlib import Path
-from typing import Union, List
+from typing import List, Union
 
-from b2sdk.api import B2Api, Bucket
 from b2sdk.account_info.in_memory import InMemoryAccountInfo
-
+from b2sdk.api import B2Api, Bucket
 import magic
 
 from mdbackup.storage.storage import AbstractStorage
@@ -39,24 +21,28 @@ class B2Storage(AbstractStorage):
         self.__bucket: Bucket = self.__b2_api.get_bucket_by_name(config['bucket'])
         self.__password: str = config.get('password')
         self.__pre = config.backups_path if not config.backups_path.endswith('/') else config.backups_path[:-1]
-        self.__pre = self.__pre if not self.__pre.startswith('/') else self.__pre[1:]
+        self.__pre = self.__pre.lstrip('/') if self.__pre is not None else ''
+
+    def __ok_key(self, path: Union[str, Path]):
+        path = str(path).lstrip('/')
+
+        if self.__pre != '':
+            path = f'{self.__pre}/{path}'
+
+        path = path.rstrip('/')
+        return path
 
     def list_directory(self, path: Union[str, Path, str]) -> List[str]:
-        path = path if isinstance(path, str) else str(path)
-        if path.startswith('/'):
-            path = path[1:]
-        full_path = f'{self.__pre}/{path}'
-        return [key
-                for key in [file_name.replace(f'{self.__pre}/', '')
+        full_path = self.__ok_key(path)
+        return [key[len(self.__pre):].lstrip('/')
+                for key in [file_name[len(self.__pre):].lstrip('/')
                             for (_, file_name) in self.__bucket.list_file_names(full_path)]
                 if key != '']
 
     def create_folder(self, name: str, parent: Union[Path, str] = None) -> str:
-        parent = parent if parent is not None else ''
-        key = f'{parent}/{name}/'
-        if key.startswith('/'):
-            key = key[1:]
-        return key
+        parent = parent.strip('/') if parent is not None else ''
+        key = self.__ok_key(f'{parent}/{name}') + '/'
+        return key[len(self.__pre):].lstrip('/')
 
     def upload(self, path: Path, parent: Union[Path, str] = None):
         if isinstance(parent, Path):
@@ -68,9 +54,7 @@ class B2Storage(AbstractStorage):
                 key = f'{parent}/{path.name}'
         else:
             key = path.name
-        if key.startswith('/'):
-            key = key[1:]
-        key = f'{self.__pre}/{key}'
+        key = self.__ok_key(key)
         self.__log.info(f'Uploading file {key} (from {path})')
         file_to_upload = str(path.absolute())
         ret = self.__bucket.upload_local_file(local_file=file_to_upload,
@@ -80,10 +64,7 @@ class B2Storage(AbstractStorage):
         self.__log.debug(ret)
 
     def delete(self, path: Union[Path, str]):
-        path = str(path)
-        if path.startswith('/'):
-            path = path[1:]
-        full_path = f'{self.__pre}/{path}'
+        full_path = self.__ok_key(path)
         self.__log.info(f'Deleting {full_path}')
         objects_to_delete = self.__bucket.ls(full_path, recursive=True)
         for (info, key) in objects_to_delete:

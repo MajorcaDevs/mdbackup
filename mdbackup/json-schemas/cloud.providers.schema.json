@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "#/",
+  "type": "array",
+  "title": "Configuration for storage providers in the cloud.",
+  "required": [],
+  "items": {
+    "$id": "#/items",
+    "type": "object",
+    "title": "Sets configurations for the storage provider.",
+    "required": [
+      "type",
+      "backupsPath"
+    ],
+    "oneOf": [
+      { "$ref": "cloud.providers.gdrive.schema.json" },
+      { "$ref": "cloud.providers.s3.schema.json" },
+      { "$ref": "cloud.providers.b2.schema.json" },
+      { "$ref": "cloud.providers.ftp.schema.json" },
+      { "$ref": "cloud.providers.ftps.schema.json" },
+      { "$ref": "cloud.providers.sftp.schema.json" }
+    ]
+  }
+}
