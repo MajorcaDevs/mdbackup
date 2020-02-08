@@ -119,7 +119,7 @@ def main_upload(config: Config, backup: Path, force: bool = False):
         raise FileNotFoundError(backup)
     if not backup.is_dir():
         raise NotADirectoryError(backup)
-    if not str(backup).startswith(str(config.backups_path)):
+    if not str(backup).startswith(str(config.backups_path.resolve())):
         raise ValueError(f'Backup path {backup} is not inside the backups path')
     manifest_path = backup / '.manifest.yaml'
     if not manifest_path.exists():
