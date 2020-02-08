@@ -48,7 +48,7 @@ This allows you to auto-complete with the elements available in the configuratio
         "method": "gz|xz|bz2|br|zst",
         "level": 8
       },
-      "cypher": {
+      "encrypt": {
         "strategy": "gpg-keys|gpg-passphrase",
         "passphrase": "If using gpg-passphrase, this will be used as passphrase for the cypher",
         "keys": "If using gpg-keys, this will be used as recipients option for the gpg cypher (emails)",
@@ -115,7 +115,7 @@ cloud:
     method: gz|xz|bz2|br|zst
     level: 8
 
-  cypher:
+  encrypt:
     strategy: gpg-keys|gpg-passphrase
     passphrase: If using gpg-passphrase, this will be used as passphrase for the cypher
     keys: If using gpg-keys, this will be used as recipients option for the gpg cypher (emails)
@@ -217,7 +217,7 @@ In general, a lot of Linux distributions includes these commands, as well as in 
 
 The compression level. Higher values indicates better but slower compressions. Values accepted for `gzip` are from 1 to 9. Values accepted for `xz` are from 0 to 9 (by default is 6, 7-9 are not recommended).
 
-### cypher
+### encrypt
 
 If defined, when backups are uploaded to a storage provider, folders will be encrypted using this configuration.
 

@@ -102,7 +102,7 @@ def _checks(params: dict) -> Path:
 
 def _file_has_changed(entry, old_file: Path) -> bool:
     mod_time_current = entry.st_mtime_ns
-    mod_time_prev = old_file.stat().st_mtime_ns
+    mod_time_prev = old_file.lstat().st_mtime_ns
     return mod_time_current != mod_time_prev
 
 
@@ -148,7 +148,7 @@ def action_copy_file(_, params: dict):
     logger = logging.getLogger(__name__).getChild('action_copy_file')
     orig_path = Path(params['from']) if params.get('from') is not None else None
     orig_stream = params.get('_stream')
-    orig_stat = orig_path.stat() if orig_path is not None else params['_stat']
+    orig_stat = orig_path.lstat() if orig_path is not None else params['_stat']
     dest_path = _checks(params)
     in_path = Path(params['to'])
     preserve_stats = params.get('preserveStats', 'utime')
@@ -200,7 +200,7 @@ def action_reverse_copy_file(_, params: dict):
     dest_path = Path(params['from'])
     orig_path = _checks(params) if 'to' in params or 'path' in params else None
     orig_stream = params.get('_stream')
-    orig_stat = orig_path.stat() if orig_path is not None else params['_stat']
+    orig_stat = orig_path.lstat() if orig_path is not None else params['_stat']
     preserve_stats = params.get('preserveStats', 'utime')
 
     raise_if_type_is_incorrect(preserve_stats, (str, bool), 'preserveStats must be a string or a boolean')
@@ -241,7 +241,7 @@ def action_clone_file(_, params: dict):
             # https://stackoverflow.com/questions/52766388/how-can-i-use-the-copy-on-write-of-a-btrfs-from-c-code
             # https://github.com/coreutils/coreutils/blob/master/src/copy.c#L370
             if not dest_path.exists():
-                dest_path.touch(orig_path.stat().st_mode)
+                dest_path.touch(orig_path.lstat().st_mode)
             src_fd = os.open(orig_path, flags=os.O_RDONLY)
             dst_fd = os.open(dest_path, flags=os.O_WRONLY | os.O_TRUNC)
             try:
@@ -257,7 +257,7 @@ def action_clone_file(_, params: dict):
 
             if preserve_stats:
                 xattrs = _read_xattrs(orig_path)
-                _preserve_stats(dest_path, orig_path.stat(), xattrs, preserve_stats)
+                _preserve_stats(dest_path, orig_path.lstat(), xattrs, preserve_stats)
         else:
             cow_failed = True
 
