@@ -3,7 +3,7 @@ import logging
 from pathlib import Path
 from typing import Iterable, List, Tuple
 
-from ..archive import archive_folder
+from ..archive import archive_file, archive_folder
 from ..config import Config
 from ..hooks import run_hook
 from ..storage import create_storage_instance
@@ -24,17 +24,29 @@ def _process_results(config: Config, backup: Path, items: Iterable[Tuple[Path, d
 
     # Compress directories
     for item, task in items:
-        # Compress if it is a directory
         if item.is_dir():
+            # Compress/encrypt if it is a directory
             filename = archive_folder(backup, item, config.cloud)
             final_items.append(backup / filename)
             items_to_remove.append(backup / filename)
             task['cloudResult'] = Path(filename)
         else:
-            final_items.append(item)
+            # Compress/encrypt if it is a file (if needed)
+            filename = archive_file(backup, item, task, config.cloud)
+            if filename is not None:
+                final_items.append(backup / filename)
+                items_to_remove.append(backup / filename)
+                task['cloudResult'] = Path(filename)
+            else:
+                final_items.append(item)
 
     # Add the manifest as well :)
-    final_items.append(backup / '.manifest.yaml')
+    manifest_filename = archive_file(backup, backup / '.manifest.yaml', {'actions': []}, config.cloud)
+    if manifest_filename is not None:
+        final_items.append(backup / manifest_filename)
+        items_to_remove.append(backup / manifest_filename)
+    else:
+        final_items.append(backup / '.manifest.yaml')
     return final_items, items_to_remove
 
 
@@ -119,7 +131,7 @@ def main_upload(config: Config, backup: Path, force: bool = False):
         raise FileNotFoundError(backup)
     if not backup.is_dir():
         raise NotADirectoryError(backup)
-    if not str(backup).startswith(str(config.backups_path)):
+    if not str(backup).startswith(str(config.backups_path.resolve())):
         raise ValueError(f'Backup path {backup} is not inside the backups path')
     manifest_path = backup / '.manifest.yaml'
     if not manifest_path.exists():
@@ -143,5 +155,5 @@ def main_upload(config: Config, backup: Path, force: bool = False):
     finally:
         # Remove compressed directories
         for item in items_to_remove:
-            logger.info(f'Removing file from compressed directory {item}')
+            logger.info(f'Removing temporary file {item}')
             item.unlink()

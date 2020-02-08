@@ -10,8 +10,8 @@ from mdbackup.utils import raise_if_type_is_incorrect
 def action_encrypt_opengpg(inp: InputDataStream, params) -> subprocess.Popen:
     passphrase = params.get('passphrase')
     recipients: list = params.get('recipients', [])
-    algorithm = params.get('cipherAlgorithm')
-    compress = params.get('compressAlgorithm', False)
+    algorithm = params.get('cipherAlgorithm', params.get('cypherAlgorithm'))
+    compress = params.get('compressAlgorithm', None)
 
     raise_if_type_is_incorrect(passphrase, str, 'passphrase must be a string')
     raise_if_type_is_incorrect(recipients, list, 'recipients must be a list of strings')
