@@ -165,6 +165,7 @@ This compression algorithm is fast and good-balanced in resources consumption. C
 | Name | Type | Description | Optional |
 |------|------|-------------|----------|
 | `compressionLevel` | `ìnt` | Compression level from 1 to 19 (default 3) | Yes |
+| `cpus` | `int` | Uses this amount of cores to compress the data | Yes |
 
 **Description**
 
