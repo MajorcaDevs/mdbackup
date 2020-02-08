@@ -365,6 +365,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#cpus" class="md-nav__link">
+    cpus
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -945,6 +952,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#cpus" class="md-nav__link">
+    cpus
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1089,7 +1103,8 @@
     <span class="nt">&quot;cloud&quot;</span><span class="p">:</span> <span class="p">{</span>
       <span class="nt">&quot;compression&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="nt">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;gz|xz|bz2|br|zst&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;level&quot;</span><span class="p">:</span> <span class="mi">8</span>
+        <span class="nt">&quot;level&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+        <span class="nt">&quot;cpus&quot;</span><span class="p">:</span> <span class="mi">1</span>
       <span class="p">},</span>
       <span class="nt">&quot;encrypt&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="nt">&quot;strategy&quot;</span><span class="p">:</span> <span class="s2">&quot;gpg-keys|gpg-passphrase&quot;</span><span class="p">,</span>
@@ -1157,6 +1172,7 @@
   <span class="nt">compression</span><span class="p">:</span>
     <span class="nt">method</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gz|xz|bz2|br|zst</span>
     <span class="nt">level</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">8</span>
+    <span class="nt">cpus</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
 
   <span class="nt">encrypt</span><span class="p">:</span>
     <span class="nt">strategy</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gpg-keys|gpg-passphrase</span>
@@ -1228,6 +1244,12 @@
 <p>In general, a lot of Linux distributions includes these commands, as well as in macOS. But it&rsquo;s worth to check their existence before using them.</p>
 <h4 id="level">level<a class="headerlink" href="#level" title="Permanent link">&para;</a></h4>
 <p>The compression level. Higher values indicates better but slower compressions. Values accepted for <code class="codehilite"><span class="err">gzip</span></code> are from 1 to 9. Values accepted for <code class="codehilite"><span class="err">xz</span></code> are from 0 to 9 (by default is 6, 7-9 are not recommended).</p>
+<h4 id="cpus">cpus<a class="headerlink" href="#cpus" title="Permanent link">&para;</a></h4>
+<p>The number of cpus/threads to use when compressing. By default, will use only one thread to compress, but this can be changed to any number. This value is ignored by some compression algorithms.</p>
+<div class="admonition note">
+<p class="admonition-title">Threads and compression algorithms</p>
+<p>Currently, <code class="codehilite"><span class="err">xz</span></code> and <code class="codehilite"><span class="err">zst</span></code> supports <code class="codehilite"><span class="err">cpus</span></code> setting, the rest will always use 1 thread.</p>
+</div>
 <h3 id="encrypt">encrypt<a class="headerlink" href="#encrypt" title="Permanent link">&para;</a></h3>
 <p>If defined, when backups are uploaded to a storage provider, folders will be encrypted using this configuration.</p>
 <p>Can be used with or without <a href="#compression">compression</a>.</p>
