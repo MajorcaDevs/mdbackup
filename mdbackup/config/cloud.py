@@ -10,9 +10,11 @@ class CloudConfig(object):
         if 'compression' in conf:
             self.__compression_level = conf['compression'].get('level', 6)
             self.__compression_strategy = conf['compression']['method']
+            self.__compression_cpus = conf['compression'].get('cpus', None)
         else:
             self.__compression_level = None
             self.__compression_strategy = None
+            self.__compression_cpus = None
         if 'encrypt' in conf:
             self.__cypher_strategy = conf['encrypt']['strategy']
             self.__cypher_params = change_keys(conf['encrypt'])
@@ -41,6 +43,13 @@ class CloudConfig(object):
         :return: The compression level
         """
         return self.__compression_level
+
+    @property
+    def compression_cpus(self) -> Optional[int]:
+        """
+        :return: The threads/cpus to use during compression
+        """
+        return self.__compression_cpus
 
     @property
     def cypher_strategy(self) -> Optional[str]:

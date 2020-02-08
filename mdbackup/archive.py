@@ -27,12 +27,13 @@ def archive_folder(backup_path: Path, folder: Path, cloud_config: CloudConfig) -
         actions.append({
             f'compress-{cloud_config.compression_strategy}': {
                 'level': cloud_config.compression_level,
+                'cpus': cloud_config.compression_cpus,
             },
         })
         filename += f'.{cloud_config.compression_strategy}'
     if cloud_config.cypher_strategy is not None:
         actions.append({
-            f'encrypt-gpg': {
+            'encrypt-gpg': {
                 'passphrase': cloud_config.cypher_params.get('passphrase'),
                 'recipients': cloud_config.cypher_params.get('keys', []),
                 'algorithm': cloud_config.cypher_params.get('algorithm'),
@@ -42,8 +43,8 @@ def archive_folder(backup_path: Path, folder: Path, cloud_config: CloudConfig) -
 
     actions.append({'to-file': {'_backup_path': backup_path, 'to': filename}})
 
-    # Do the compression
-    logger.info(f'Compressing directory {folder} into {filename}')
+    # Do the magic
+    logger.info(f'Compressing/encrypting directory {folder} into {filename}')
     run_task_actions('archive-folder', actions)
 
     return filename
