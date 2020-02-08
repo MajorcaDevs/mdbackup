@@ -16,7 +16,7 @@
 | `recipients` | `List[str]` | List of emails that will be able to decrypt the data | Yes |
 | `cipherAlgorithm` | `str` | Changes the cipher algorithm | Yes |
 | `cypherAlgorithm` | `str` | Alias for `cypherAlgorithm` | Yes |
-| `compressAlgorithm` | `str` | Changes the compress algorithm | Yes |
+| `compressAlgorithm` | `str` | Selects the compress algorithm, if not set, then will be uncompressed (default) | Yes |
 
 At least one recipient must be defined. If no recipients are defined, a passphrase must be provided. Both can be defined.
 
