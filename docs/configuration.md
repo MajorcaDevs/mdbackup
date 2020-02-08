@@ -46,7 +46,8 @@ This allows you to auto-complete with the elements available in the configuratio
     "cloud": {
       "compression": {
         "method": "gz|xz|bz2|br|zst",
-        "level": 8
+        "level": 8,
+        "cpus": 1
       },
       "encrypt": {
         "strategy": "gpg-keys|gpg-passphrase",
@@ -114,6 +115,7 @@ cloud:
   compression:
     method: gz|xz|bz2|br|zst
     level: 8
+    cpus: 1
 
   encrypt:
     strategy: gpg-keys|gpg-passphrase
@@ -216,6 +218,13 @@ In general, a lot of Linux distributions includes these commands, as well as in 
 #### level
 
 The compression level. Higher values indicates better but slower compressions. Values accepted for `gzip` are from 1 to 9. Values accepted for `xz` are from 0 to 9 (by default is 6, 7-9 are not recommended).
+
+#### cpus
+
+The number of cpus/threads to use when compressing. By default, will use only one thread to compress, but this can be changed to any number. This value is ignored by some compression algorithms.
+
+!!! Note "Threads and compression algorithms"
+    Currently, `xz` and `zst` supports `cpus` setting, the rest will always use 1 thread.
 
 ### encrypt
 

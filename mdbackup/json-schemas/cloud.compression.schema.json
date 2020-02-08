@@ -22,9 +22,14 @@
     "level": {
       "$id": "#/properties/level",
       "type": "number",
-      "title": "Selects the compression level",
-      "default": 6,
-      "enum": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ]
+      "title": "Selects the compression level to use to compress files (value depends on compression algorithm)",
+      "default": 6
+    },
+    "cpus": {
+      "$id": "#/properties/cpus",
+      "type": "number",
+      "title": "Selects the number of threads to use to compress files (may be ignored by some algorithms)",
+      "default": 1
     }
   }
 }
