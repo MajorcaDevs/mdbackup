@@ -34,7 +34,7 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.6.0">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.6.1">
     
     
       
@@ -42,7 +42,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/application.1b62728e.css">
+      <link rel="stylesheet" href="../assets/stylesheets/application.592ad16c.css">
       
       
     
@@ -79,7 +79,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="#quick-start-guide" tabindex="1" class="md-skip">
+      <a href="#quick-start-guide" tabindex="0" class="md-skip">
         Skip to content
       </a>
     
@@ -88,7 +88,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href=".." title="mdbackup documentation" class="md-header-nav__button md-logo">
+        <a href=".." title="mdbackup documentation" aria-label="mdbackup documentation" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -119,7 +119,7 @@
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <input type="text" class="md-search__input" aria-label="search" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
       <label class="md-icon md-search__icon" for="__search"></label>
       <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
         &#xE5CD;
@@ -783,31 +783,31 @@
 </div>
 <p>In this guide, a virtual environment will be used to install and use the tool. It is not recommended to install it directly in the system.</p>
 <p>First prepare the virtual environment. You can use <code class="codehilite"><span class="err">venv</span></code> or <code class="codehilite"><span class="err">virtualenv</span></code>, but the first will be used.</p>
-<div class="codehilite"><pre><span></span>python -m venv .venv
+<div class="codehilite"><pre><span></span><code>python -m venv .venv
 python -m virtualenv .venv
-</pre></div>
+</code></pre></div>
 
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><code class="codehilite"><span class="err">python</span></code> here it is referred to the python 3 executable. In some platforms will be <code class="codehilite"><span class="err">python3</span></code>.</p>
 </div>
 <p>Once the environment is created, we must &ldquo;activate&rdquo; it:</p>
-<div class="codehilite"><pre><span></span>. .venv/bin/activate
-</pre></div>
+<div class="codehilite"><pre><span></span><code>. .venv/bin/activate
+</code></pre></div>
 
 <div class="admonition info">
 <p class="admonition-title">Info</p>
 <p>It may be good idea to upgrade some basic packages after enabling the virtual environment: <code class="codehilite"><span class="err">pip install --upgrade pip setuptools wheel</span></code></p>
 </div>
 <p>Now you can use <code class="codehilite"><span class="err">python</span></code> and <code class="codehilite"><span class="err">pip</span></code> and everything will work from and install to the virtual environment. Now you can download the tool and install it:</p>
-<div class="codehilite"><pre><span></span><span class="c1">#Install using pip</span>
+<div class="codehilite"><pre><span></span><code><span class="c1">#Install using pip</span>
 pip install mdbackup
 
 <span class="c1">#You can also install the tool using the wheel package from GitHub:</span>
 <span class="c1">#Check the latest release at https://github.com/MajorcaDevs/mdbackup/releases</span>
 
 mdbackup --help
-</pre></div>
+</code></pre></div>
 
 <p>To check if the tool is installed properly, run the help of the tool and you should get something like <a href="../arguments/">this</a>.</p>
 <p>You can also use the <a href="../docker/">Docker container</a>. But it is recommended to read the guide to get an idea.</p>
@@ -840,12 +840,12 @@ mdbackup --help
 </ul>
 <p>And the third folder, it does not matter where is placed, but it will be used soon to store backups. It can be a network storage, an external drive or a partition in some local drive. It is recommended to store them outside the root partition (<code class="codehilite"><span class="err">/</span></code>), if possible.</p>
 <p>Did you notice the <code class="codehilite"><span class="err">config.json</span></code>? This file holds the <a href="../configuration/">configuration</a> of the tool. Write in it the following:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;backupsPath&quot;</span><span class="p">:</span> <span class="s2">&quot;/the/path/to/the/folder/where/the/backups/are/going/to/be/stored&quot;</span><span class="p">,</span>
   <span class="nt">&quot;logLevel&quot;</span><span class="p">:</span> <span class="s2">&quot;DEBUG&quot;</span><span class="p">,</span>
   <span class="nt">&quot;env&quot;</span><span class="p">:</span> <span class="p">{}</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -861,17 +861,17 @@ mdbackup --help
 <div class="superfences-tabs">
 <input name="__tabs_1" type="radio" id="__tab_1_0" checked="checked" />
 <label for="__tab_1_0">YAML syntax</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="nt">name</span><span class="p">:</span> <span class="s">&#39;test&#39;</span>
+<div class="superfences-content"><div class="codehilite"><pre><span></span><code><span class="nt">name</span><span class="p">:</span> <span class="s">&#39;test&#39;</span>
 <span class="nt">tasks</span><span class="p">:</span>
   <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Backup home</span>
     <span class="nt">actions</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">from-directory</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">/home/user</span>  <span class="c1">#macOS users, use &quot;/Users/YourUser&quot;</span>
       <span class="p p-Indicator">-</span> <span class="nt">to-directory</span><span class="p">:</span>
           <span class="nt">path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">home</span>
-</pre></div></div>
+</code></pre></div></div>
 <input name="__tabs_1" type="radio" id="__tab_1_1" />
 <label for="__tab_1_1">JSON syntax</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="superfences-content"><div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span>
   <span class="nt">&quot;tasks&quot;</span><span class="p">:</span> <span class="p">[</span>
     <span class="p">{</span>
@@ -887,7 +887,7 @@ mdbackup --help
     <span class="p">}</span>
   <span class="p">]</span>
 <span class="p">}</span>
-</pre></div></div>
+</code></pre></div></div>
 </div>
 <p>This task will copy your home directory and all its contents into the backup folder. You can use any other folder you want just to try, this is an example.</p>
 <p>Now try running the tool: <code class="codehilite"><span class="err">mdbackup</span></code>. If everything is well configured, you will have a new folder in the backups folder with the current date and time (in UTC) and with your folder copied inside. Well, try now to make a backup again. If the folder being copied is large enough, you will notice that this time, the backup took less time than the first time. This is because the action <code class="codehilite"><span class="err">to-directory</span></code> takes into account the previous backup and will try to do an incremental backup: if the file to copy already exists in the previous backup and has not been modified since the last time, then it will do a <code class="codehilite"><span class="err">hard-link</span></code> instead of a copy. This trick only works for some of the actions, check their documentation to know what are the ones doing this.</p>
@@ -904,7 +904,7 @@ mdbackup --help
 <div class="superfences-tabs">
 <input name="__tabs_2" type="radio" id="__tab_2_0" checked="checked" />
 <label for="__tab_2_0">YAML syntax</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">PostgreSQL example</span>
+<div class="superfences-content"><div class="codehilite"><pre><span></span><code><span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">PostgreSQL example</span>
 <span class="nt">env</span><span class="p">:</span>
   <span class="nt">host</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">localhost</span>
   <span class="nt">user</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">postgres</span>
@@ -922,10 +922,10 @@ mdbackup --help
           <span class="nt">database</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">test2</span>
       <span class="p p-Indicator">-</span> <span class="nt">to-file</span><span class="p">:</span>
           <span class="nt">path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">test2.sql</span>
-</pre></div></div>
+</code></pre></div></div>
 <input name="__tabs_2" type="radio" id="__tab_2_1" />
 <label for="__tab_2_1">JSON syntax</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="superfences-content"><div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;PostgreSQL example&quot;</span><span class="p">,</span>
   <span class="nt">&quot;env&quot;</span><span class="p">:</span> <span class="p">{</span>
     <span class="nt">&quot;host&quot;</span><span class="p">:</span> <span class="s2">&quot;localhost&quot;</span><span class="p">,</span>
@@ -965,14 +965,14 @@ mdbackup --help
     <span class="p">}</span>
   <span class="p">]</span>
 <span class="p">}</span>
-</pre></div></div>
+</code></pre></div></div>
 </div>
 <p>The tool will read the environment variables, and inject them in the actions parameters.</p>
 <p>But wait, there&rsquo;s more: you can even place <code class="codehilite"><span class="cp">${</span><span class="n">VARIABLE</span><span class="cp">}</span></code> tokens in the parameters or other variables inside <code class="codehilite"><span class="err">env</span></code> sections to refer to real environment variables or variables on <code class="codehilite"><span class="err">env</span></code>s. This example will try to access to the database using the user running the tool:</p>
 <div class="superfences-tabs">
 <input name="__tabs_3" type="radio" id="__tab_3_0" checked="checked" />
 <label for="__tab_3_0">YAML syntax</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">PostgreSQL example</span>
+<div class="superfences-content"><div class="codehilite"><pre><span></span><code><span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">PostgreSQL example</span>
 <span class="nt">env</span><span class="p">:</span>
   <span class="nt">host</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">localhost</span>
   <span class="nt">user</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">${USER}</span>
@@ -989,10 +989,10 @@ mdbackup --help
           <span class="nt">database</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">test2</span>
       <span class="p p-Indicator">-</span> <span class="nt">to-file</span><span class="p">:</span>
           <span class="nt">path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">test2.sql</span>
-</pre></div></div>
+</code></pre></div></div>
 <input name="__tabs_3" type="radio" id="__tab_3_1" />
 <label for="__tab_3_1">JSON syntax</label>
-<div class="superfences-content"><div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="superfences-content"><div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;PostgreSQL example&quot;</span><span class="p">,</span>
   <span class="nt">&quot;env&quot;</span><span class="p">:</span> <span class="p">{</span>
     <span class="nt">&quot;host&quot;</span><span class="p">:</span> <span class="s2">&quot;localhost&quot;</span><span class="p">,</span>
@@ -1031,7 +1031,7 @@ mdbackup --help
     <span class="p">}</span>
   <span class="p">]</span>
 <span class="p">}</span>
-</pre></div></div>
+</code></pre></div></div>
 </div>
 <p>If everything went well, you now will have a <code class="codehilite"><span class="err">test1.sql</span></code> and <code class="codehilite"><span class="err">test2.sql</span></code> files in the backup folder.</p>
 <div class="admonition info">
@@ -1040,7 +1040,7 @@ mdbackup --help
 </div>
 <h2 id="compression">Compression<a class="headerlink" href="#compression" title="Permanent link">&para;</a></h2>
 <p>What if your postgres backup takes some MB and you think &ldquo;what if the file were compressed, will be a few KBs?&rdquo; You can add a compress action in the middle of the actions to compress the output. See the example:</p>
-<div class="codehilite"><pre><span></span><span class="nn">...</span>
+<div class="codehilite"><pre><span></span><code><span class="nn">...</span>
     <span class="nt">actions</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">postgres-database</span><span class="p">:</span>
           <span class="nt">database</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">test1</span>
@@ -1048,18 +1048,18 @@ mdbackup --help
       <span class="p p-Indicator">-</span> <span class="nt">to-file</span><span class="p">:</span>
           <span class="nt">path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">test1.sql.gz</span>
 <span class="nn">...</span>
-</pre></div>
+</code></pre></div>
 
 <p>The <a href="../actions/compress#compress-gz"><code class="codehilite"><span class="err">compress-gz</span></code></a> action receives data as input and compresses it using <code class="codehilite"><span class="err">gzip</span></code> command. And that&rsquo;s how you compress some data.</p>
 <p>In addition, when uploading folders to a storage provider, they automatically are archived into a <code class="codehilite"><span class="err">tar</span></code> file. If you want to save some bits, you can also compress them by adding the following configuration in the configuration file:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;...&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">,</span>
   <span class="nt">&quot;compression&quot;</span><span class="p">:</span> <span class="p">{</span>
     <span class="nt">&quot;strategy&quot;</span><span class="p">:</span> <span class="s2">&quot;gzip&quot;</span><span class="p">,</span>
     <span class="nt">&quot;level&quot;</span><span class="p">:</span> <span class="mi">7</span>
   <span class="p">}</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 <div class="admonition warning">
 <p class="admonition-title">Extra tools needed for compression</p>
@@ -1069,7 +1069,7 @@ mdbackup --help
 <p>You need <strong>OpenGPG 2</strong> in order to cypher files. And as well as the compression, will be used automatically to upload to storage providers.</p>
 <p>Most Linux distributions have installed <code class="codehilite"><span class="err">gpg</span></code> tools, but you must check the version. On macOS, install <a href="https://gpgtools.org">GPGTools</a>.</p>
 <p>There&rsquo;s two ways to encrypt data, in this guide will be using the passphrase. Here is a configuration example:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;...&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">,</span>
   <span class="nt">&quot;cypher&quot;</span><span class="p">:</span> <span class="p">{</span>
     <span class="nt">&quot;strategy&quot;</span><span class="p">:</span> <span class="s2">&quot;gpg-passphrase&quot;</span><span class="p">,</span>
@@ -1077,10 +1077,10 @@ mdbackup --help
     <span class="nt">&quot;algorithm&quot;</span><span class="p">:</span> <span class="s2">&quot;AES256&quot;</span>
   <span class="p">}</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 <p>But, if instead what you want is to encrypt a file in a task, there is an action for you:</p>
-<div class="codehilite"><pre><span></span><span class="nn">...</span>
+<div class="codehilite"><pre><span></span><code><span class="nn">...</span>
     <span class="nt">actions</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">postgres-database</span><span class="p">:</span>
           <span class="nt">database</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">test1</span>
@@ -1089,10 +1089,10 @@ mdbackup --help
       <span class="p p-Indicator">-</span> <span class="nt">to-file</span><span class="p">:</span>
           <span class="nt">path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">test1.sql.asc</span>
 <span class="nn">...</span>
-</pre></div>
+</code></pre></div>
 
 <p>The <a href="../actions/encrypt#encrypt-gpg"><code class="codehilite"><span class="err">encrypt-gpg</span></code></a> action will use <code class="codehilite"><span class="err">gpg</span></code> to encrypt the input data. You may even compress and encrypt the data in a task (preferible in this order):</p>
-<div class="codehilite"><pre><span></span><span class="nn">...</span>
+<div class="codehilite"><pre><span></span><code><span class="nn">...</span>
     <span class="nt">actions</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">postgres-database</span><span class="p">:</span>
           <span class="nt">database</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">test1</span>
@@ -1102,7 +1102,7 @@ mdbackup --help
       <span class="p p-Indicator">-</span> <span class="nt">to-file</span><span class="p">:</span>
           <span class="nt">path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">test1.sql.asc</span>
 <span class="nn">...</span>
-</pre></div>
+</code></pre></div>
 
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -1116,7 +1116,7 @@ mdbackup --help
 </blockquote>
 <p>There are many <a href="./storage">storage providers</a> to choose. In the guide FTP will be used to quickly show how to upload files. <em>Also because this is the only storage provider that does not need to install any extra packages.</em></p>
 <p>This is the configuration for the FTP:</p>
-<div class="codehilite"><pre><span></span><span class="p">{</span>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
   <span class="nt">&quot;...&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">,</span>
   <span class="nt">&quot;storage&quot;</span><span class="p">:</span> <span class="p">[</span>
     <span class="p">{</span>
@@ -1127,7 +1127,7 @@ mdbackup --help
     <span class="p">}</span>
   <span class="p">]</span>
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 <p>This will upload the files to the FTP server <code class="codehilite"><span class="err">ftp.local</span></code>, in the folder <code class="codehilite"><span class="err">/backups</span></code> using the <code class="codehilite"><span class="err">anonymous</span></code> user and no password.</p>
 <h2 id="the-end">The end<a class="headerlink" href="#the-end" title="Permanent link">&para;</a></h2>
@@ -1195,9 +1195,9 @@ mdbackup --help
           </div>
         
         powered by
-        <a href="https://www.mkdocs.org">MkDocs</a>
+        <a href="https://www.mkdocs.org" target="_blank" rel="noopener">MkDocs</a>
         and
-        <a href="https://squidfunk.github.io/mkdocs-material/">
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
           Material for MkDocs</a>
       </div>
       
@@ -1207,7 +1207,7 @@ mdbackup --help
       
     </div>
     
-      <script src="../assets/javascripts/application.808e90bb.js"></script>
+      <script src="../assets/javascripts/application.98c7b6b1.js"></script>
       
       <script>app.initialize({version:"1.0.4",url:{base:".."}})</script>
       

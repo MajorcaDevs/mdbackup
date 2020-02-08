@@ -34,7 +34,7 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.6.0">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.6.1">
     
     
       
@@ -42,7 +42,7 @@
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/application.1b62728e.css">
+      <link rel="stylesheet" href="assets/stylesheets/application.592ad16c.css">
       
       
     
@@ -79,7 +79,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="#backups-utility" tabindex="1" class="md-skip">
+      <a href="#backups-utility" tabindex="0" class="md-skip">
         Skip to content
       </a>
     
@@ -88,7 +88,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="." title="mdbackup documentation" class="md-header-nav__button md-logo">
+        <a href="." title="mdbackup documentation" aria-label="mdbackup documentation" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -119,7 +119,7 @@
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <input type="text" class="md-search__input" aria-label="search" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
       <label class="md-icon md-search__icon" for="__search"></label>
       <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
         &#xE5CD;
@@ -575,16 +575,16 @@
 </ul>
 <p>First select a folder where all the needed files will be stored. It is important not to move (or rename) this folder after installation.</p>
 <p>Run one of those commands. If both fail, try to install <code class="codehilite"><span class="err">python3-virtualenv</span></code> (debian based) or <code class="codehilite"><span class="err">pip3 install virtualenv</span></code> (on macOS).</p>
-<div class="codehilite"><pre><span></span>python3 -m venv .venv
+<div class="codehilite"><pre><span></span><code>python3 -m venv .venv
 python3 -m virtualenv .venv
-</pre></div>
+</code></pre></div>
 
 <p>When you have the virtual environment created, you have to activate it. With this, you can run python commands and everything you do, will alter the virtual env, not the real one (and so, you don&rsquo;t need <code class="codehilite"><span class="err">sudo</span></code> to do things).</p>
-<div class="codehilite"><pre><span></span>. .venv/bin/activate
+<div class="codehilite"><pre><span></span><code>. .venv/bin/activate
 <span class="c1"># Download the .whl package</span>
 pip install --upgrade setuptools wheel
 pip install mdbackup*.whl
-</pre></div>
+</code></pre></div>
 
 <p>Now you can run the utility (only if you have enabled the virtual env) with <code class="codehilite"><span class="err">mdbackup</span></code>. In this folder it is recommended to store the <code class="codehilite"><span class="err">config</span></code> and <code class="codehilite"><span class="err">steps</span></code> folders.</p>
 <blockquote>
@@ -641,9 +641,9 @@ pip install mdbackup*.whl
           </div>
         
         powered by
-        <a href="https://www.mkdocs.org">MkDocs</a>
+        <a href="https://www.mkdocs.org" target="_blank" rel="noopener">MkDocs</a>
         and
-        <a href="https://squidfunk.github.io/mkdocs-material/">
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
           Material for MkDocs</a>
       </div>
       
@@ -653,7 +653,7 @@ pip install mdbackup*.whl
       
     </div>
     
-      <script src="assets/javascripts/application.808e90bb.js"></script>
+      <script src="assets/javascripts/application.98c7b6b1.js"></script>
       
       <script>app.initialize({version:"1.0.4",url:{base:"."}})</script>
       

@@ -34,7 +34,7 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.6.0">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.6.1">
     
     
       
@@ -42,7 +42,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/application.1b62728e.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/application.592ad16c.css">
       
       
     
@@ -79,7 +79,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="#actions-database" tabindex="1" class="md-skip">
+      <a href="#actions-database" tabindex="0" class="md-skip">
         Skip to content
       </a>
     
@@ -88,7 +88,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="../.." title="mdbackup documentation" class="md-header-nav__button md-logo">
+        <a href="../.." title="mdbackup documentation" aria-label="mdbackup documentation" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -119,7 +119,7 @@
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <input type="text" class="md-search__input" aria-label="search" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
       <label class="md-icon md-search__icon" for="__search"></label>
       <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
         &#xE5CD;
@@ -811,20 +811,20 @@
 <div class="admonition example">
 <p class="admonition-title">Example</p>
 <p>Simple backup of a database.</p>
-<div class="codehilite"><pre><span></span><span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">postgres database task example</span>
+<div class="codehilite"><pre><span></span><code><span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">postgres database task example</span>
   <span class="nt">actions</span><span class="p">:</span>
     <span class="p p-Indicator">-</span> <span class="nt">postgres-database</span><span class="p">:</span>
         <span class="nt">database</span><span class="p">:</span> <span class="s">&#39;app-database&#39;</span>
     <span class="p p-Indicator">-</span> <span class="nt">compress-gz</span><span class="p">:</span> <span class="p p-Indicator">{}</span>
     <span class="p p-Indicator">-</span> <span class="nt">to-file</span><span class="p">:</span>
         <span class="nt">path</span><span class="p">:</span> <span class="s">&#39;app-database.sql.gz&#39;</span>
-</pre></div>
+</code></pre></div>
 
 </div>
 <div class="admonition example">
 <p class="admonition-title">Example</p>
 <p>Backup using docker to make a backup.</p>
-<div class="codehilite"><pre><span></span><span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">postgres database using docker task example</span>
+<div class="codehilite"><pre><span></span><code><span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">postgres database using docker task example</span>
   <span class="nt">actions</span><span class="p">:</span>
     <span class="p p-Indicator">-</span> <span class="nt">postgres-database</span><span class="p">:</span>
         <span class="nt">database</span><span class="p">:</span> <span class="s">&#39;app-database&#39;</span>
@@ -835,7 +835,7 @@
     <span class="p p-Indicator">-</span> <span class="nt">compress-gz</span><span class="p">:</span> <span class="p p-Indicator">{}</span>
     <span class="p p-Indicator">-</span> <span class="nt">to-file</span><span class="p">:</span>
         <span class="nt">path</span><span class="p">:</span> <span class="s">&#39;app-database.sql.gz&#39;</span>
-</pre></div>
+</code></pre></div>
 
 </div>
 <h2 id="mysql-database"><code class="codehilite"><span class="err">mysql-database</span></code><a class="headerlink" href="#mysql-database" title="Permanent link">&para;</a></h2>
@@ -908,7 +908,7 @@
 <div class="admonition example">
 <p class="admonition-title">Example</p>
 <p>Simple backup of a database.</p>
-<div class="codehilite"><pre><span></span><span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mysql database task example</span>
+<div class="codehilite"><pre><span></span><code><span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mysql database task example</span>
   <span class="nt">actions</span><span class="p">:</span>
     <span class="p p-Indicator">-</span> <span class="nt">mysql-database</span><span class="p">:</span>
         <span class="nt">host</span><span class="p">:</span> <span class="s">&#39;127.0.0.1&#39;</span>
@@ -918,13 +918,13 @@
     <span class="p p-Indicator">-</span> <span class="nt">compress-gz</span><span class="p">:</span> <span class="p p-Indicator">{}</span>
     <span class="p p-Indicator">-</span> <span class="nt">to-file</span><span class="p">:</span>
         <span class="nt">path</span><span class="p">:</span> <span class="s">&#39;app-database.sql.gz&#39;</span>
-</pre></div>
+</code></pre></div>
 
 </div>
 <div class="admonition example">
 <p class="admonition-title">Example</p>
 <p>Backup using docker to make a backup.</p>
-<div class="codehilite"><pre><span></span><span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mysql database using docker task example</span>
+<div class="codehilite"><pre><span></span><code><span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mysql database using docker task example</span>
   <span class="nt">actions</span><span class="p">:</span>
     <span class="p p-Indicator">-</span> <span class="nt">mysql-database</span><span class="p">:</span>
         <span class="nt">docker</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
@@ -936,7 +936,7 @@
     <span class="p p-Indicator">-</span> <span class="nt">compress-gz</span><span class="p">:</span> <span class="p p-Indicator">{}</span>
     <span class="p p-Indicator">-</span> <span class="nt">to-file</span><span class="p">:</span>
         <span class="nt">path</span><span class="p">:</span> <span class="s">&#39;app-database.sql.gz&#39;</span>
-</pre></div>
+</code></pre></div>
 
 </div>
 <h2 id="influxdb"><code class="codehilite"><span class="err">influxdb</span></code><a class="headerlink" href="#influxdb" title="Permanent link">&para;</a></h2>
@@ -1025,13 +1025,13 @@
 <div class="admonition example">
 <p class="admonition-title">Example</p>
 <p>Simple backup of a database.</p>
-<div class="codehilite"><pre><span></span><span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">influxdb database task example</span>
+<div class="codehilite"><pre><span></span><code><span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">influxdb database task example</span>
   <span class="nt">actions</span><span class="p">:</span>
     <span class="p p-Indicator">-</span> <span class="nt">influxdb</span><span class="p">:</span>
         <span class="nt">to</span><span class="p">:</span> <span class="s">&#39;influxdb/netdata&#39;</span>
         <span class="nt">host</span><span class="p">:</span> <span class="s">&#39;127.0.0.1:8088&#39;</span>
         <span class="nt">database</span><span class="p">:</span> <span class="s">&#39;graphite&#39;</span>
-</pre></div>
+</code></pre></div>
 
 </div>
                 
@@ -1096,9 +1096,9 @@
           </div>
         
         powered by
-        <a href="https://www.mkdocs.org">MkDocs</a>
+        <a href="https://www.mkdocs.org" target="_blank" rel="noopener">MkDocs</a>
         and
-        <a href="https://squidfunk.github.io/mkdocs-material/">
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
           Material for MkDocs</a>
       </div>
       
@@ -1108,7 +1108,7 @@
       
     </div>
     
-      <script src="../../assets/javascripts/application.808e90bb.js"></script>
+      <script src="../../assets/javascripts/application.98c7b6b1.js"></script>
       
       <script>app.initialize({version:"1.0.4",url:{base:"../.."}})</script>
       

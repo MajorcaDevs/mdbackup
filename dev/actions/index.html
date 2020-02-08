@@ -34,7 +34,7 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.6.0">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.6.1">
     
     
       
@@ -42,7 +42,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/application.1b62728e.css">
+      <link rel="stylesheet" href="../assets/stylesheets/application.592ad16c.css">
       
       
     
@@ -79,7 +79,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="#actions" tabindex="1" class="md-skip">
+      <a href="#actions" tabindex="0" class="md-skip">
         Skip to content
       </a>
     
@@ -88,7 +88,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href=".." title="mdbackup documentation" class="md-header-nav__button md-logo">
+        <a href=".." title="mdbackup documentation" aria-label="mdbackup documentation" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -119,7 +119,7 @@
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <input type="text" class="md-search__input" aria-label="search" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
       <label class="md-icon md-search__icon" for="__search"></label>
       <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
         &#xE5CD;
@@ -831,7 +831,7 @@
 <div class="admonition info">
 <p class="admonition-title"><code class="codehilite"><span class="err">DirEntry</span></code></p>
 <p>Is a data structure used internally to represent a entry of a folder. The object is defined like this:</p>
-<div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">DirEntry</span><span class="p">:</span>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">DirEntry</span><span class="p">:</span>
     <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">path</span><span class="p">:</span> <span class="n">Path</span>
     <span class="n">stats</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">stat_result</span>
@@ -841,18 +841,18 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">link_content</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">real_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">pass</span>
-</pre></div>
+</code></pre></div>
 
 </div>
 <p>In actions, a <strong>data stream</strong> means a <code class="codehilite"><span class="err">io.FileIO</span></code>, <code class="codehilite"><span class="err">io.BufferedIOBase</span></code> or <code class="codehilite"><span class="err">io.TextIOBase</span></code> object that has a file descriptor associated to the stream, or a <code class="codehilite"><span class="err">subprocess.Popen</span></code> object with <code class="codehilite"><span class="err">PIPE</span></code> mode set to <code class="codehilite"><span class="err">stdout</span></code> and <code class="codehilite"><span class="err">stderr</span></code>. Currently, the <em>file descriptor</em>-thing is important because they are used to be used in external processes efficently (without using internal pipes). <code class="codehilite"><span class="err">mdbackup</span></code> checks if a data stream is invalid and raises an error for it.</p>
 <p>On the other hand, the <code class="codehilite"><span class="err">DirEntry</span></code> iterator is implemented using a generator function that returns <code class="codehilite"><span class="err">DirEntry</span></code> objects for each entry found in the folder. The type of a entry can be <code class="codehilite"><span class="err">dir</span></code>, <code class="codehilite"><span class="err">symlink</span></code> or <code class="codehilite"><span class="err">file</span></code>. A file will have the <code class="codehilite"><span class="err">stream</span></code> attribute filled pointing to the contents of the file.
 A symlink will have the <code class="codehilite"><span class="err">link_content</span></code> attribute set with the contents of the symlink. In all types, the <code class="codehilite"><span class="err">path</span></code> must be filled with a relative path to the entry, as well as <code class="codehilite"><span class="err">stats</span></code>, requiring <code class="codehilite"><span class="err">st_mode</span></code>, <code class="codehilite"><span class="err">st_uid</span></code>, <code class="codehilite"><span class="err">st_gid</span></code>, <code class="codehilite"><span class="err">st_mtime</span></code>, <code class="codehilite"><span class="err">st_size</span></code> properties to be filled.</p>
-<details class="example"><summary>Example of initial action</summary><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">action_read_file</span><span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">io</span><span class="o">.</span><span class="n">FileIO</span><span class="p">:</span>
+<details class="example"><summary>Example of initial action</summary><div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">action_read_file</span><span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">io</span><span class="o">.</span><span class="n">FileIO</span><span class="p">:</span>
     <span class="k">return</span> <span class="nb">open</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">],</span> <span class="s1">&#39;rb&#39;</span><span class="p">,</span> <span class="n">buffering</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-</pre></div>
+</code></pre></div>
 
 </details>
-<details class="example"><summary>Example of transform action</summary><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">action_compress_gzip</span><span class="p">(</span><span class="n">inp</span><span class="p">:</span> <span class="n">InputDataStream</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">:</span>
+<details class="example"><summary>Example of transform action</summary><div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">action_compress_gzip</span><span class="p">(</span><span class="n">inp</span><span class="p">:</span> <span class="n">InputDataStream</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">:</span>
     <span class="n">compression_level</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;compressionLevel&#39;</span><span class="p">)</span>
 
     <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;gzip&#39;</span><span class="p">,</span> <span class="s1">&#39;-c&#39;</span><span class="p">]</span>
@@ -867,10 +867,10 @@ A symlink will have the <code class="codehilite"><span class="err">link_content<
         <span class="k">if</span> <span class="n">entry</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;file&#39;</span><span class="p">:</span>
             <span class="n">entry</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">entry</span><span class="o">.</span><span class="n">path</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.bak&#39;</span><span class="p">)</span>
         <span class="k">yield</span> <span class="n">entry</span>
-</pre></div>
+</code></pre></div>
 
 </details>
-<details class="example"><summary>Example of final action</summary><div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">action_write_file</span><span class="p">(</span><span class="n">inp</span><span class="p">:</span> <span class="n">InputDataStream</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+<details class="example"><summary>Example of final action</summary><div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">action_write_file</span><span class="p">(</span><span class="n">inp</span><span class="p">:</span> <span class="n">InputDataStream</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
     <span class="c1"># The _backup_path parameter is internal, and can be used freely</span>
     <span class="n">full_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;_backup_path&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">])</span>
 
@@ -883,7 +883,7 @@ A symlink will have the <code class="codehilite"><span class="err">link_content<
     <span class="n">file_object</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
     <span class="k">return</span> <span class="n">full_path</span>
-</pre></div>
+</code></pre></div>
 
 </details>
 <h2 id="registring-actions">Registring actions<a class="headerlink" href="#registring-actions" title="Permanent link">&para;</a></h2>
@@ -1017,7 +1017,7 @@ A symlink will have the <code class="codehilite"><span class="err">link_content<
 <p>As mentioned in the <a href="../configuration">configuration</a>, the user-defined actions must be modules that can be loaded from python using the <code class="codehilite"><span class="err">import</span></code> syntax. The value in the configuration was <code class="codehilite"><span class="err">module#function</span></code> where <code class="codehilite"><span class="err">module</span></code> is the module to import and <code class="codehilite"><span class="k">function</span></code> is the name of the callable object that will register all actions.</p>
 <p>The function (or callable object) will receive some keyword arguments (aka <code class="codehilite"><span class="err">kwargs</span></code>) with the <code class="codehilite"><span class="err">register_action</span></code> function and <code class="codehilite"><span class="err">action</span></code> and <code class="codehilite"><span class="err">unaction</span></code> decorators to be used quickly without the need to import them. You can also import them directly by importing the module <code class="codehilite"><span class="err">mdbackup.actions.container</span></code>. The function will also receive <code class="codehilite"><span class="err">get_action</span></code> and <code class="codehilite"><span class="err">get_unaction</span></code> that retrieves the implementation for the action/<em>unaction</em> for the given identifier (the first parameter of both functions). And lastly, the <em>kwarg</em> <code class="codehilite"><span class="err">dir_entry</span></code> will be passed with the class <code class="codehilite"><span class="err">DirEntry</span></code> if needed.</p>
 <p>The function must register all actions by either using the function or the decorator. If anything fails, your function should raise an exception to notify the failure, and put some <code class="codehilite"><span class="err">debug</span></code> logs will also help.</p>
-<div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">register_my_actions</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">unaction</span><span class="p">,</span> <span class="n">get_action</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">register_my_actions</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">unaction</span><span class="p">,</span> <span class="n">get_action</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="n">action_ssh</span> <span class="o">=</span> <span class="n">get_action</span><span class="p">(</span><span class="s1">&#39;ssh&#39;</span><span class="p">)</span>
 
     <span class="nd">@action</span><span class="p">(</span><span class="s1">&#39;my-read-file&#39;</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s1">&#39;stream:file&#39;</span><span class="p">)</span>
@@ -1033,7 +1033,7 @@ A symlink will have the <code class="codehilite"><span class="err">link_content<
             <span class="s1">&#39;knownHostsPolicy&#39;</span><span class="p">:</span> <span class="s1">&#39;ignore&#39;</span><span class="p">,</span>  <span class="c1"># You should never do this</span>
             <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;bash&#39;</span><span class="p">,</span> <span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;if [[ -f &quot;</span><span class="si">{params[&quot;path&quot;]}</span><span class="s1">&quot; ]]; then cat &quot;</span><span class="si">{params[&quot;path&quot;]}</span><span class="s1">&quot;; else cd &quot;</span><span class="si">{params[&quot;path&quot;]}</span><span class="s1">&quot;; tar -c .; fi&#39;</span><span class="p">]</span>
         <span class="p">})</span>
-</pre></div>
+</code></pre></div>
                 
                   
                 
@@ -1096,9 +1096,9 @@ A symlink will have the <code class="codehilite"><span class="err">link_content<
           </div>
         
         powered by
-        <a href="https://www.mkdocs.org">MkDocs</a>
+        <a href="https://www.mkdocs.org" target="_blank" rel="noopener">MkDocs</a>
         and
-        <a href="https://squidfunk.github.io/mkdocs-material/">
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
           Material for MkDocs</a>
       </div>
       
@@ -1108,7 +1108,7 @@ A symlink will have the <code class="codehilite"><span class="err">link_content<
       
     </div>
     
-      <script src="../assets/javascripts/application.808e90bb.js"></script>
+      <script src="../assets/javascripts/application.98c7b6b1.js"></script>
       
       <script>app.initialize({version:"1.0.4",url:{base:".."}})</script>
       
