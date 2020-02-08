@@ -27,7 +27,7 @@ class DirEntry:
 
     @staticmethod
     def from_real_path(path: Path, root_path: Optional[Path] = None, **kwargs) -> 'DirEntry':
-        stats = path.stat()
+        stats = path.lstat()
         rel_path = path.relative_to(root_path) if root_path is not None else path
         try:
             xattrs = _read_xattrs(path)
