@@ -63,6 +63,7 @@ def action_mysql_command(_, params: dict):
 
     if docker:
         params['image'] = params.get('image', 'mariadb:alpine')
+        params['user'] = None
         return action_docker(None, params)
     else:
         return action_command(None, params)
@@ -102,7 +103,6 @@ def action_influxd_command(_, params: dict):
 
     if docker:
         params['image'] = params.get('image', 'influxdb:alpine')
-        params['user'] = None
         return action_docker(None, params)
     else:
         return action_command(None, params)
