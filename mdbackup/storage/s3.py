@@ -47,7 +47,7 @@ class S3Storage(AbstractStorage):
     def list_directory(self, path: Union[str, Path]) -> List[str]:
         items = self.list_directory_recursive(path)
         rep_path = path + '/' if path != '' else path
-        items = [key[len(self.__pre):].lstrip('/') for key in items
+        items = [key.lstrip('/') for key in items
                  if (len(key.replace(rep_path, '').split('/')) == 2 if key.endswith('/')
                      else len(key.replace(rep_path, '').split('/')) == 1)]
         return items
