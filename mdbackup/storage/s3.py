@@ -82,8 +82,8 @@ class S3Storage(AbstractStorage):
         self.__log.debug(ret)
 
     def delete(self, path: Union[Path, str]):
-        path = self.__ok_key(path)
-        self.__log.info(f'Deleting {self.__pre}/{path}')
+        full_path = self.__ok_key(path)
+        self.__log.info(f'Deleting {full_path}')
         objects_to_delete = self.list_directory_recursive(path)[::-1]
         while len(objects_to_delete) > 0:
             ret = self.__s3.delete_objects(
