@@ -126,18 +126,16 @@ def main():
     _register_actions(config)
 
     try:
+        _load_secrets(config)
         if args.mode == 'backup':
-            _load_secrets(config)
             backup = main_backup(config)
             logger.info(f'Backup done: {backup.absolute()}')
         elif args.mode == 'upload':
             backup_path = (config.backups_path / (args.backup if args.backup is not None else 'current')).resolve()
-            _load_secrets(config)
             main_upload(config, backup_path, force=args.force)
         elif args.mode == 'cleanup':
             main_cleanup(config)
         elif args.mode in ('complete', None):
-            _load_secrets(config)
             backup = main_backup(config)
             main_upload(config, backup)
             main_cleanup(config)
