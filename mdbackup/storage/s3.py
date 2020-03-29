@@ -41,13 +41,12 @@ class S3Storage(AbstractStorage):
                  for key in [item['Key'][len(self.__pre):].lstrip('/')
                              for item in res.get('Contents', [])]
                  if key != '']
-        self.__log.debug(items)
         return items
 
     def list_directory(self, path: Union[str, Path]) -> List[str]:
         items = self.list_directory_recursive(path)
         rep_path = path + '/' if path != '' else path
-        items = [key[len(self.__pre):].lstrip('/') for key in items
+        items = [key.lstrip('/') for key in items
                  if (len(key.replace(rep_path, '').split('/')) == 2 if key.endswith('/')
                      else len(key.replace(rep_path, '').split('/')) == 1)]
         return items
@@ -72,27 +71,25 @@ class S3Storage(AbstractStorage):
             key = path.name
         key = self.__ok_key(key)
         self.__log.info(f'Uploading file {key} (from {path})')
-        ret = self.__s3.upload_file(str(path.absolute()),
-                                    self.__bucket,
-                                    key,
-                                    ExtraArgs={
-                                        'ContentType': magic.from_file(str(path.absolute()), mime=True),
-                                        'StorageClass': self.__storageclass,
-                                    })
-        self.__log.debug(ret)
+        self.__s3.upload_file(str(path.absolute()),
+                              self.__bucket,
+                              key,
+                              ExtraArgs={
+                                  'ContentType': magic.from_file(str(path.absolute()), mime=True),
+                                  'StorageClass': self.__storageclass,
+                              })
 
     def delete(self, path: Union[Path, str]):
-        path = self.__ok_key(path)
-        self.__log.info(f'Deleting {self.__pre}/{path}')
+        full_path = self.__ok_key(path)
+        self.__log.info(f'Deleting {full_path}')
         objects_to_delete = self.list_directory_recursive(path)[::-1]
         while len(objects_to_delete) > 0:
-            ret = self.__s3.delete_objects(
+            self.__s3.delete_objects(
                 Bucket=self.__bucket,
                 Delete={
-                    'Objects': [{'Key': self.__ok_key(key)} for key in objects_to_delete],
+                    'Objects': [{'Key': f'{self.__pre}/{key}'} for key in objects_to_delete],
                     'Quiet': True,
                 },
             )
 
-            self.__log.debug(ret)
             objects_to_delete = self.list_directory_recursive(path)[::-1]

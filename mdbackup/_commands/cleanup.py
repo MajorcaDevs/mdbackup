@@ -44,6 +44,7 @@ def _cloud_cleanup(config: Config):
     regex = re.compile(r'\d{4}-\d{2}-\d{2}T\d{1,2}:\d{2}')
     for prov_config in config.cloud.providers:
         if prov_config.max_backups_kept is None:
+            logger.debug(f'Ignoring entry of type {prov_config.type} because maxBackupsKept is not set')
             continue
         storage = create_storage_instance(prov_config)
         if storage is None:

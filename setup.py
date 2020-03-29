@@ -2,7 +2,7 @@ import sys
 
 import setuptools
 
-version = '0.4.2'
+version = '0.4.3'
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
