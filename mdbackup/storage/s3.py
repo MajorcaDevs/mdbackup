@@ -41,7 +41,6 @@ class S3Storage(AbstractStorage):
                  for key in [item['Key'][len(self.__pre):].lstrip('/')
                              for item in res.get('Contents', [])]
                  if key != '']
-        self.__log.debug(items)
         return items
 
     def list_directory(self, path: Union[str, Path]) -> List[str]:
@@ -79,7 +78,6 @@ class S3Storage(AbstractStorage):
                                         'ContentType': magic.from_file(str(path.absolute()), mime=True),
                                         'StorageClass': self.__storageclass,
                                     })
-        self.__log.debug(ret)
 
     def delete(self, path: Union[Path, str]):
         full_path = self.__ok_key(path)
@@ -89,10 +87,9 @@ class S3Storage(AbstractStorage):
             ret = self.__s3.delete_objects(
                 Bucket=self.__bucket,
                 Delete={
-                    'Objects': [{'Key': self.__ok_key(key)} for key in objects_to_delete],
+                    'Objects': [{'Key': f'{self.__pre}/{key}'} for key in objects_to_delete],
                     'Quiet': True,
                 },
             )
 
-            self.__log.debug(ret)
             objects_to_delete = self.list_directory_recursive(path)[::-1]
