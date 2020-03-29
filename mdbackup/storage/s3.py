@@ -71,20 +71,20 @@ class S3Storage(AbstractStorage):
             key = path.name
         key = self.__ok_key(key)
         self.__log.info(f'Uploading file {key} (from {path})')
-        ret = self.__s3.upload_file(str(path.absolute()),
-                                    self.__bucket,
-                                    key,
-                                    ExtraArgs={
-                                        'ContentType': magic.from_file(str(path.absolute()), mime=True),
-                                        'StorageClass': self.__storageclass,
-                                    })
+        self.__s3.upload_file(str(path.absolute()),
+                              self.__bucket,
+                              key,
+                              ExtraArgs={
+                                  'ContentType': magic.from_file(str(path.absolute()), mime=True),
+                                  'StorageClass': self.__storageclass,
+                              })
 
     def delete(self, path: Union[Path, str]):
         full_path = self.__ok_key(path)
         self.__log.info(f'Deleting {full_path}')
         objects_to_delete = self.list_directory_recursive(path)[::-1]
         while len(objects_to_delete) > 0:
-            ret = self.__s3.delete_objects(
+            self.__s3.delete_objects(
                 Bucket=self.__bucket,
                 Delete={
                     'Objects': [{'Key': f'{self.__pre}/{key}'} for key in objects_to_delete],
