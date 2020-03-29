@@ -79,4 +79,4 @@ grouped_versions = [(version, Version(version.major, version.minor, 0)) for vers
 grouped_versions = {key: [v for v, _ in values]
                     for key, values in itertools.groupby(grouped_versions, key=lambda x: x[1])}
 final_versions = [next(iter(sorted(grouped_versions[key], reverse=True))) for key in sorted(grouped_versions.keys())]
-[print(str(final_version)) for final_version in final_versions]
+[print(f'v{final_version}') for final_version in final_versions]
