@@ -20,6 +20,8 @@ function build_docs {
   } >> "build/docs/$1/index.html"
 }
 
+current_branch="$(git rev-parse --abbrev-ref HEAD)"
+
 git checkout -- .
 git clean -fdx .
 
@@ -41,7 +43,10 @@ git checkout dev
 git pull
 build_docs "dev"
 
+git checkout "${current_branch}"
+
 for tag in $(git tag | grep -E '^v?\d+\.\d+\.\d+' | python ./docs/docker/versioning-build-grab-latest-minor.py); do
+  echo " > ${tag}"
   git checkout "$tag"
   if [[ -d docs ]] && [[ -f docs/requirements.txt ]]; then
     echo Building docs for version "$tag"
