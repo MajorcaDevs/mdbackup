@@ -158,3 +158,5 @@ def action_influxdb_backup(_, params: dict):
     if proc.returncode != 0:
         logger.error(f'Backup failed, process ended with exit code {proc.returncode}')
         raise ChildProcessError(stderr.decode('utf-8')[:-1])
+
+    return backup_path / to
