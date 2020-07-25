@@ -9,12 +9,6 @@ pipeline {
     label '!docker-qemu'
   }
 
-  when {
-    expression {
-      BRANCH_NAME ==~ /master|dev/
-    }
-  }
-
   environment {
     CI = 'true'
     GIT_TAG = ''
