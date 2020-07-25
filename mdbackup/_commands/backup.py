@@ -123,6 +123,8 @@ def _run_tasks(
                      task.name)
             if task.stop_on_fail:
                 raise e
+            else:
+                tasks_results[task.name] = None
 
         run_hook(f'backup:tasks:{tasks.name}:task:{task.name}:after', str(backup_path), tasks.name, task.name)
 
