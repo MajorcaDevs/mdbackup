@@ -2,6 +2,15 @@
 
 > Network refers here to network devices like switches, routers, NAS...
 
+!!! warn "Custom CAs in requests"
+    By default, the `mdbackup` tool uses the stock Mozilla's CA bundle instead of the system one. If your system has configured custom CA's and want to use them, set this environment variable (Debian/Ubuntu):
+
+    ```sh
+    export REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
+    ```
+
+    [See this answer](https://stackoverflow.com/questions/31448854/how-to-force-requests-use-the-certificates-on-my-ubuntu-system#comment78596389_37447847) from StackOverflow...
+
 ## `asuswrt`
 
 **Input**: Nothing
