@@ -33,7 +33,7 @@ def _get_tasks_definitions(config_path: Path) -> List[Path]:
     """
     defs_dir = config_path / 'tasks'
     if not defs_dir.exists():
-        raise FileNotFoundError(f'The tasks folder does not exist')
+        raise FileNotFoundError('The tasks folder does not exist')
     definitions = [x for x in defs_dir.iterdir() if x.is_file() and x.name.split('.')[-1] in ('json', 'yaml', 'yml')]
     definitions.sort()
     return [script.absolute() for script in definitions]
