@@ -90,34 +90,38 @@ Now we need to define the logic to create backups. We use the term [tasks](../ta
 
 The steps are executed following the natural order (alphanumeric order) of the names of the files. For example, `01.json` will run before `02.json`. It can be as many files as desired, or just one. It does not matter. So now we will give some contents to `01.yaml` (the file shown in the tree).
 
-```yaml tab="YAML syntax"
-name: 'test'
-tasks:
-  - name: Backup home
-    actions:
-      - from-directory: /home/user  #macOS users, use "/Users/YourUser"
-      - to-directory:
-          path: home
-```
+=== "YAML syntax"
 
-```json tab="JSON syntax"
-{
-  "name": "test",
-  "tasks": [
+    ```yaml
+    name: 'test'
+    tasks:
+      - name: Backup home
+        actions:
+          - from-directory: /home/user  #macOS users, use "/Users/YourUser"
+          - to-directory:
+              path: home
+    ```
+
+=== "JSON syntax"
+
+    ```json
     {
-      "name": "Backup home",
-      "actions": [
-        { "from-directory": "/home/user" },
+      "name": "test",
+      "tasks": [
         {
-          "to-directory": {
-            "path": "home"
-          }
+          "name": "Backup home",
+          "actions": [
+            { "from-directory": "/home/user" },
+            {
+              "to-directory": {
+                "path": "home"
+              }
+            }
+          ]
         }
       ]
     }
-  ]
-}
-```
+    ```
 
 This task will copy your home directory and all its contents into the backup folder. You can use any other folder you want just to try, this is an example.
 
@@ -138,135 +142,143 @@ Let's try to make a backup from a postgres database with the predefined action. 
 
 Time to add a new tasks file called `02.yaml` with the following contents:
 
-```yaml tab="YAML syntax"
-name: PostgreSQL example
-env:
-  host: localhost
-  user: postgres
-  password: WonderfulPassword123
-tasks:
-  - name: Postgres task example
-    actions:
-      - postgres-database:
-          database: test1
-      - to-file:
-          path: test1.sql
-  - name: Postgres task example 2
-    actions:
-      - postgres-database:
-          database: test2
-      - to-file:
-          path: test2.sql
-```
+=== "YAML syntax"
 
-```json tab="JSON syntax"
-{
-  "name": "PostgreSQL example",
-  "env": {
-    "host": "localhost",
-    "user": "postgres",
-    "password": "WonderfulPassword123"
-  },
-  "tasks": [
+    ```yaml
+    name: PostgreSQL example
+    env:
+      host: localhost
+      user: postgres
+      password: WonderfulPassword123
+    tasks:
+      - name: Postgres task example
+        actions:
+          - postgres-database:
+              database: test1
+          - to-file:
+              path: test1.sql
+      - name: Postgres task example 2
+        actions:
+          - postgres-database:
+              database: test2
+          - to-file:
+              path: test2.sql
+    ```
+
+=== "JSON syntax"
+
+    ```json
     {
-      "name": "Postgres task example",
-      "actions": [
+      "name": "PostgreSQL example",
+      "env": {
+        "host": "localhost",
+        "user": "postgres",
+        "password": "WonderfulPassword123"
+      },
+      "tasks": [
         {
-          "postgres-database": {
-            "database": "test1"
-          }
+          "name": "Postgres task example",
+          "actions": [
+            {
+              "postgres-database": {
+                "database": "test1"
+              }
+            },
+            {
+              "to-file": {
+                "path": "test1.sql"
+              }
+            }
+          ]
         },
         {
-          "to-file": {
-            "path": "test1.sql"
-          }
-        }
-      ]
-    },
-    {
-      "name": "Postgres task example 2",
-      "actions": [
-        {
-          "postgres-database": {
-            "database": "test2"
-          }
-        },
-        {
-          "to-file": {
-            "path": "test2.sql"
-          }
+          "name": "Postgres task example 2",
+          "actions": [
+            {
+              "postgres-database": {
+                "database": "test2"
+              }
+            },
+            {
+              "to-file": {
+                "path": "test2.sql"
+              }
+            }
+          ]
         }
       ]
     }
-  ]
-}
-```
+    ```
 
 The tool will read the environment variables, and inject them in the actions parameters.
 
 But wait, there's more: you can even place `${VARIABLE}` tokens in the parameters or other variables inside `env` sections to refer to real environment variables or variables on `env`s. This example will try to access to the database using the user running the tool:
 
-```yaml tab="YAML syntax"
-name: PostgreSQL example
-env:
-  host: localhost
-  user: ${USER}
-tasks:
-  - name: Postgres task example
-    actions:
-      - postgres-database:
-          database: test1
-      - to-file:
-          path: test1.sql
-  - name: Postgres task example 2
-    actions:
-      - postgres-database:
-          database: test2
-      - to-file:
-          path: test2.sql
-```
+=== "YAML syntax"
 
-```json tab="JSON syntax"
-{
-  "name": "PostgreSQL example",
-  "env": {
-    "host": "localhost",
-    "user": "${USER}"
-  },
-  "tasks": [
+    ```yaml
+    name: PostgreSQL example
+    env:
+      host: localhost
+      user: ${USER}
+    tasks:
+      - name: Postgres task example
+        actions:
+          - postgres-database:
+              database: test1
+          - to-file:
+              path: test1.sql
+      - name: Postgres task example 2
+        actions:
+          - postgres-database:
+              database: test2
+          - to-file:
+              path: test2.sql
+    ```
+
+=== "JSON syntax"
+
+    ```json
     {
-      "name": "Postgres task example",
-      "actions": [
+      "name": "PostgreSQL example",
+      "env": {
+        "host": "localhost",
+        "user": "${USER}"
+      },
+      "tasks": [
         {
-          "postgres-database": {
-            "database": "test1"
-          }
+          "name": "Postgres task example",
+          "actions": [
+            {
+              "postgres-database": {
+                "database": "test1"
+              }
+            },
+            {
+              "to-file": {
+                "path": "test1.sql"
+              }
+            }
+          ]
         },
         {
-          "to-file": {
-            "path": "test1.sql"
-          }
-        }
-      ]
-    },
-    {
-      "name": "Postgres task example 2",
-      "actions": [
-        {
-          "postgres-database": {
-            "database": "test2"
-          }
-        },
-        {
-          "to-file": {
-            "path": "test2.sql"
-          }
+          "name": "Postgres task example 2",
+          "actions": [
+            {
+              "postgres-database": {
+                "database": "test2"
+              }
+            },
+            {
+              "to-file": {
+                "path": "test2.sql"
+              }
+            }
+          ]
         }
       ]
     }
-  ]
-}
-```
+    ```
 
 
 If everything went well, you now will have a `test1.sql` and `test2.sql` files in the backup folder.
