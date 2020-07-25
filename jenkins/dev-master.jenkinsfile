@@ -4,6 +4,9 @@ def generateImageName(arch, flavour) {
   return "majorcadevs/mdbackup:${GIT_TAG}-${arch}-${flavour}"
 }
 
+def arches = ['amd64', 'arm64v8', 'arm32v7']
+def flavours = ['alpine', 'slim']
+
 pipeline {
   agent {
     label '!docker-qemu'
@@ -98,8 +101,6 @@ pipeline {
       steps {
         script {
           def builders = [:]
-          def arches = ['amd64', 'arm64v8', 'arm32v7']
-          def flavours = ['alpine', 'slim']
 
           for(arch in arches) {
             for(flavour in flavours) {
@@ -149,8 +150,6 @@ pipeline {
 
       steps {
         script {
-          def flavours = ['slim', 'alpine']
-          def arches = ['amd64', 'arm32v7', 'arm64v8']
           def images = [:]
 
           flavours.each { flavour ->

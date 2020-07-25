@@ -1,6 +1,10 @@
 pipeline {
   agent {
-    label '!docker-qemu'
+    docker {
+      label 'docker'
+      image 'python:3.7-buster'
+      args '-e HOME=$WORKSPACE -e PATH=$PATH:$WORKSPACE/.local/bin'
+    }
   }
 
   environment {
@@ -8,21 +12,23 @@ pipeline {
   }
 
   stages {
-    stage('Test') {
-      agent {
-        docker {
-          label 'docker'
-          image 'python:3.7-buster'
-          args '-e HOME=$WORKSPACE -e PATH=$PATH:$WORKSPACE/.local/bin'
-        }
+    stage('Prepare') {
+      steps {
+        sh 'pip install --user -r docker/dev/requirements.dev.txt'
+        sh 'pip install --user -r docker/requirements.txt'
       }
+    }
 
+    stage('Code Style') {
+      steps {
+        sh 'flake8 mdbackup'
+        sh 'flake8 tests'
+      }
+    }
+
+    stage('Test') {
       steps {
         script {
-          sh 'pip install --user -r docker/dev/requirements.dev.txt'
-          sh 'pip install --user -r docker/requirements.txt'
-          sh 'flake8 mdbackup'
-          sh 'flake8 tests'
           sh 'coverage run --source=mdbackup --branch -m xmlrunner discover -s tests -p \'*tests*.py\' -o tests/.report'
           sh 'coverage xml -o coverage_report.xml'
           sh 'PYTHONPATH=$PWD python -m mdbackup --help'
