@@ -1,6 +1,6 @@
 site_name: mdbackup documentation
 repo_url: https://github.com/MajorcaDevs/mdbackup
-repo_name: Github
+repo_name: MajorcaDevs/mdbackup
 edit_uri: blob/master
 site_description: mdbackup documentation
 copyright: MajorcaDevs 2019
@@ -12,6 +12,13 @@ theme:
   #custom_dir: custom/themes/material
   #favicon: custom/img/favicon.ico
   language: 'en'
+  features:
+    - instant
+  icon:
+    logo: material/archive-arrow-up
+    repo: fontawesome/brands/github
+  palette:
+    scheme: preference
 extra_css:
   #- "custom/css/styles.css"
 extra_javascript:
@@ -25,7 +32,6 @@ markdown_extensions:
  - footnotes
  - tables
  - admonition
- - codehilite
  - meta
  - sane_lists
  - smarty
@@ -39,22 +45,24 @@ markdown_extensions:
  - pymdownx.caret
  - pymdownx.critic
  - pymdownx.details
+ - pymdownx.highlight:
+    use_pygments: true
  - pymdownx.inlinehilite
  - pymdownx.magiclink
  - pymdownx.mark
  - pymdownx.smartsymbols
  - pymdownx.superfences
+ - pymdownx.tabbed
  - pymdownx.tasklist:
     custom_checkbox: true
  - pymdownx.tilde
  - pymdownx.betterem
- - pymdownx.superfences
  - markdown.extensions.footnotes
  - markdown.extensions.attr_list
  - markdown.extensions.def_list
  - markdown.extensions.tables
  - markdown.extensions.abbr
- - pymdownx.extrarawhtml
+ - markdown.extensions.md_in_html
 nav:
   - Home: 'README.md'
   - Quick start: 'quick-start.md'

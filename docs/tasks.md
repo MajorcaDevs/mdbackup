@@ -5,64 +5,68 @@ A **task** is a group of [actions](../actions) that conforms a full backup of so
 
 ## Tasks definition file
 
-```yaml tab="YAML syntax"
-name: Good name that identifies this group of tasks (optional - file name will be used instead)
-env:
-  one-variable: 1
-  another-variable: true
-  101-variable:
-    'yes': yes
-    'no': no
-inside: this/folder
-tasks:
-  - name: Task 1
-    env:
-      more-variables: 'yes it is'
-    stopOnFail: True
-    actions:
-      - from-file: /etc/hosts
-      - compress-gz: {}
-      - to-file:
-          path: hosts.gz
-    cloud:
-      ignore: false
-```
+=== "YAML syntax"
 
-```json tab="JSON syntax"
-{
-  "name": "Good name that identifies this group of tasks (optional - file name will be used instead)",
-  "env": {
-    "one-variable": 1,
-    "another-variable": true,
-    "101-variable": {
-      "yes": true,
-      "no": false
-    }
-  },
-  "inside": "this/folder",
-  "tasks": [
+    ```yaml
+    name: Good name that identifies this group of tasks (optional - file name will be used instead)
+    env:
+      one-variable: 1
+      another-variable: true
+      101-variable:
+        'yes': yes
+        'no': no
+    inside: this/folder
+    tasks:
+      - name: Task 1
+        env:
+          more-variables: 'yes it is'
+        stopOnFail: True
+        actions:
+          - from-file: /etc/hosts
+          - compress-gz: {}
+          - to-file:
+              path: hosts.gz
+        cloud:
+          ignore: false
+    ```
+
+=== "JSON syntax"
+
+    ```json
     {
-      "name": "Task 1",
+      "name": "Good name that identifies this group of tasks (optional - file name will be used instead)",
       "env": {
-        "more-variables": "yes it is"
+        "one-variable": 1,
+        "another-variable": true,
+        "101-variable": {
+          "yes": true,
+          "no": false
+        }
       },
-      "stopOnFail": false,
-      "actions": [
-        { "from-file": "/etc/hosts" },
-        { "compress-gz": {} },
+      "inside": "this/folder",
+      "tasks": [
         {
-          "to-file": {
-            "path": "hosts.gz"
+          "name": "Task 1",
+          "env": {
+            "more-variables": "yes it is"
+          },
+          "stopOnFail": false,
+          "actions": [
+            { "from-file": "/etc/hosts" },
+            { "compress-gz": {} },
+            {
+              "to-file": {
+                "path": "hosts.gz"
+              }
+            }
+          ],
+          "cloud": {
+            "ignore": false
           }
         }
-      ],
-      "cloud": {
-        "ignore": false
-      }
+      ]
     }
-  ]
-}
-```
+    ```
 
 One file will look like the above example. The example has all possible options that can have. Let's treat each of them.
 

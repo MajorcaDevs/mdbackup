@@ -12,141 +12,145 @@ You have available under `config/config.schema.json` the JSON schema of the conf
 
 This allows you to auto-complete with the elements available in the configuration. But in case you cannot use an app with schema support, here's it is the (maybe not updated) list of options:
 
-```json tab="JSON syntax"
-{
-    "backupsPath": "Path where the backups will be stored",
-    "logLevel": "Log level for the app, valid values are: CRITICAL,ERROR,WARNING,INFO,DEBUG",
-    "actionsModules": [
-      "my.module#actions_register_function"
-    ],
-    "maxBackupsKept": 7,
-    "env": {
-      "something": "true"
-    },
-    "secrets": {
-      "secret-provider": {
-        "envDefs": {
-          "pgpassword": "/path/to/pg-password",
-          "mysqlpassword": "mysql-password"
+=== "JSON syntax"
+
+    ```json
+    {
+        "backupsPath": "Path where the backups will be stored",
+        "logLevel": "Log level for the app, valid values are: CRITICAL,ERROR,WARNING,INFO,DEBUG",
+        "actionsModules": [
+          "my.module#actions_register_function"
+        ],
+        "maxBackupsKept": 7,
+        "env": {
+          "something": "true"
         },
-        "config": {
-          "setting-1": "value",
-          "setting-2": true
+        "secrets": {
+          "secret-provider": {
+            "envDefs": {
+              "pgpassword": "/path/to/pg-password",
+              "mysqlpassword": "mysql-password"
+            },
+            "config": {
+              "setting-1": "value",
+              "setting-2": true
+            },
+            "storageProviders": [
+              "storage/digital-ocean",
+              {
+                "key": "storage/gdrive",
+                "backupsPath": "/Backups/mbp"
+              },
+              "storage/amazon"
+            ]
+          }
         },
-        "storageProviders": [
-          "storage/digital-ocean",
-          {
-            "key": "storage/gdrive",
-            "backupsPath": "/Backups/mbp"
+        "cloud": {
+          "compression": {
+            "method": "gz|xz|bz2|br|zst",
+            "level": 8,
+            "cpus": 1
           },
-          "storage/amazon"
-        ]
-      }
-    },
-    "cloud": {
-      "compression": {
-        "method": "gz|xz|bz2|br|zst",
-        "level": 8,
-        "cpus": 1
-      },
-      "encrypt": {
-        "strategy": "gpg-keys|gpg-passphrase",
-        "passphrase": "If using gpg-passphrase, this will be used as passphrase for the cypher",
-        "keys": "If using gpg-keys, this will be used as recipients option for the gpg cypher (emails)",
-        "algorithm": "Defines the algorithm to use in the cypher process, depends in the strategy (currently one of `gpg --version` cyphers)"
-      },
-      "providers": [
-        {
-          "type": "provider-type-1",
-          "backupsPath": "Path in the storage provider where to store the backups",
-          "maxBackupsKept": 30,
-          "provider-specific-param-1": "config/client_secrets.json",
-          "provider-specific-param-2": false
+          "encrypt": {
+            "strategy": "gpg-keys|gpg-passphrase",
+            "passphrase": "If using gpg-passphrase, this will be used as passphrase for the cypher",
+            "keys": "If using gpg-keys, this will be used as recipients option for the gpg cypher (emails)",
+            "algorithm": "Defines the algorithm to use in the cypher process, depends in the strategy (currently one of `gpg --version` cyphers)"
+          },
+          "providers": [
+            {
+              "type": "provider-type-1",
+              "backupsPath": "Path in the storage provider where to store the backups",
+              "maxBackupsKept": 30,
+              "provider-specific-param-1": "config/client_secrets.json",
+              "provider-specific-param-2": false
+            },
+            {
+              "type": "provider-type-2",
+              "backupsPath": "Path in the storage provider where to store the backups",
+              "maxBackupsKept": 7,
+              "provider-specific-param-1": "THIS_IS-NOT-AN-API-KEY",
+              "provider-specific-param-2": "THIS_IS_NOT_AN-API-S3Cr3t",
+              "provider-specific-param-3": 10
+            }
+          ]
         },
-        {
-          "type": "provider-type-2",
-          "backupsPath": "Path in the storage provider where to store the backups",
-          "maxBackupsKept": 7,
-          "provider-specific-param-1": "THIS_IS-NOT-AN-API-KEY",
-          "provider-specific-param-2": "THIS_IS_NOT_AN-API-S3Cr3t",
-          "provider-specific-param-3": 10
+        "hooks": {
+          "backup:before": "echo $@",
+          "backup:after": "path/to/script",
+          "backup:error": "wombo combo $1 $2",
+          "upload:before": "echo $@",
+          "upload:after": "echo $@",
+          "upload:error": "echo $@",
+          "oldBackup:deleting": "echo $@",
+          "oldBackup:deleted": "echo $@",
+          "oldBackup:error": "echo $@"
         }
-      ]
-    },
-    "hooks": {
-      "backup:before": "echo $@",
-      "backup:after": "path/to/script",
-      "backup:error": "wombo combo $1 $2",
-      "upload:before": "echo $@",
-      "upload:after": "echo $@",
-      "upload:error": "echo $@",
-      "oldBackup:deleting": "echo $@",
-      "oldBackup:deleted": "echo $@",
-      "oldBackup:error": "echo $@"
     }
-}
-```
+    ```
 
-```yaml tab="YAML syntax"
-backupsPath: Path where the backups will be stored
-logLevel: "Log level for the app, valid values are: CRITICAL,ERROR,WARNING,INFO,DEBUG"
-actionsModules:
-  - "my.module#actions_register_function"
+=== "YAML syntax"
 
-maxBackupsKept: 7
-env:
-  something: "true"
+    ```yaml
+    backupsPath: Path where the backups will be stored
+    logLevel: "Log level for the app, valid values are: CRITICAL,ERROR,WARNING,INFO,DEBUG"
+    actionsModules:
+      - "my.module#actions_register_function"
 
-secrets:
-  secret-provider:
-    envDefs:
-      pgpassword: /path/to/pg-password
-      mysqlpassword: mysql-password
-    config:
-      "setting-1": "value"
-      "setting-2": true
-    storageProviders:
-      - storage/digital-ocean
-      - key: storage/gdrive
-        backupsPath: /Backups/mbp
-      - storage/aws-s3
+    maxBackupsKept: 7
+    env:
+      something: "true"
 
-cloud:
-  compression:
-    method: gz|xz|bz2|br|zst
-    level: 8
-    cpus: 1
+    secrets:
+      secret-provider:
+        envDefs:
+          pgpassword: /path/to/pg-password
+          mysqlpassword: mysql-password
+        config:
+          "setting-1": "value"
+          "setting-2": true
+        storageProviders:
+          - storage/digital-ocean
+          - key: storage/gdrive
+            backupsPath: /Backups/mbp
+          - storage/aws-s3
 
-  encrypt:
-    strategy: gpg-keys|gpg-passphrase
-    passphrase: If using gpg-passphrase, this will be used as passphrase for the cypher
-    keys: If using gpg-keys, this will be used as recipients option for the gpg cypher (emails)
-    algorithm: Defines the algorithm to use in the cypher process, depends in the strategy (currently one of `gpg --version` cyphers)
+    cloud:
+      compression:
+        method: gz|xz|bz2|br|zst
+        level: 8
+        cpus: 1
 
-  providers:
-    - type: "provider-type-1"
-      backupsPath: "Path in the storage provider where to store the backups"
-      maxBackupsKept: 30
-      provider-specific-param-1: "config/client_secrets.json"
-      provider-specific-param-2: false
-    - type: "provider-type-2"
-      backupsPath: "Path in the storage provider where to store the backups"
-      maxBackupsKept: 7
-      provider-specific-param-1: "THIS_IS-NOT-AN-API-KEY"
-      provider-specific-param-2: "THIS_IS_NOT_AN-API-S3Cr3t"
-      provider-specific-param-3: 10
+      encrypt:
+        strategy: gpg-keys|gpg-passphrase
+        passphrase: If using gpg-passphrase, this will be used as passphrase for the cypher
+        keys: If using gpg-keys, this will be used as recipients option for the gpg cypher (emails)
+        algorithm: Defines the algorithm to use in the cypher process, depends in the strategy (currently one of `gpg --version` cyphers)
 
-hooks:
-  backup:before: "echo $@"
-  backup:after: "path/to/script"
-  backup:error: "wombo combo $1 $2"
-  upload:before: "echo $@"
-  upload:after: "echo $@"
-  upload:error: "echo $@"
-  oldBackup:deleting: "echo $@"
-  oldBackup:deleted: "echo $@"
-  oldBackup:error: "echo $@"
-```
+      providers:
+        - type: "provider-type-1"
+          backupsPath: "Path in the storage provider where to store the backups"
+          maxBackupsKept: 30
+          provider-specific-param-1: "config/client_secrets.json"
+          provider-specific-param-2: false
+        - type: "provider-type-2"
+          backupsPath: "Path in the storage provider where to store the backups"
+          maxBackupsKept: 7
+          provider-specific-param-1: "THIS_IS-NOT-AN-API-KEY"
+          provider-specific-param-2: "THIS_IS_NOT_AN-API-S3Cr3t"
+          provider-specific-param-3: 10
+
+    hooks:
+      backup:before: "echo $@"
+      backup:after: "path/to/script"
+      backup:error: "wombo combo $1 $2"
+      upload:before: "echo $@"
+      upload:after: "echo $@"
+      upload:error: "echo $@"
+      oldBackup:deleting: "echo $@"
+      oldBackup:deleted: "echo $@"
+      oldBackup:error: "echo $@"
+    ```
 
 The configuration file must be located in the configuration folder and can be a json or yaml file. By default, the configuration folder is placed at `config` (based on the current working directory) but can be changed by using the argument `-c`.
 
