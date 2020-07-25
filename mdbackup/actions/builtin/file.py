@@ -157,7 +157,7 @@ def action_copy_file(_, params: dict):
 
     avoid_copy = False
     if params.get('_prev_backup_path') is not None and not params.get('forceCopy', False):
-        logger.debug(f'Checking if the file can be cloned from previous backup')
+        logger.debug('Checking if the file can be cloned from previous backup')
         prev_in_path = Path(params['_prev_backup_path']) / in_path
         avoid_copy = not _file_has_changed(orig_stat, prev_in_path) if prev_in_path.exists() else False
 
@@ -207,7 +207,7 @@ def action_reverse_copy_file(_, params: dict):
 
     avoid_copy = False
     if not params.get('forceCopy', False):
-        logger.debug(f'Checking if the file can be needs to be copied')
+        logger.debug('Checking if the file can be needs to be copied')
         avoid_copy = not _file_has_changed(orig_stat, dest_path) if dest_path.exists() else False
 
     if avoid_copy:
