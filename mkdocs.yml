@@ -12,8 +12,6 @@ theme:
   #custom_dir: custom/themes/material
   #favicon: custom/img/favicon.ico
   language: 'en'
-  features:
-    - instant
   icon:
     logo: material/archive-arrow-up
     repo: fontawesome/brands/github
