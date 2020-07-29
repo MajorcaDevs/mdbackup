@@ -14,6 +14,7 @@ def action_psql_command(_, params: dict):
 
     if docker:
         params['image'] = params.get('image', 'postgres:alpine')
+        params['user'] = None
         return action_docker(None, params)
     elif run_as is not None:
         raise_if_type_is_incorrect(run_as, str, 'runAs must be a string')
