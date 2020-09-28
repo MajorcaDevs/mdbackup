@@ -15,7 +15,7 @@ pipeline {
     stage('Prepare') {
       steps {
         sh 'pip install --user pipenv'
-        sh 'python -m pipenv install'
+        sh 'python -m pipenv install --dev'
       }
     }
 
