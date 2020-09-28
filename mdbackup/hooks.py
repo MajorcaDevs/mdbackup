@@ -1,55 +1,59 @@
 import logging
-from pathlib import Path
+import json
+import shlex
 import subprocess
 from threading import Thread
-from typing import Dict, List, Optional
+from typing import Any, Dict, List
 
 
 _hooks_config: Dict[str, List[str]] = {}
 
 
-def run_hook(hook_name: str, *args: str, cwd: Optional[str] = None):
+def run_hook(hook_name: str, obj: Dict[str, Any]):
     logger = logging.getLogger(__name__)
     if hook_name not in _hooks_config:
         logger.debug(f'The hook {hook_name} is not defined, not running it')
         return
 
-    if cwd is not None:
-        cwd_path = Path(cwd)
-        if not cwd_path.exists():
-            logger.warning(f'The CWD {cwd} does not exist')
-            return
-        if not cwd_path.is_dir():
-            logger.warning(f'The CWD {cwd} is not a folder')
-            return
+    obj_in_json = json.dumps(obj, indent=2)
 
     logger.info(f'Running hook {hook_name}')
-    joins = [(_hook_runner(hook_name, hook, hook_name, *args, cwd=cwd, shell=True), hook)
+    joins = [(_hook_runner(hook_name, hook, obj_in_json), hook)
              for hook in _hooks_config[hook_name]]
     for join, hook in joins:
         try:
             join()
-        except Exception:
-            logger.debug(f'Failed running the hook {hook}')
+        except Exception as e:
+            logger.debug(f'Failed running the hook {hook}', e)
 
 
-def _hook_runner(name: str, path: str, *args: str, cwd: Optional[str] = None, shell: bool = False):
+def _hook_runner(name: str, path: str, stdin: str):
     logger = logging.getLogger(f'{__name__}:{name}')
     logger.debug(f'Running script {path}')
-    process = subprocess.Popen([path, *args],
+    args = shlex.split(path, posix=True)
+    process = subprocess.Popen(args,
+                               stdin=subprocess.PIPE,
                                stderr=subprocess.PIPE,
                                stdout=subprocess.PIPE,
-                               cwd=cwd,
-                               bufsize=1,
-                               shell=shell)
+                               bufsize=0)
+
+    # Write the data
+    process.stdin.write(stdin.encode('UTF-8'))
+    process.stdin.close()
 
     # Print stderr lines in a thread
-    stderr_thread = Thread(target=lambda: [logger.debug(err_line[:-1].decode('UTF-8')) for err_line in process.stderr])
+    def stderr_process():
+        for err_line in process.stderr:
+            logger.debug(err_line[:-1].decode('UTF-8'))
+        process.stderr.close()
+
+    stderr_thread = Thread(target=stderr_process)
     stderr_thread.start()
 
     # Read every line (from stdout) into the logger
     for line in process.stdout:
-        logger.debug(line[0:-1].decode('UTF-8'))
+        logger.debug(line[:-1].decode('UTF-8'))
+    process.stdout.close()
 
     # Join thread and wait to wait process (same as join, but in processes)
     def join():
