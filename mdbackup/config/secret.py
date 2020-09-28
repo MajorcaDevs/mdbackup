@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 from mdbackup.secrets import get_secret_backend_implementation
 
@@ -27,3 +27,7 @@ class SecretConfig(object):
     @property
     def storage(self) -> List[Union[str, Dict[str, str]]]:
         return self.__storage
+
+    @property
+    def config(self) -> Dict[str, Any]:
+        return self.__config
