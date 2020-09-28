@@ -2,7 +2,7 @@ pipeline {
   agent {
     docker {
       label 'docker'
-      image 'python:3.7-buster'
+      image 'python:3.8-buster'
       args '-e HOME=$WORKSPACE -e PATH=$PATH:$WORKSPACE/.local/bin'
     }
   }
@@ -14,8 +14,8 @@ pipeline {
   stages {
     stage('Prepare') {
       steps {
-        sh 'pip install --user -r docker/dev/requirements.dev.txt'
-        sh 'pip install --user -r docker/requirements.txt'
+        sh 'pip install --user pipenv'
+        sh 'python -m pipenv install'
       }
     }
 
@@ -39,6 +39,7 @@ pipeline {
         always {
           junit 'tests/.report/**/*.xml'
           cobertura coberturaReportFile: 'coverage_report.xml'
+          sh 'python -m pipenv --rm'
         }
       }
     }
