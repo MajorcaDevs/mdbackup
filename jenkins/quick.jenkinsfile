@@ -31,7 +31,6 @@ pipeline {
         script {
           sh 'python -m pipenv run coverage run --source=mdbackup --branch -m xmlrunner discover -s tests -p \'*tests*.py\' -o tests/.report'
           sh 'python -m pipenv run coverage xml -o coverage_report.xml'
-          sh 'PYTHONPATH=$PWD python -m mdbackup --help'
         }
       }
 
@@ -39,7 +38,6 @@ pipeline {
         always {
           junit 'tests/.report/**/*.xml'
           cobertura coberturaReportFile: 'coverage_report.xml'
-          sh 'python -m pipenv --rm'
         }
       }
     }
