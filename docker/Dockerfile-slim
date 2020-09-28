@@ -1,6 +1,6 @@
 ARG ARCH='amd64'
 
-FROM ${ARCH}/python:3.7-slim-stretch
+FROM ${ARCH}/python:3.8-slim
 LABEL owner="MajorcaDevs"
 
 COPY ./docker/requirements.txt /mdbackup/requirements.txt

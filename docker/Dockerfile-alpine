@@ -1,7 +1,6 @@
 ARG ARCH='amd64'
 
-FROM ${ARCH}/python:3.7-alpine
-
+FROM ${ARCH}/python:3.8-alpine
 LABEL owner="MajorcaDevs"
 
 COPY ./docker/requirements.txt /mdbackup/requirements.txt
