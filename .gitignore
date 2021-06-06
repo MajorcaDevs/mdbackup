@@ -9,7 +9,6 @@ dist/
 
 config/*
 
-Pipfile
 __pycache__
 
 .coverage

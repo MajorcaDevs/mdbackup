@@ -2,7 +2,7 @@ pipeline {
   agent {
     docker {
       label 'docker'
-      image 'python:3.7-buster'
+      image 'python:3.8-buster'
       args '-e HOME=$WORKSPACE -e PATH=$PATH:$WORKSPACE/.local/bin'
     }
   }
@@ -14,24 +14,23 @@ pipeline {
   stages {
     stage('Prepare') {
       steps {
-        sh 'pip install --user -r docker/dev/requirements.dev.txt'
-        sh 'pip install --user -r docker/requirements.txt'
+        sh 'pip install --user pipenv'
+        sh 'python -m pipenv install --dev'
       }
     }
 
     stage('Code Style') {
       steps {
-        sh 'flake8 mdbackup'
-        sh 'flake8 tests'
+        sh 'python -m pipenv run flake8 mdbackup'
+        sh 'python -m pipenv run flake8 tests'
       }
     }
 
     stage('Test') {
       steps {
         script {
-          sh 'coverage run --source=mdbackup --branch -m xmlrunner discover -s tests -p \'*tests*.py\' -o tests/.report'
-          sh 'coverage xml -o coverage_report.xml'
-          sh 'PYTHONPATH=$PWD python -m mdbackup --help'
+          sh 'python -m pipenv run coverage run --source=mdbackup --branch -m xmlrunner discover -s tests -p \'*tests*.py\' -o tests/.report'
+          sh 'python -m pipenv run coverage xml -o coverage_report.xml'
         }
       }
 
