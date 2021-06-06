@@ -1,5 +1,5 @@
-import logging
 import json
+import logging
 import shlex
 import subprocess
 from threading import Thread

@@ -101,7 +101,7 @@ def _run_tasks(
 
     tasks_results: Dict[str, Path] = {}
     for task in tasks.tasks:
-        run_hook(f'backup:tasks:task:pre', {
+        run_hook('backup:tasks:task:pre', {
             'path': str(final_backup_path),
             'previousPath': str(prev_backup_path) if prev_backup_path is not None else None,
             'tasksName': tasks.name,
@@ -120,7 +120,7 @@ def _run_tasks(
 
             tasks_results[task.name] = run_task_actions(task.name, actions).relative_to(backup_path)
 
-            run_hook(f'backup:tasks:task:post', {
+            run_hook('backup:tasks:task:post', {
                 'path': str(final_backup_path),
                 'previousPath': str(prev_backup_path) if prev_backup_path is not None else None,
                 'tasksName': tasks.name,
@@ -129,7 +129,7 @@ def _run_tasks(
             })
         except Exception as e:
             logger.exception(f'Task {task.name} failed')
-            run_hook(f'backup:tasks:task:error', {
+            run_hook('backup:tasks:task:error', {
                 'message': ', '.join(e.args),
                 'path': str(final_backup_path),
                 'previousPath': str(prev_backup_path) if prev_backup_path is not None else None,
@@ -302,21 +302,21 @@ def _do_backup(backups_folder: Path,
             raise
 
         logger.info(f'Preparing to run tasks of {tasks.name}')
-        run_hook(f'backup:tasks:pre', {'path': str(tmp_backup), 'tasksName': tasks.name})
+        run_hook('backup:tasks:pre', {'path': str(tmp_backup), 'tasksName': tasks.name})
         try:
             resolved_tasks_env = _resolve_secrets({**resolved_env, **tasks.env}, secrets)
             result = _run_tasks(tasks, tmp_backup, prev_backup, resolved_tasks_env, secrets)
             tasks_definitions_results[tasks.file_name] = (tasks, result)
         except Exception as e:
             logger.error(f'One of the tasks of {tasks.name} failed')
-            run_hook(f'backup:tasks:error', {
+            run_hook('backup:tasks:error', {
                 'path': str(tmp_backup),
                 'message': ', '.join(e.args),
                 'tasksName': tasks.name,
             })
             raise Exception(f'One of the tasks of {tasks.name} failed, backup will stop', tasks.name)
 
-        run_hook(f'backup:tasks:post', {
+        run_hook('backup:tasks:post', {
             'path': str(tmp_backup),
             'tasksName': tasks.name,
             'created': [str(p) for p in tasks_definitions_results[tasks.file_name][1].values()],
