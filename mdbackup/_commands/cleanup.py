@@ -30,13 +30,20 @@ def _local_cleanup(config: Config):
     logger.debug('List of folders available:\n{}'.format('\n'.join([str(b) for b in backups_list])))
     for old in backups_list[0:max(0, len(backups_list) - max_backups)]:
         logger.warning(f'Removing old backup folder {old}')
-        run_hook('oldBackup:deleting', str(old.absolute()))
+        run_hook('backup:cleanup:local:pre', {
+            'path': str(old.absolute()),
+        })
         try:
             shutil.rmtree(str(old.absolute()))
-            run_hook('oldBackup:deleted', str(old.absolute()))
+            run_hook('backup:cleanup:local:post', {
+                'path': str(old.absolute()),
+            })
         except OSError as e:
             logger.exception(f'Could not completely remove backup {old}')
-            run_hook('oldBackup:error', str(old.absolute()), str(e))
+            run_hook('backup:cleanup:local:error', {
+                'path': str(old.absolute()),
+                'message': str(e),
+            })
 
 
 def _cloud_cleanup(config: Config):
@@ -57,12 +64,24 @@ def _cloud_cleanup(config: Config):
             logger.debug('List of folders available:\n{}'.format('\n'.join([str(b) for b in folders])))
             for old in folders[0:max(0, len(folders) - prov_config.max_backups_kept)]:
                 logger.warning(f'Removing old backup folder {old} of {prov_config.type}')
-                run_hook('oldBackup:storage:deleting', prov_config.type, prov_config.backups_path, str(old))
+                run_hook('backup:cleanup:cloud:pre', {
+                    'type': prov_config.type,
+                    'backupsPath': prov_config.backups_path,
+                    'path': str(old),
+                })
                 storage.delete(old)
-                run_hook('oldBackup:storage:deleted', prov_config.type, prov_config.backups_path, str(old))
+                run_hook('backup:cleanup:cloud:post', {
+                    'type': prov_config.type,
+                    'backupsPath': prov_config.backups_path,
+                    'path': str(old),
+                })
         except Exception as e:
             logger.exception(e)
-            run_hook('oldBackup:storage:error', prov_config.type, prov_config.backups_path, str(e))
+            run_hook('backup:cleanup:cloud:error', {
+                'type': prov_config.type,
+                'backupsPath': prov_config.backups_path,
+                'message': str(e),
+            })
 
         del storage
 

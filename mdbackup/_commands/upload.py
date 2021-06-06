@@ -50,7 +50,7 @@ def _process_results(config: Config, backup: Path, items: Iterable[Tuple[Path, d
     return final_items, items_to_remove
 
 
-def _upload_backup(config: Config, backup: Path, items: Iterable[Tuple[Path, dict]]) -> bool:
+def _upload_backup(config: Config, backup: Path, items: Iterable[Path]) -> bool:
     """
     Uploads backup to all cloud storage providers
     """
@@ -63,7 +63,12 @@ def _upload_backup(config: Config, backup: Path, items: Iterable[Tuple[Path, dic
         # Detect provider type and instantiate it
         storage = create_storage_instance(prov_config)
 
-        run_hook('upload:before', prov_config.type, str(backup))
+        run_hook('upload:pre', {
+            'type': prov_config.type,
+            'localPath': str(backup),
+            'remoteBackupsPath': prov_config.backups_path,
+            'files': list(items),
+        })
 
         # Create folder for this backup
         try:
@@ -71,7 +76,12 @@ def _upload_backup(config: Config, backup: Path, items: Iterable[Tuple[Path, dic
             backup_cloud_folder = storage.create_folder(backup_folder_name)
         except Exception as e:
             # If we cannot create it, will continue to the next configured provider
-            run_hook('upload:error', prov_config.type, str(backup), str(e))
+            run_hook('upload:error', {
+                'type': prov_config.type,
+                'localPath': str(backup),
+                'remoteBackupsPath': prov_config.backups_path,
+                'message': str(e),
+            })
             logger.exception(f'Could not create folder {backup_folder_name}', e)
             continue
 
@@ -90,11 +100,23 @@ def _upload_backup(config: Config, backup: Path, items: Iterable[Tuple[Path, dic
             could_upload = True
         except Exception as e:
             # Log only in case of error
-            run_hook('upload:error', prov_config.type, str(backup), str(e))
+            run_hook('upload:error', {
+                'type': prov_config.type,
+                'localPath': str(backup),
+                'remoteBackupsPath': prov_config.backups_path,
+                'remotePath': backup_cloud_folder,
+                'item': str(item),
+                'message': str(e),
+            })
             logger.exception(f'Could not upload file {item}: {e}')
             storage.delete(backup_cloud_folder)
 
-        run_hook('upload:after', prov_config.type, str(backup), str(backup_cloud_folder))
+        run_hook('upload:post', {
+            'type': prov_config.type,
+            'localPath': str(backup),
+            'remoteBackupsPath': prov_config.backups_path,
+            'remotePath': backup_cloud_folder,
+        })
         del storage
 
     return could_upload
@@ -126,7 +148,7 @@ def main_upload(config: Config, backup: Path, force: bool = False):
 
     # (do the following only if there are any providers defined)
     if len(config.cloud.providers) == 0:
-        logger.warn('No configured cloud storage providers, not uploading anything...')
+        logger.warning('No configured cloud storage providers, not uploading anything...')
         return
 
     if not backup.exists():
@@ -140,14 +162,14 @@ def main_upload(config: Config, backup: Path, force: bool = False):
         raise FileNotFoundError(f'Backup manifest does not exist in the folder {backup}')
     manifest = read_data_file(manifest_path)
     if not force and manifest.get('uploaded', False):
-        logger.warn(f'Backup {backup} has been already uploaded')
+        logger.warning(f'Backup {backup} has been already uploaded')
         return
 
     try:
         # Get files and folders to upload from the manifest (with their respective tasks)
         items = _get_generated_files_from_manifest(manifest, backup)
         # Archive folders (using tar) and compress and/or encrypt if configured and store in manifest paths for the
-        # archived folders so it will be easier to retrive them in restores
+        # archived folders so it will be easier to retrieve them in restores
         final_items, items_to_remove = _process_results(config, backup, items)
         write_data_file(manifest_path, manifest)
         # Upload files

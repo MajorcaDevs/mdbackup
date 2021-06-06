@@ -101,7 +101,12 @@ def _run_tasks(
 
     tasks_results: Dict[str, Path] = {}
     for task in tasks.tasks:
-        run_hook(f'backup:tasks:{tasks.name}:task:{task.name}:before', str(final_backup_path), tasks.name, task.name)
+        run_hook('backup:tasks:task:pre', {
+            'path': str(final_backup_path),
+            'previousPath': str(prev_backup_path) if prev_backup_path is not None else None,
+            'tasksName': tasks.name,
+            'taskName': task.name,
+        })
 
         try:
             actions = _inject_resolved_env_into_actions(task.actions,
@@ -114,19 +119,27 @@ def _run_tasks(
                                                         secrets)
 
             tasks_results[task.name] = run_task_actions(task.name, actions).relative_to(backup_path)
+
+            run_hook('backup:tasks:task:post', {
+                'path': str(final_backup_path),
+                'previousPath': str(prev_backup_path) if prev_backup_path is not None else None,
+                'tasksName': tasks.name,
+                'taskName': task.name,
+                'result': str(tasks_results[task.name]),
+            })
         except Exception as e:
             logger.exception(f'Task {task.name} failed')
-            run_hook(f'backup:tasks:{tasks.name}:task:{task.name}:error',
-                     ', '.join(e.args),
-                     str(backup_path),
-                     tasks.name,
-                     task.name)
+            run_hook('backup:tasks:task:error', {
+                'message': ', '.join(e.args),
+                'path': str(final_backup_path),
+                'previousPath': str(prev_backup_path) if prev_backup_path is not None else None,
+                'tasksName': tasks.name,
+                'taskName': task.name,
+            })
             if task.stop_on_fail:
                 raise e
             else:
                 tasks_results[task.name] = None
-
-        run_hook(f'backup:tasks:{tasks.name}:task:{task.name}:after', str(backup_path), tasks.name, task.name)
 
     return tasks_results
 
@@ -166,6 +179,7 @@ def _resolve_secrets(env: dict, secrets: List[SecretConfig]) -> dict:
         if isinstance(value, str):
             if value.startswith('#'):
                 logger.debug(f'Trying to resolve env {key} with secret alias {value}')
+                new_value = None
                 for secret in secrets:
                     new_value = _resolve_secret(value[1:].split('.'), secret)
                     if new_value is not None:
@@ -174,7 +188,7 @@ def _resolve_secrets(env: dict, secrets: List[SecretConfig]) -> dict:
                         break
 
                 if new_value is None:
-                    logger.warn(f'Env {key} with secret alias {value} cannot be resolved')
+                    logger.warning(f'Env {key} with secret alias {value} cannot be resolved')
                     new_env[key] = value
             else:
                 new_env[key] = value
@@ -201,11 +215,11 @@ def _resolve_env_vars(value, task_env: dict) -> dict:
                 if isinstance(task_env[env_var], (str, int, float, Path)):
                     env_var_value = str(task_env[env_var])
                 else:
-                    logger.warn(f'Environment variable value from task {env_var} is not a string, ignoring...')
+                    logger.warning(f'Environment variable value from task {env_var} is not a string, ignoring...')
             elif env_var in os.environ:
                 env_var_value = os.environ[env_var]
             else:
-                logger.warn(f'Environment variable {env_var} cannot be found, ignoring...')
+                logger.warning(f'Environment variable {env_var} cannot be found, ignoring...')
 
             value = (
                 value[0:env_var_match.start()] +
@@ -256,17 +270,15 @@ def _create_backup_manifest(backup_path: Path, results: Dict[str, Tuple[Tasks, D
 
 def _do_backup(backups_folder: Path,
                config_path: Path,
-               action_modules: List[str] = [],
                env: dict = {},
                secrets: List[SecretConfig] = []) -> Path:
     """
     Looks for the tasks defs, prepares the directory where the backups will
     be stored, run the tasks and saves the directory with the right name.
     Returns the created directory with the backups. You must define where to
-    store the backups in ``backups_folder``. The ``action_modules`` allows
-    you to load external modules that contain extra actions. The ``env`` are
-    environment variables that will be defined in the tasks execution. Finally,
-    the ``secrets`` parameter declares a list of secret backends from where
+    store the backups in ``backups_folder``. The ``env`` are environment
+    variables that will be defined in the tasks execution. Finally, the
+    ``secrets`` parameter declares a list of secret backends from where
     secrets will be extracted when requested from ``env`` sections.
     """
     logger = logging.getLogger(__name__).getChild('do_backup')
@@ -275,7 +287,7 @@ def _do_backup(backups_folder: Path,
     prev_backup = prev_backup.resolve() if prev_backup.exists() else None
     resolved_env = _resolve_secrets(env, secrets)
 
-    run_hook('backup:before', str(tmp_backup))
+    run_hook('backup:pre', {'path': str(tmp_backup)})
 
     logger.info(f'Temporary backup folder is {tmp_backup}')
     tmp_backup.mkdir(exist_ok=True, parents=True)
@@ -290,17 +302,25 @@ def _do_backup(backups_folder: Path,
             raise
 
         logger.info(f'Preparing to run tasks of {tasks.name}')
-        run_hook(f'backup:tasks:{tasks.name}:before', str(tmp_backup), tasks.name)
+        run_hook('backup:tasks:pre', {'path': str(tmp_backup), 'tasksName': tasks.name})
         try:
             resolved_tasks_env = _resolve_secrets({**resolved_env, **tasks.env}, secrets)
             result = _run_tasks(tasks, tmp_backup, prev_backup, resolved_tasks_env, secrets)
             tasks_definitions_results[tasks.file_name] = (tasks, result)
         except Exception as e:
             logger.error(f'One of the tasks of {tasks.name} failed')
-            run_hook(f'backup:tasks:{tasks.name}:error', str(tmp_backup), ', '.join(e.args), tasks.name)
+            run_hook('backup:tasks:error', {
+                'path': str(tmp_backup),
+                'message': ', '.join(e.args),
+                'tasksName': tasks.name,
+            })
             raise Exception(f'One of the tasks of {tasks.name} failed, backup will stop', tasks.name)
 
-        run_hook(f'backup:tasks:{tasks.name}:after', str(tmp_backup), tasks.name)
+        run_hook('backup:tasks:post', {
+            'path': str(tmp_backup),
+            'tasksName': tasks.name,
+            'created': [str(p) for p in tasks_definitions_results[tasks.file_name][1].values()],
+        })
 
     backup = _generate_backup_path(backups_folder)
     logger.info(f'Moving {tmp_backup} to {backup}')
@@ -314,7 +334,11 @@ def _do_backup(backups_folder: Path,
         current_backup.unlink()
     os.symlink(backup, current_backup)
 
-    run_hook('backup:after', str(backup))
+    run_hook('backup:post', {
+        'path': str(backup),
+        'created': {value[0].name: [str(p) for p in value[1].values()]
+                    for _, value in tasks_definitions_results.items()},
+    })
 
     return backup
 
@@ -325,13 +349,16 @@ def main_backup(config: Config) -> Path:
     try:
         return _do_backup(config.backups_path,
                           config.config_folder,
-                          config.actions_modules,
                           env={
                              **config.env,
                           },
                           secrets=config.secrets)
     except Exception as e:
         logger.error(e)
-        run_hook('backup:error', str(config.backups_path / '.partial'), str(e), e.args[1] if len(e.args) > 2 else '')
+        run_hook('backup:error', {
+            'path': str(config.backups_path / '.partial'),
+            'message': str(e),
+            'stepName': e.args[1] if len(e.args) > 2 else None,
+        })
         shutil.rmtree(str(config.backups_path / '.partial'))
         sys.exit(1)
