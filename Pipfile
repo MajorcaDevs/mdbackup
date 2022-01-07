@@ -12,14 +12,14 @@ coverage = "~=5.3"
 unittest-xml-reporting = "~=3.0.0"
 
 [packages]
-pyyaml = "~=5.4.0"
-jsonschema = "~=3.2.0"
+pyyaml = "~=6.0.0"
+jsonschema = "~=4.3.0"
 python-magic = "~=0.4.0"
 boto3 = "~=1.17.0"
 b2sdk = "~=1.1.0"
 pydrive = "~=1.3.0"
-paramiko = "~=2.7.0"
-requests = "~=2.25.0"
+paramiko = "~=2.9.0"
+requests = "~=2.27.0"
 urllib3 = ">=1.26.5"
 
 [requires]

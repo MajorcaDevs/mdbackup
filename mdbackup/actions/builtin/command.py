@@ -76,6 +76,7 @@ def action_command(inp, params) -> subprocess.Popen:
         bufsize=0,
         env=env,
         cwd=params.get('_backup_path'),
+        pass_fds=params.get('_pass_fds', ()),
     )
 
 
