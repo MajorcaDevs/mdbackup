@@ -1,5 +1,5 @@
-import subprocess
 import os
+import subprocess
 
 from mdbackup.actions.builtin.command import action_command
 from mdbackup.actions.container import action, unaction
