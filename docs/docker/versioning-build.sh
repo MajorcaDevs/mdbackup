@@ -1,4 +1,5 @@
 #!/bin/ash
+{
 
 set -e
 
@@ -6,7 +7,13 @@ function build_docs {
   #python -m venv .venv
   #. .venv/bin/activate
 
-  pip install -r docs/requirements.txt
+  if grep '# versions fixed' docs/requirements.txt; then
+    echo "Installing dependencies from docs/requirements.txt"
+    pip install -r docs/requirements.txt
+  else
+    echo "Installing dependencies manually"
+    pip install 'mkdocs<1.2' 'mkdocs-material<6'
+  fi
   mkdocs build --config-file="$(ls mkdocs.y*ml)" --site-dir="build/docs/$1"
 
   #deactivate
@@ -59,3 +66,6 @@ done
 if [[ -n "${BRANCH_NAME}" ]]; then
   git checkout "$BRANCH_NAME"
 fi
+
+exit
+}

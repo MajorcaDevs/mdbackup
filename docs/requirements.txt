@@ -1,2 +1,2 @@
-mkdocs>=1.0.1
-mkdocs-material
+mkdocs<2
+mkdocs-material<8

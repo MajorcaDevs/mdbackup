@@ -1,0 +1,186 @@
+name: Publish version
+
+on:
+  push:
+    tags: [ '*' ]
+
+permissions:
+  contents: read
+
+env:
+  REGISTRY: docker.io
+  IMAGE_NAME: majorcadevs/mdbackup
+
+jobs:
+  whl:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.10'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install wheel twine
+      - name: Build wheel
+        run: |
+          python setup.py sdist bdist_wheel
+      - name: Publish
+        run: |
+          twine upload --user ${{ secrets.PYPI_USER }} --password ${{ secrets.PYPI_PASS }} dist/*
+      - uses: ncipollo/release-action@v1
+        with:
+          artifacts: 'dist/*.whl'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          prerelease: ${{ contains(github.ref, 'beta') || contains(github.ref, 'alpha') || contains(github.ref, 'rc') }}
+          draft: true
+          generateReleaseNotes: true
+
+  docs:
+    runs-on: ubuntu-latest
+    needs: whl
+    if: ${{ !contains(github.ref, 'beta') && !contains(github.ref, 'alpha') && !contains(github.ref, 'rc') }}
+    permissions:
+      contents: write
+    container:
+      image: python:alpine
+      env:
+        HOMEPAGE_URL: https://mdbackup.majorcadevs.com
+    steps:
+      - name: Install dependencies
+        run: apk add --no-cache git jq moreutils nodejs npm build-base
+      - uses: actions/checkout@v3
+      - name: Build docs
+        run: |
+          # workaround for error in permissions
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          # fetch all refs
+          git fetch
+
+          # build docs
+          python -m venv .venv
+          . .venv/bin/activate
+          pip install -r docs/requirements.txt
+          mkdocs build --config-file=mkdocs.yml
+      - name: Deploy to GitHub Pages
+        uses: crazy-max/ghaction-github-pages@v3
+        with:
+          target_branch: gh-pages
+          build_dir: build/docs
+          fqdn: mdbackup.majorcadevs.com
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  docker:
+    strategy:
+      matrix:
+        arch:
+          - amd64
+          - arm64v8
+          - arm32v7
+        flavour:
+          - alpine
+          - slim
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # Configure buildx and QEMU for cross-arch support
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      # Log in into the registry
+      - name: Log into registry ${{ env.REGISTRY }}
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.DOCKER_HUB_USER }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+      # Extract metadata (tags, labels) for Docker
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+      - name: Parse tag
+        id: parser
+        run: |
+          REF="${{ github.ref }}"
+          if [[ $REF == refs/tags/* ]]; then
+            VERSION=${REF#refs/tags/v}
+            VERSION=${REF#refs/tags/}
+          else
+            echo "No idea how to decipher this ref: $REF"
+            exit 1
+          fi
+          echo ::set-output name=version::$VERSION
+
+      # Build and push Docker image with Buildx
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: ./docker/Dockerfile-${{ matrix.flavour }}
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.parser.outputs.version }}-${{ matrix.arch }}-${{ matrix.flavour }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+  docker-manifest:
+    runs-on: ubuntu-latest
+    needs: docker
+    strategy:
+      matrix:
+        flavour:
+          - alpine
+          - slim
+    steps:
+      # Log in into the registry
+      - name: Log into registry ${{ env.REGISTRY }}
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.DOCKER_HUB_USER }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+      - name: Parse tag
+        id: parser
+        run: |
+          REF="${{ github.ref }}"
+          if [[ $REF == refs/tags/* ]]; then
+            VERSION=${REF#refs/tags/v}
+            VERSION=${REF#refs/tags/}
+          else
+            echo "No idea how to decipher this ref: $REF"
+            exit 1
+          fi
+          echo ::set-output name=version::$VERSION
+
+      - name: Publish manifests for version
+        env:
+          MANIFEST_NAME: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.parser.outputs.version }}-${{ matrix.flavour }}
+        run: |
+          docker manifest create ${{ env.MANIFEST_NAME }} \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.parser.outputs.version }}-amd64-${{ matrix.flavour }} \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.parser.outputs.version }}-arm64v8-${{ matrix.flavour }} \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.parser.outputs.version }}-arm32v7-${{ matrix.flavour }}
+          docker manifest push -p ${{ env.MANIFEST_NAME }}
+
+      - name: Publish manifests for latest
+        if: ${{ !contains(steps.parser.outputs.version, 'beta') && !contains(steps.parser.outputs.version, 'alpha') && !contains(steps.parser.outputs.version, 'rc') }}
+        env:
+          MANIFEST_NAME: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.flavour }}
+        run: |
+          docker manifest create ${{ env.MANIFEST_NAME }} \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.parser.outputs.version }}-amd64-${{ matrix.flavour }} \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.parser.outputs.version }}-arm64v8-${{ matrix.flavour }} \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.parser.outputs.version }}-arm32v7-${{ matrix.flavour }}
+          docker manifest push -p ${{ env.MANIFEST_NAME }}

@@ -1,9 +1,9 @@
 site_name: mdbackup documentation
 repo_url: https://github.com/MajorcaDevs/mdbackup
 repo_name: MajorcaDevs/mdbackup
-edit_uri: blob/master
+edit_uri: blob/dev
 site_description: mdbackup documentation
-copyright: MajorcaDevs 2019
+copyright: MajorcaDevs 2022
 docs_dir: docs
 site_dir: build/docs
 strict: true
