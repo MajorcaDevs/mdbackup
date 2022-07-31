@@ -43,7 +43,6 @@ jobs:
   docs:
     runs-on: ubuntu-latest
     needs: whl
-    if: ${{ !contains(github.ref, 'beta') && !contains(github.ref, 'alpha') && !contains(github.ref, 'rc') }}
     permissions:
       contents: write
     container:
@@ -54,18 +53,32 @@ jobs:
       - name: Install dependencies
         run: apk add --no-cache git jq moreutils nodejs npm build-base
       - uses: actions/checkout@v3
-      - name: Build docs
+      - name: Prepare git
         run: |
           # workaround for error in permissions
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          # fetch all refs
-          git fetch
-
+          # fetch gh-pages
+          git fetch origin gh-pages --depth=1
+      - name: Install dependencies
+        run: |
+          pip install pipenv
+          pipenv install -d
+      - name: Build and publish docs (stable)
+        if: ${{ !contains(github.ref, 'beta') && !contains(github.ref, 'alpha') && !contains(github.ref, 'rc') }}
+        run: |
+          # get version
+          REF="${{ github.ref }}"
+          VERSION=${REF#refs/tags/v}
+          VERSION=${VERSION#refs/tags/}
+          VERSION=$(echo $VERSION | awk '{ split($0, a, "."); print a[1] "." a[2] }')
+          echo "Version family: $VERSION"
           # build docs
-          python -m venv .venv
-          . .venv/bin/activate
-          pip install -r docs/requirements.txt
-          mkdocs build --config-file=mkdocs.yml
+          mike deploy --push --update-aliases $VERSION stable
+      - name: Build and publish docs (dev)
+        if: ${{ contains(github.ref, 'beta') || contains(github.ref, 'alpha') || contains(github.ref, 'rc') }}
+        run: |
+          # build docs
+          mike deploy --push dev
       - name: Deploy to GitHub Pages
         uses: crazy-max/ghaction-github-pages@v3
         with:
@@ -117,7 +130,7 @@ jobs:
           REF="${{ github.ref }}"
           if [[ $REF == refs/tags/* ]]; then
             VERSION=${REF#refs/tags/v}
-            VERSION=${REF#refs/tags/}
+            VERSION=${VERSION#refs/tags/}
           else
             echo "No idea how to decipher this ref: $REF"
             exit 1
@@ -157,7 +170,7 @@ jobs:
           REF="${{ github.ref }}"
           if [[ $REF == refs/tags/* ]]; then
             VERSION=${REF#refs/tags/v}
-            VERSION=${REF#refs/tags/}
+            VERSION=${VERSION#refs/tags/}
           else
             echo "No idea how to decipher this ref: $REF"
             exit 1

@@ -1,3 +1,8 @@
+---
+hide:
+  - toc
+---
+
 # Backups utility
 
 [![PyPI version](https://img.shields.io/pypi/v/mdbackup) ![PyPI downloads](https://img.shields.io/pypi/dw/mdbackup)](https://pypi.org/project/mdbackup/)
