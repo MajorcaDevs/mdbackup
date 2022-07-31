@@ -1,6 +1,4 @@
 
-
-
 <!doctype html>
 <html lang="en" class="no-js">
   <head>
@@ -12,8 +10,8 @@
       
       
       
-      <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.5.0">
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.3.1, mkdocs-material-8.3.9">
     
     
       
@@ -21,24 +19,29 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.b5d04df8.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.1d29e8d0.min.css">
       
-        <link rel="stylesheet" href="../assets/stylesheets/palette.9ab2c1f8.min.css">
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.cbb835fc.min.css">
+        
       
-      
-    
-    
-    
-      
-        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
-        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
       
     
     
     
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
+
     
     
   </head>
@@ -46,11 +49,16 @@
   
     
     
+      
     
-    <body dir="ltr" data-md-color-scheme="preference" data-md-color-primary="" data-md-color-accent="">
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="">
   
     
-      <script>matchMedia("(prefers-color-scheme: dark)").matches&&document.body.setAttribute("data-md-color-scheme","slate")</script>
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
@@ -67,48 +75,86 @@
       
     </div>
     
-      <header class="md-header" data-md-component="header">
-  <nav class="md-header-nav md-grid" aria-label="Header">
-    <a href=".." title="mdbackup documentation" class="md-header-nav__button md-logo" aria-label="mdbackup documentation">
+      <div data-md-component="outdated" hidden>
+        <aside class="md-banner md-banner--warning">
+          
+        </aside>
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="mdbackup documentation" class="md-header__button md-logo" aria-label="mdbackup documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 21h16V8H4m10 7v3h-4v-3H7l5-5 5 5M3 3h18v4H3"/></svg>
 
     </a>
-    <label class="md-header-nav__button md-icon" for="__drawer">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
     </label>
-    <div class="md-header-nav__title" data-md-component="header-title">
-      
-        <div class="md-header-nav__ellipsis">
-          <span class="md-header-nav__topic md-ellipsis">
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
             mdbackup documentation
           </span>
-          <span class="md-header-nav__topic md-ellipsis">
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
             
               Configuration
             
           </span>
         </div>
-      
+      </div>
     </div>
     
-      <label class="md-header-nav__button md-icon" for="__search">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      <form class="md-header__option" data-md-component="palette">
+        
+          
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent=""  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+            </label>
+          
+        
+          
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent=""  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+          
+            <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+            </label>
+          
+        
+      </form>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
       </label>
-      
-<div class="md-search" data-md-component="search" role="dialog">
+      <div class="md-search" data-md-component="search" role="dialog">
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
       <label class="md-search__icon md-icon" for="__search">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
       </label>
-      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
-      </button>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" data-md-scrollfix>
@@ -124,12 +170,11 @@
 </div>
     
     
-      <div class="md-header-nav__source">
-        
-<a href="https://github.com/MajorcaDevs/mdbackup/" title="Go to repository" class="md-source">
+      <div class="md-header__source">
+        <a href="https://github.com/MajorcaDevs/mdbackup" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
   </div>
   <div class="md-source__repository">
     MajorcaDevs/mdbackup
@@ -138,25 +183,30 @@
       </div>
     
   </nav>
+  
 </header>
     
     <div class="md-container" data-md-component="container">
       
+      
         
-      
-      
+          
         
       
       <main class="md-main" data-md-component="main">
         <div class="md-main__inner md-grid">
           
             
-              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
-                    <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="mdbackup documentation" class="md-nav__button md-logo" aria-label="mdbackup documentation">
+    <a href=".." title="mdbackup documentation" class="md-nav__button md-logo" aria-label="mdbackup documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 21h16V8H4m10 7v3h-4v-3H7l5-5 5 5M3 3h18v4H3"/></svg>
@@ -166,11 +216,10 @@
   </label>
   
     <div class="md-nav__source">
-      
-<a href="https://github.com/MajorcaDevs/mdbackup/" title="Go to repository" class="md-source">
+      <a href="https://github.com/MajorcaDevs/mdbackup" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
   </div>
   <div class="md-source__repository">
     MajorcaDevs/mdbackup
@@ -184,24 +233,15 @@
       
       
 
-
-  <li class="md-nav__item">
-    <a href=".." title="Home" class="md-nav__link">
-      Home
-    </a>
-  </li>
-
-    
-      
-      
-      
-
-
-  <li class="md-nav__item">
-    <a href="../quick-start/" title="Quick start" class="md-nav__link">
-      Quick start
-    </a>
-  </li>
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
 
     
       
@@ -209,40 +249,56 @@
       
 
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../quick-start/" class="md-nav__link">
+        Quick start
+      </a>
+    </li>
+  
 
-
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
     
       
+      
+      
+
+  
+  
     
-    
-      <label class="md-nav__link md-nav__link--active" for="__toc">
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Configuration
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Configuration
-        <span class="md-nav__icon md-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9h14V7H3v2m0 4h14v-2H3v2m0 4h14v-2H3v2m16 0h2v-2h-2v2m0-10v2h2V7h-2m0 6h2v-2h-2v2z"/></svg>
-        </span>
-      </label>
-    
-    <a href="./" title="Configuration" class="md-nav__link md-nav__link--active">
-      Configuration
-    </a>
-    
+      </a>
       
+        
+
 <nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
   
   
     
   
   
     <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-      </span>
+      <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
-    <ul class="md-nav__list" data-md-scrollfix>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
   <a href="#backupspath" class="md-nav__link">
@@ -431,404 +487,471 @@
     </ul>
   
 </nav>
-    
-  </li>
-
-    
       
-      
-      
-
-
-  <li class="md-nav__item md-nav__item--nested">
-    
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
-    
-    <label class="md-nav__link" for="nav-4">
-      Actions
-      <span class="md-nav__icon md-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
-      </span>
-    </label>
-    <nav class="md-nav" aria-label="Actions" data-md-level="1">
-      <label class="md-nav__title" for="nav-4">
-        <span class="md-nav__icon md-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-        </span>
-        Actions
-      </label>
-      <ul class="md-nav__list" data-md-scrollfix>
-        
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../actions/" title="Actions overview" class="md-nav__link">
-      Actions overview
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item md-nav__item--nested">
-    
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4-2" type="checkbox" id="nav-4-2">
-    
-    <label class="md-nav__link" for="nav-4-2">
-      Builtin actions
-      <span class="md-nav__icon md-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
-      </span>
-    </label>
-    <nav class="md-nav" aria-label="Builtin actions" data-md-level="2">
-      <label class="md-nav__title" for="nav-4-2">
-        <span class="md-nav__icon md-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-        </span>
-        Builtin actions
-      </label>
-      <ul class="md-nav__list" data-md-scrollfix>
-        
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../actions/archive/" title="Archive" class="md-nav__link">
-      Archive
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../actions/command/" title="Command" class="md-nav__link">
-      Command
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../actions/compress/" title="Compress" class="md-nav__link">
-      Compress
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../actions/database/" title="Database" class="md-nav__link">
-      Database
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../actions/directory/" title="Directory" class="md-nav__link">
-      Directory
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../actions/encrypt/" title="Encrypt" class="md-nav__link">
-      Encrypt
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../actions/file/" title="File" class="md-nav__link">
-      File
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../actions/network/" title="Network" class="md-nav__link">
-      Network
-    </a>
-  </li>
-
-        
-      </ul>
-    </nav>
-  </li>
-
-        
-      </ul>
-    </nav>
-  </li>
+    </li>
+  
 
     
       
       
       
 
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4">
+          Actions
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Actions" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Actions
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../actions/" class="md-nav__link">
+        Actions overview
+      </a>
+    </li>
+  
 
-  <li class="md-nav__item">
-    <a href="../tasks/" title="Tasks" class="md-nav__link">
-      Tasks
-    </a>
-  </li>
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_2" type="checkbox" id="__nav_4_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_2">
+          Builtin actions
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Builtin actions" data-md-level="2">
+        <label class="md-nav__title" for="__nav_4_2">
+          <span class="md-nav__icon md-icon"></span>
+          Builtin actions
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../actions/archive/" class="md-nav__link">
+        Archive
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../actions/command/" class="md-nav__link">
+        Command
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../actions/compress/" class="md-nav__link">
+        Compress
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../actions/database/" class="md-nav__link">
+        Database
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../actions/directory/" class="md-nav__link">
+        Directory
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../actions/encrypt/" class="md-nav__link">
+        Encrypt
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../actions/file/" class="md-nav__link">
+        File
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../actions/network/" class="md-nav__link">
+        Network
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
 
     
       
       
       
 
-
-  <li class="md-nav__item md-nav__item--nested">
-    
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6">
-    
-    <label class="md-nav__link" for="nav-6">
-      Storage providers
-      <span class="md-nav__icon md-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
-      </span>
-    </label>
-    <nav class="md-nav" aria-label="Storage providers" data-md-level="1">
-      <label class="md-nav__title" for="nav-6">
-        <span class="md-nav__icon md-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-        </span>
-        Storage providers
-      </label>
-      <ul class="md-nav__list" data-md-scrollfix>
-        
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../storage/" title="Overview" class="md-nav__link">
-      Overview
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../storage/gdrive/" title="Google Drive" class="md-nav__link">
-      Google Drive
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../storage/s3/" title="S3" class="md-nav__link">
-      S3
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../storage/b2/" title="B2" class="md-nav__link">
-      B2
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../storage/ftp/" title="FTP(S)" class="md-nav__link">
-      FTP(S)
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../storage/sftp/" title="SFTP" class="md-nav__link">
-      SFTP
-    </a>
-  </li>
-
-        
-      </ul>
-    </nav>
-  </li>
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tasks/" class="md-nav__link">
+        Tasks
+      </a>
+    </li>
+  
 
     
       
       
       
 
-
-  <li class="md-nav__item md-nav__item--nested">
+  
+  
+  
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6">
+          Storage providers
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Storage providers" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          Storage providers
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../storage/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../storage/gdrive/" class="md-nav__link">
+        Google Drive
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../storage/s3/" class="md-nav__link">
+        S3
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../storage/b2/" class="md-nav__link">
+        B2
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../storage/ftp/" class="md-nav__link">
+        FTP(S)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../storage/sftp/" class="md-nav__link">
+        SFTP
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
     
-    <label class="md-nav__link" for="nav-7">
-      Secrets providers
-      <span class="md-nav__icon md-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
-      </span>
-    </label>
-    <nav class="md-nav" aria-label="Secrets providers" data-md-level="1">
-      <label class="md-nav__title" for="nav-7">
-        <span class="md-nav__icon md-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-        </span>
-        Secrets providers
-      </label>
-      <ul class="md-nav__list" data-md-scrollfix>
-        
-        
-          
-          
-          
+      
+      
+      
 
-
-  <li class="md-nav__item">
-    <a href="../secrets/" title="Overview" class="md-nav__link">
-      Overview
-    </a>
-  </li>
-
-        
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7">
+          Secrets providers
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Secrets providers" data-md-level="1">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          Secrets providers
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
           
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../secrets/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
           
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../secrets/file/" class="md-nav__link">
+        File
+      </a>
+    </li>
+  
+
+            
           
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../secrets/vault/" class="md-nav__link">
+        Vault
+      </a>
+    </li>
+  
 
-
-  <li class="md-nav__item">
-    <a href="../secrets/file/" title="File" class="md-nav__link">
-      File
-    </a>
-  </li>
-
-        
+            
           
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../secrets/vault/" title="Vault" class="md-nav__link">
-      Vault
-    </a>
-  </li>
-
-        
-      </ul>
-    </nav>
-  </li>
+        </ul>
+      </nav>
+    </li>
+  
 
     
       
       
       
 
-
-  <li class="md-nav__item">
-    <a href="../hooks/" title="Hooks" class="md-nav__link">
-      Hooks
-    </a>
-  </li>
-
-    
-      
-      
-      
-
-
-  <li class="md-nav__item">
-    <a href="../arguments/" title="Arguments" class="md-nav__link">
-      Arguments
-    </a>
-  </li>
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hooks/" class="md-nav__link">
+        Hooks
+      </a>
+    </li>
+  
 
     
       
       
       
 
-
-  <li class="md-nav__item">
-    <a href="../run-as-service/" title="Run as a service" class="md-nav__link">
-      Run as a service
-    </a>
-  </li>
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arguments/" class="md-nav__link">
+        Arguments
+      </a>
+    </li>
+  
 
     
       
       
       
 
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../run-as-service/" class="md-nav__link">
+        Run as a service
+      </a>
+    </li>
+  
 
-  <li class="md-nav__item">
-    <a href="../docker/" title="Docker" class="md-nav__link">
-      Docker
-    </a>
-  </li>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../docker/" class="md-nav__link">
+        Docker
+      </a>
+    </li>
+  
 
     
   </ul>
@@ -838,23 +961,24 @@
               </div>
             
             
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
+
 <nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
   
   
     
   
   
     <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-      </span>
+      <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
-    <ul class="md-nav__list" data-md-scrollfix>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
   <a href="#backupspath" class="md-nav__link">
@@ -1048,174 +1172,172 @@
               </div>
             
           
-          <div class="md-content">
+          <div class="md-content" data-md-component="content">
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/MajorcaDevs/mdbackup/blob/master/configuration.md" title="Edit this page" class="md-content__button md-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
-                  </a>
-                
-                
-                  
-                
-                
-                <h1 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h1>
-<p>You have available under <code>config/config.schema.json</code> the JSON schema of the configuration file. You can use it like this on an app like Visual Studio Code or PyCharm:</p>
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
-    <span class="nt">&quot;$schema&quot;</span><span class="p">:</span> <span class="s2">&quot;./config.schema.json&quot;</span>
-<span class="p">}</span>
-</code></pre></div>
+  <a href="https://github.com/MajorcaDevs/mdbackup/blob/dev/configuration.md" title="Edit this page" class="md-content__button md-icon">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
+  </a>
 
+
+
+<h1 id="configuration">Configuration</h1>
+<p>You have available under <code>config/config.schema.json</code> the JSON schema of the configuration file. You can use it like this on an app like Visual Studio Code or PyCharm:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span><span class="w"></span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="nt">&quot;$schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;./config.schema.json&quot;</span><span class="w"></span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">}</span><span class="w"></span>
+</code></pre></div>
 <blockquote>
 <p>If you are going to use the <code>$schema</code>, you should download it or reference the URL of the file from the repository directly.</p>
 </blockquote>
-<p>This allows you to auto-complete with the elements available in the configuration. But in case you cannot use an app with schema support, here&rsquo;s it is the (maybe not updated) list of options:</p>
-<div class="tabbed-set" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><label for="__tabbed_1_1">JSON syntax</label><div class="tabbed-content">
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
-    <span class="nt">&quot;backupsPath&quot;</span><span class="p">:</span> <span class="s2">&quot;Path where the backups will be stored&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;logLevel&quot;</span><span class="p">:</span> <span class="s2">&quot;Log level for the app, valid values are: CRITICAL,ERROR,WARNING,INFO,DEBUG&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;actionsModules&quot;</span><span class="p">:</span> <span class="p">[</span>
-      <span class="s2">&quot;my.module#actions_register_function&quot;</span>
-    <span class="p">],</span>
-    <span class="nt">&quot;maxBackupsKept&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
-    <span class="nt">&quot;env&quot;</span><span class="p">:</span> <span class="p">{</span>
-      <span class="nt">&quot;something&quot;</span><span class="p">:</span> <span class="s2">&quot;true&quot;</span>
-    <span class="p">},</span>
-    <span class="nt">&quot;secrets&quot;</span><span class="p">:</span> <span class="p">{</span>
-      <span class="nt">&quot;secret-provider&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="nt">&quot;envDefs&quot;</span><span class="p">:</span> <span class="p">{</span>
-          <span class="nt">&quot;pgpassword&quot;</span><span class="p">:</span> <span class="s2">&quot;/path/to/pg-password&quot;</span><span class="p">,</span>
-          <span class="nt">&quot;mysqlpassword&quot;</span><span class="p">:</span> <span class="s2">&quot;mysql-password&quot;</span>
-        <span class="p">},</span>
-        <span class="nt">&quot;config&quot;</span><span class="p">:</span> <span class="p">{</span>
-          <span class="nt">&quot;setting-1&quot;</span><span class="p">:</span> <span class="s2">&quot;value&quot;</span><span class="p">,</span>
-          <span class="nt">&quot;setting-2&quot;</span><span class="p">:</span> <span class="kc">true</span>
-        <span class="p">},</span>
-        <span class="nt">&quot;storageProviders&quot;</span><span class="p">:</span> <span class="p">[</span>
-          <span class="s2">&quot;storage/digital-ocean&quot;</span><span class="p">,</span>
-          <span class="p">{</span>
-            <span class="nt">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;storage/gdrive&quot;</span><span class="p">,</span>
-            <span class="nt">&quot;backupsPath&quot;</span><span class="p">:</span> <span class="s2">&quot;/Backups/mbp&quot;</span>
-          <span class="p">},</span>
-          <span class="s2">&quot;storage/amazon&quot;</span>
-        <span class="p">]</span>
-      <span class="p">}</span>
-    <span class="p">},</span>
-    <span class="nt">&quot;cloud&quot;</span><span class="p">:</span> <span class="p">{</span>
-      <span class="nt">&quot;compression&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="nt">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;gz|xz|bz2|br|zst&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;level&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
-        <span class="nt">&quot;cpus&quot;</span><span class="p">:</span> <span class="mi">1</span>
-      <span class="p">},</span>
-      <span class="nt">&quot;encrypt&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="nt">&quot;strategy&quot;</span><span class="p">:</span> <span class="s2">&quot;gpg-keys|gpg-passphrase&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;passphrase&quot;</span><span class="p">:</span> <span class="s2">&quot;If using gpg-passphrase, this will be used as passphrase for the cypher&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;keys&quot;</span><span class="p">:</span> <span class="s2">&quot;If using gpg-keys, this will be used as recipients option for the gpg cypher (emails)&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;algorithm&quot;</span><span class="p">:</span> <span class="s2">&quot;Defines the algorithm to use in the cypher process, depends in the strategy (currently one of `gpg --version` cyphers)&quot;</span>
-      <span class="p">},</span>
-      <span class="nt">&quot;providers&quot;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="p">{</span>
-          <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;provider-type-1&quot;</span><span class="p">,</span>
-          <span class="nt">&quot;backupsPath&quot;</span><span class="p">:</span> <span class="s2">&quot;Path in the storage provider where to store the backups&quot;</span><span class="p">,</span>
-          <span class="nt">&quot;maxBackupsKept&quot;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span>
-          <span class="nt">&quot;provider-specific-param-1&quot;</span><span class="p">:</span> <span class="s2">&quot;config/client_secrets.json&quot;</span><span class="p">,</span>
-          <span class="nt">&quot;provider-specific-param-2&quot;</span><span class="p">:</span> <span class="kc">false</span>
-        <span class="p">},</span>
-        <span class="p">{</span>
-          <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;provider-type-2&quot;</span><span class="p">,</span>
-          <span class="nt">&quot;backupsPath&quot;</span><span class="p">:</span> <span class="s2">&quot;Path in the storage provider where to store the backups&quot;</span><span class="p">,</span>
-          <span class="nt">&quot;maxBackupsKept&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
-          <span class="nt">&quot;provider-specific-param-1&quot;</span><span class="p">:</span> <span class="s2">&quot;THIS_IS-NOT-AN-API-KEY&quot;</span><span class="p">,</span>
-          <span class="nt">&quot;provider-specific-param-2&quot;</span><span class="p">:</span> <span class="s2">&quot;THIS_IS_NOT_AN-API-S3Cr3t&quot;</span><span class="p">,</span>
-          <span class="nt">&quot;provider-specific-param-3&quot;</span><span class="p">:</span> <span class="mi">10</span>
-        <span class="p">}</span>
-      <span class="p">]</span>
-    <span class="p">},</span>
-    <span class="nt">&quot;hooks&quot;</span><span class="p">:</span> <span class="p">{</span>
-      <span class="nt">&quot;backup:before&quot;</span><span class="p">:</span> <span class="s2">&quot;echo $@&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;backup:after&quot;</span><span class="p">:</span> <span class="s2">&quot;path/to/script&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;backup:error&quot;</span><span class="p">:</span> <span class="s2">&quot;wombo combo $1 $2&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;upload:before&quot;</span><span class="p">:</span> <span class="s2">&quot;echo $@&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;upload:after&quot;</span><span class="p">:</span> <span class="s2">&quot;echo $@&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;upload:error&quot;</span><span class="p">:</span> <span class="s2">&quot;echo $@&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;oldBackup:deleting&quot;</span><span class="p">:</span> <span class="s2">&quot;echo $@&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;oldBackup:deleted&quot;</span><span class="p">:</span> <span class="s2">&quot;echo $@&quot;</span><span class="p">,</span>
-      <span class="nt">&quot;oldBackup:error&quot;</span><span class="p">:</span> <span class="s2">&quot;echo $@&quot;</span>
-    <span class="p">}</span>
-<span class="p">}</span>
+<p>This allows you to auto-complete with the elements available in the configuration. But in case you cannot use an app with schema support, here's it is the (maybe not updated) list of options:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">JSON syntax</label><label for="__tabbed_1_2">YAML syntax</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span><span class="w"></span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="nt">&quot;backupsPath&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Path where the backups will be stored&quot;</span><span class="p">,</span><span class="w"></span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nt">&quot;logLevel&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Log level for the app, valid values are: CRITICAL,ERROR,WARNING,INFO,DEBUG&quot;</span><span class="p">,</span><span class="w"></span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="nt">&quot;actionsModules&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">      </span><span class="s2">&quot;my.module#actions_register_function&quot;</span><span class="w"></span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="p">],</span><span class="w"></span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="nt">&quot;maxBackupsKept&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span><span class="w"></span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="nt">&quot;env&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">      </span><span class="nt">&quot;something&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;true&quot;</span><span class="w"></span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="p">},</span><span class="w"></span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="nt">&quot;secrets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">      </span><span class="nt">&quot;secret-provider&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">        </span><span class="nt">&quot;envDefs&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">          </span><span class="nt">&quot;pgpassword&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/path/to/pg-password&quot;</span><span class="p">,</span><span class="w"></span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">          </span><span class="nt">&quot;mysqlpassword&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;mysql-password&quot;</span><span class="w"></span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">        </span><span class="p">},</span><span class="w"></span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">        </span><span class="nt">&quot;config&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">          </span><span class="nt">&quot;setting-1&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;value&quot;</span><span class="p">,</span><span class="w"></span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">          </span><span class="nt">&quot;setting-2&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"></span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">        </span><span class="p">},</span><span class="w"></span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">        </span><span class="nt">&quot;storageProviders&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">          </span><span class="s2">&quot;storage/digital-ocean&quot;</span><span class="p">,</span><span class="w"></span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">          </span><span class="p">{</span><span class="w"></span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">            </span><span class="nt">&quot;key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;storage/gdrive&quot;</span><span class="p">,</span><span class="w"></span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">            </span><span class="nt">&quot;backupsPath&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/Backups/mbp&quot;</span><span class="w"></span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">          </span><span class="p">},</span><span class="w"></span>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">          </span><span class="s2">&quot;storage/amazon&quot;</span><span class="w"></span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">        </span><span class="p">]</span><span class="w"></span>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="w">      </span><span class="p">}</span><span class="w"></span>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="w">    </span><span class="p">},</span><span class="w"></span>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="w">    </span><span class="nt">&quot;cloud&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="w">      </span><span class="nt">&quot;compression&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="w">        </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;gz|xz|bz2|br|zst&quot;</span><span class="p">,</span><span class="w"></span>
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="w">        </span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"></span>
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="w">        </span><span class="nt">&quot;cpus&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w"></span>
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="w">      </span><span class="p">},</span><span class="w"></span>
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="w">      </span><span class="nt">&quot;encrypt&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="w">        </span><span class="nt">&quot;strategy&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;gpg-keys|gpg-passphrase&quot;</span><span class="p">,</span><span class="w"></span>
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a><span class="w">        </span><span class="nt">&quot;passphrase&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;If using gpg-passphrase, this will be used as passphrase for the cypher&quot;</span><span class="p">,</span><span class="w"></span>
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a><span class="w">        </span><span class="nt">&quot;keys&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;If using gpg-keys, this will be used as recipients option for the gpg cypher (emails)&quot;</span><span class="p">,</span><span class="w"></span>
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a><span class="w">        </span><span class="nt">&quot;algorithm&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Defines the algorithm to use in the cypher process, depends in the strategy (currently one of `gpg --version` cyphers)&quot;</span><span class="w"></span>
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a><span class="w">      </span><span class="p">},</span><span class="w"></span>
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a><span class="w">      </span><span class="nt">&quot;providers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a><span class="w">        </span><span class="p">{</span><span class="w"></span>
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a><span class="w">          </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;provider-type-1&quot;</span><span class="p">,</span><span class="w"></span>
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a><span class="w">          </span><span class="nt">&quot;backupsPath&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Path in the storage provider where to store the backups&quot;</span><span class="p">,</span><span class="w"></span>
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a><span class="w">          </span><span class="nt">&quot;maxBackupsKept&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span><span class="w"></span>
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a><span class="w">          </span><span class="nt">&quot;provider-specific-param-1&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;config/client_secrets.json&quot;</span><span class="p">,</span><span class="w"></span>
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a><span class="w">          </span><span class="nt">&quot;provider-specific-param-2&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w"></span>
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a><span class="w">        </span><span class="p">},</span><span class="w"></span>
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a><span class="w">        </span><span class="p">{</span><span class="w"></span>
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a><span class="w">          </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;provider-type-2&quot;</span><span class="p">,</span><span class="w"></span>
+<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a><span class="w">          </span><span class="nt">&quot;backupsPath&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Path in the storage provider where to store the backups&quot;</span><span class="p">,</span><span class="w"></span>
+<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a><span class="w">          </span><span class="nt">&quot;maxBackupsKept&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span><span class="w"></span>
+<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a><span class="w">          </span><span class="nt">&quot;provider-specific-param-1&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;THIS_IS-NOT-AN-API-KEY&quot;</span><span class="p">,</span><span class="w"></span>
+<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a><span class="w">          </span><span class="nt">&quot;provider-specific-param-2&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;THIS_IS_NOT_AN-API-S3Cr3t&quot;</span><span class="p">,</span><span class="w"></span>
+<a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a><span class="w">          </span><span class="nt">&quot;provider-specific-param-3&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w"></span>
+<a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a><span class="w">        </span><span class="p">}</span><span class="w"></span>
+<a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a><span class="w">      </span><span class="p">]</span><span class="w"></span>
+<a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a><span class="w">    </span><span class="p">},</span><span class="w"></span>
+<a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a><span class="w">    </span><span class="nt">&quot;hooks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a><span class="w">      </span><span class="nt">&quot;backup:before&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;echo $@&quot;</span><span class="p">,</span><span class="w"></span>
+<a id="__codelineno-1-63" name="__codelineno-1-63" href="#__codelineno-1-63"></a><span class="w">      </span><span class="nt">&quot;backup:after&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;path/to/script&quot;</span><span class="p">,</span><span class="w"></span>
+<a id="__codelineno-1-64" name="__codelineno-1-64" href="#__codelineno-1-64"></a><span class="w">      </span><span class="nt">&quot;backup:error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;wombo combo $1 $2&quot;</span><span class="p">,</span><span class="w"></span>
+<a id="__codelineno-1-65" name="__codelineno-1-65" href="#__codelineno-1-65"></a><span class="w">      </span><span class="nt">&quot;upload:before&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;echo $@&quot;</span><span class="p">,</span><span class="w"></span>
+<a id="__codelineno-1-66" name="__codelineno-1-66" href="#__codelineno-1-66"></a><span class="w">      </span><span class="nt">&quot;upload:after&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;echo $@&quot;</span><span class="p">,</span><span class="w"></span>
+<a id="__codelineno-1-67" name="__codelineno-1-67" href="#__codelineno-1-67"></a><span class="w">      </span><span class="nt">&quot;upload:error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;echo $@&quot;</span><span class="p">,</span><span class="w"></span>
+<a id="__codelineno-1-68" name="__codelineno-1-68" href="#__codelineno-1-68"></a><span class="w">      </span><span class="nt">&quot;oldBackup:deleting&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;echo $@&quot;</span><span class="p">,</span><span class="w"></span>
+<a id="__codelineno-1-69" name="__codelineno-1-69" href="#__codelineno-1-69"></a><span class="w">      </span><span class="nt">&quot;oldBackup:deleted&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;echo $@&quot;</span><span class="p">,</span><span class="w"></span>
+<a id="__codelineno-1-70" name="__codelineno-1-70" href="#__codelineno-1-70"></a><span class="w">      </span><span class="nt">&quot;oldBackup:error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;echo $@&quot;</span><span class="w"></span>
+<a id="__codelineno-1-71" name="__codelineno-1-71" href="#__codelineno-1-71"></a><span class="w">    </span><span class="p">}</span><span class="w"></span>
+<a id="__codelineno-1-72" name="__codelineno-1-72" href="#__codelineno-1-72"></a><span class="p">}</span><span class="w"></span>
 </code></pre></div>
-
 </div>
-<input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><label for="__tabbed_1_2">YAML syntax</label><div class="tabbed-content">
-<div class="highlight"><pre><span></span><code><span class="nt">backupsPath</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Path where the backups will be stored</span>
-<span class="nt">logLevel</span><span class="p">:</span> <span class="s">&quot;Log</span><span class="nv"> </span><span class="s">level</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">app,</span><span class="nv"> </span><span class="s">valid</span><span class="nv"> </span><span class="s">values</span><span class="nv"> </span><span class="s">are:</span><span class="nv"> </span><span class="s">CRITICAL,ERROR,WARNING,INFO,DEBUG&quot;</span>
-<span class="nt">actionsModules</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="s">&quot;my.module#actions_register_function&quot;</span>
-
-<span class="nt">maxBackupsKept</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">7</span>
-<span class="nt">env</span><span class="p">:</span>
-  <span class="nt">something</span><span class="p">:</span> <span class="s">&quot;true&quot;</span>
-
-<span class="nt">secrets</span><span class="p">:</span>
-  <span class="nt">secret-provider</span><span class="p">:</span>
-    <span class="nt">envDefs</span><span class="p">:</span>
-      <span class="nt">pgpassword</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">/path/to/pg-password</span>
-      <span class="nt">mysqlpassword</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mysql-password</span>
-    <span class="nt">config</span><span class="p">:</span>
-      <span class="s">&quot;setting-1&quot;</span><span class="p p-Indicator">:</span> <span class="s">&quot;value&quot;</span>
-      <span class="s">&quot;setting-2&quot;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-    <span class="nt">storageProviders</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">storage/digital-ocean</span>
-      <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">storage/gdrive</span>
-        <span class="nt">backupsPath</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">/Backups/mbp</span>
-      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">storage/aws-s3</span>
-
-<span class="nt">cloud</span><span class="p">:</span>
-  <span class="nt">compression</span><span class="p">:</span>
-    <span class="nt">method</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gz|xz|bz2|br|zst</span>
-    <span class="nt">level</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">8</span>
-    <span class="nt">cpus</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
-
-  <span class="nt">encrypt</span><span class="p">:</span>
-    <span class="nt">strategy</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gpg-keys|gpg-passphrase</span>
-    <span class="nt">passphrase</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">If using gpg-passphrase, this will be used as passphrase for the cypher</span>
-    <span class="nt">keys</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">If using gpg-keys, this will be used as recipients option for the gpg cypher (emails)</span>
-    <span class="nt">algorithm</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Defines the algorithm to use in the cypher process, depends in the strategy (currently one of `gpg --version` cyphers)</span>
-
-  <span class="nt">providers</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="nt">type</span><span class="p">:</span> <span class="s">&quot;provider-type-1&quot;</span>
-      <span class="nt">backupsPath</span><span class="p">:</span> <span class="s">&quot;Path</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">storage</span><span class="nv"> </span><span class="s">provider</span><span class="nv"> </span><span class="s">where</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">store</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">backups&quot;</span>
-      <span class="nt">maxBackupsKept</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">30</span>
-      <span class="nt">provider-specific-param-1</span><span class="p">:</span> <span class="s">&quot;config/client_secrets.json&quot;</span>
-      <span class="nt">provider-specific-param-2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
-    <span class="p p-Indicator">-</span> <span class="nt">type</span><span class="p">:</span> <span class="s">&quot;provider-type-2&quot;</span>
-      <span class="nt">backupsPath</span><span class="p">:</span> <span class="s">&quot;Path</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">storage</span><span class="nv"> </span><span class="s">provider</span><span class="nv"> </span><span class="s">where</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">store</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">backups&quot;</span>
-      <span class="nt">maxBackupsKept</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">7</span>
-      <span class="nt">provider-specific-param-1</span><span class="p">:</span> <span class="s">&quot;THIS_IS-NOT-AN-API-KEY&quot;</span>
-      <span class="nt">provider-specific-param-2</span><span class="p">:</span> <span class="s">&quot;THIS_IS_NOT_AN-API-S3Cr3t&quot;</span>
-      <span class="nt">provider-specific-param-3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span>
-
-<span class="nt">hooks</span><span class="p">:</span>
-  <span class="l l-Scalar l-Scalar-Plain">backup:before</span><span class="p p-Indicator">:</span> <span class="s">&quot;echo</span><span class="nv"> </span><span class="s">$@&quot;</span>
-  <span class="l l-Scalar l-Scalar-Plain">backup:after</span><span class="p p-Indicator">:</span> <span class="s">&quot;path/to/script&quot;</span>
-  <span class="l l-Scalar l-Scalar-Plain">backup:error</span><span class="p p-Indicator">:</span> <span class="s">&quot;wombo</span><span class="nv"> </span><span class="s">combo</span><span class="nv"> </span><span class="s">$1</span><span class="nv"> </span><span class="s">$2&quot;</span>
-  <span class="l l-Scalar l-Scalar-Plain">upload:before</span><span class="p p-Indicator">:</span> <span class="s">&quot;echo</span><span class="nv"> </span><span class="s">$@&quot;</span>
-  <span class="l l-Scalar l-Scalar-Plain">upload:after</span><span class="p p-Indicator">:</span> <span class="s">&quot;echo</span><span class="nv"> </span><span class="s">$@&quot;</span>
-  <span class="l l-Scalar l-Scalar-Plain">upload:error</span><span class="p p-Indicator">:</span> <span class="s">&quot;echo</span><span class="nv"> </span><span class="s">$@&quot;</span>
-  <span class="l l-Scalar l-Scalar-Plain">oldBackup:deleting</span><span class="p p-Indicator">:</span> <span class="s">&quot;echo</span><span class="nv"> </span><span class="s">$@&quot;</span>
-  <span class="l l-Scalar l-Scalar-Plain">oldBackup:deleted</span><span class="p p-Indicator">:</span> <span class="s">&quot;echo</span><span class="nv"> </span><span class="s">$@&quot;</span>
-  <span class="l l-Scalar l-Scalar-Plain">oldBackup:error</span><span class="p p-Indicator">:</span> <span class="s">&quot;echo</span><span class="nv"> </span><span class="s">$@&quot;</span>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">backupsPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Path where the backups will be stored</span><span class="w"></span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">logLevel</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Log</span><span class="nv"> </span><span class="s">level</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">app,</span><span class="nv"> </span><span class="s">valid</span><span class="nv"> </span><span class="s">values</span><span class="nv"> </span><span class="s">are:</span><span class="nv"> </span><span class="s">CRITICAL,ERROR,WARNING,INFO,DEBUG&quot;</span><span class="w"></span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nt">actionsModules</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;my.module#actions_register_function&quot;</span><span class="w"></span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nt">maxBackupsKept</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span><span class="w"></span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="nt">env</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="nt">something</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="w"></span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="nt">secrets</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span><span class="nt">secret-provider</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span><span class="nt">envDefs</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">      </span><span class="nt">pgpassword</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/pg-password</span><span class="w"></span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">      </span><span class="nt">mysqlpassword</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mysql-password</span><span class="w"></span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">    </span><span class="nt">config</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">      </span><span class="s">&quot;setting-1&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;value&quot;</span><span class="w"></span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">      </span><span class="s">&quot;setting-2&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">    </span><span class="nt">storageProviders</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">storage/digital-ocean</span><span class="w"></span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">storage/gdrive</span><span class="w"></span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">        </span><span class="nt">backupsPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/Backups/mbp</span><span class="w"></span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">storage/aws-s3</span><span class="w"></span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="nt">cloud</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="w">  </span><span class="nt">compression</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="w">    </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gz|xz|bz2|br|zst</span><span class="w"></span>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="w">    </span><span class="nt">level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span><span class="w"></span>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="w">    </span><span class="nt">cpus</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="w">  </span><span class="nt">encrypt</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a><span class="w">    </span><span class="nt">strategy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gpg-keys|gpg-passphrase</span><span class="w"></span>
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a><span class="w">    </span><span class="nt">passphrase</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">If using gpg-passphrase, this will be used as passphrase for the cypher</span><span class="w"></span>
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a><span class="w">    </span><span class="nt">keys</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">If using gpg-keys, this will be used as recipients option for the gpg cypher (emails)</span><span class="w"></span>
+<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a><span class="w">    </span><span class="nt">algorithm</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Defines the algorithm to use in the cypher process, depends in the strategy (currently one of `gpg --version` cyphers)</span><span class="w"></span>
+<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a>
+<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a><span class="w">  </span><span class="nt">providers</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;provider-type-1&quot;</span><span class="w"></span>
+<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a><span class="w">      </span><span class="nt">backupsPath</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Path</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">storage</span><span class="nv"> </span><span class="s">provider</span><span class="nv"> </span><span class="s">where</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">store</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">backups&quot;</span><span class="w"></span>
+<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a><span class="w">      </span><span class="nt">maxBackupsKept</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span><span class="w"></span>
+<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a><span class="w">      </span><span class="nt">provider-specific-param-1</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;config/client_secrets.json&quot;</span><span class="w"></span>
+<a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a><span class="w">      </span><span class="nt">provider-specific-param-2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
+<a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;provider-type-2&quot;</span><span class="w"></span>
+<a id="__codelineno-2-43" name="__codelineno-2-43" href="#__codelineno-2-43"></a><span class="w">      </span><span class="nt">backupsPath</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Path</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">storage</span><span class="nv"> </span><span class="s">provider</span><span class="nv"> </span><span class="s">where</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">store</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">backups&quot;</span><span class="w"></span>
+<a id="__codelineno-2-44" name="__codelineno-2-44" href="#__codelineno-2-44"></a><span class="w">      </span><span class="nt">maxBackupsKept</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span><span class="w"></span>
+<a id="__codelineno-2-45" name="__codelineno-2-45" href="#__codelineno-2-45"></a><span class="w">      </span><span class="nt">provider-specific-param-1</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;THIS_IS-NOT-AN-API-KEY&quot;</span><span class="w"></span>
+<a id="__codelineno-2-46" name="__codelineno-2-46" href="#__codelineno-2-46"></a><span class="w">      </span><span class="nt">provider-specific-param-2</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;THIS_IS_NOT_AN-API-S3Cr3t&quot;</span><span class="w"></span>
+<a id="__codelineno-2-47" name="__codelineno-2-47" href="#__codelineno-2-47"></a><span class="w">      </span><span class="nt">provider-specific-param-3</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w"></span>
+<a id="__codelineno-2-48" name="__codelineno-2-48" href="#__codelineno-2-48"></a>
+<a id="__codelineno-2-49" name="__codelineno-2-49" href="#__codelineno-2-49"></a><span class="nt">hooks</span><span class="p">:</span><span class="w"></span>
+<a id="__codelineno-2-50" name="__codelineno-2-50" href="#__codelineno-2-50"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">backup:before</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;echo</span><span class="nv"> </span><span class="s">$@&quot;</span><span class="w"></span>
+<a id="__codelineno-2-51" name="__codelineno-2-51" href="#__codelineno-2-51"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">backup:after</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;path/to/script&quot;</span><span class="w"></span>
+<a id="__codelineno-2-52" name="__codelineno-2-52" href="#__codelineno-2-52"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">backup:error</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;wombo</span><span class="nv"> </span><span class="s">combo</span><span class="nv"> </span><span class="s">$1</span><span class="nv"> </span><span class="s">$2&quot;</span><span class="w"></span>
+<a id="__codelineno-2-53" name="__codelineno-2-53" href="#__codelineno-2-53"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">upload:before</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;echo</span><span class="nv"> </span><span class="s">$@&quot;</span><span class="w"></span>
+<a id="__codelineno-2-54" name="__codelineno-2-54" href="#__codelineno-2-54"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">upload:after</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;echo</span><span class="nv"> </span><span class="s">$@&quot;</span><span class="w"></span>
+<a id="__codelineno-2-55" name="__codelineno-2-55" href="#__codelineno-2-55"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">upload:error</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;echo</span><span class="nv"> </span><span class="s">$@&quot;</span><span class="w"></span>
+<a id="__codelineno-2-56" name="__codelineno-2-56" href="#__codelineno-2-56"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">oldBackup:deleting</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;echo</span><span class="nv"> </span><span class="s">$@&quot;</span><span class="w"></span>
+<a id="__codelineno-2-57" name="__codelineno-2-57" href="#__codelineno-2-57"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">oldBackup:deleted</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;echo</span><span class="nv"> </span><span class="s">$@&quot;</span><span class="w"></span>
+<a id="__codelineno-2-58" name="__codelineno-2-58" href="#__codelineno-2-58"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">oldBackup:error</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;echo</span><span class="nv"> </span><span class="s">$@&quot;</span><span class="w"></span>
 </code></pre></div>
-
+</div>
 </div>
 </div>
 <p>The configuration file must be located in the configuration folder and can be a json or yaml file. By default, the configuration folder is placed at <code>config</code> (based on the current working directory) but can be changed by using the argument <code>-c</code>.</p>
-<h2 id="backupspath">backupsPath<a class="headerlink" href="#backupspath" title="Permanent link">&para;</a></h2>
+<h2 id="backupspath">backupsPath</h2>
 <p>The path where all the backups will be stored locally. It will contain all the past backups plus the in-process (if any).</p>
 <p>When a backup is being done, it will create a <code>.partial</code> folder inside <code>backupsPath</code> and inside the folder, all the copied files and directories will be stored.</p>
 <p>After a backup, the folder will be renamed to <code>YYYY-MM-DDThh:mm</code>, matching the time when the backup was completed.</p>
-<h2 id="loglevel">logLevel<a class="headerlink" href="#loglevel" title="Permanent link">&para;</a></h2>
+<h2 id="loglevel">logLevel</h2>
 <p>Configures the log level. Every log issued to the logger that is below the configured log level will be ignored. By default is set to <code>INFO</code>. The available levels, ordered by importance, are:</p>
 <ul>
 <li><code>CRITICAL</code></li>
@@ -1224,145 +1346,138 @@
 <li><code>INFO</code></li>
 <li><code>DEBUG</code></li>
 </ul>
-<h2 id="actionsmodules">actionsModules<a class="headerlink" href="#actionsmodules" title="Permanent link">&para;</a></h2>
+<h2 id="actionsmodules">actionsModules</h2>
 <p>If defined, will load all python modules and run the function that will register new <a href="../actions">actions</a> into the system that can be used in <a href="../tasks">tasks</a>.</p>
-<h2 id="maxbackupskept">maxBackupsKept<a class="headerlink" href="#maxbackupskept" title="Permanent link">&para;</a></h2>
+<h2 id="maxbackupskept">maxBackupsKept</h2>
 <p>Defines how many backups will be kept in the local folder. By default is set to 7. To disable the cleanup, use <code>0</code> or <code>null</code> as value of this setting.</p>
-<h2 id="env">env<a class="headerlink" href="#env" title="Permanent link">&para;</a></h2>
+<h2 id="env">env</h2>
 <p>This section defines environment variables that will be available when running <a href="../actions">actions</a>. Can be anything that can be accepted by an action. These variables are passed to the actions as parameters, only if the type is a dictionary (i.e.: the action <a href="../actions/file#from-file"><code>from-file</code></a> accepts a dictionary or a string as parameter, only when using a dictionary these values will be filled).</p>
-<h2 id="secrets">secrets<a class="headerlink" href="#secrets" title="Permanent link">&para;</a></h2>
+<h2 id="secrets">secrets</h2>
 <p>Defines all secrets providers available to run the tool. Can obtain values for environment and storage providers from the secret providers in runtime, improving security by having in different places all the secrets. It is optional, but it is recommended to use any secret provider.</p>
 <p>Every type of secret provider is defined inside the <code>secrets</code> section, where the key of the object is the type, and the object contains the configuration of the provider and what to inject from it.</p>
-<h3 id="config">config<a class="headerlink" href="#config" title="Permanent link">&para;</a></h3>
+<h3 id="config">config</h3>
 <p>The configuration section contains provider-specific configuration which allows the provider to work. See <a href="../secrets/">secret providers</a> documentation to see the available providers and their configuration.</p>
-<h3 id="envdefs">envDefs<a class="headerlink" href="#envdefs" title="Permanent link">&para;</a></h3>
+<h3 id="envdefs">envDefs</h3>
 <p>Declares environment variable definitions that can be used to reference secrets in the <a href="../tasks">tasks</a> <code>env</code> sections and <a href="../actions">actions</a> parameters.</p>
-<h3 id="storageproviders">storageProviders<a class="headerlink" href="#storageproviders" title="Permanent link">&para;</a></h3>
+<h3 id="storageproviders">storageProviders</h3>
 <p>The storage section defines <a href="#storage_1">storage provider configurations</a> that will be grabbed from the secret provider. Each value of the list is a (secret) provider-specific url/path/identifier that tells the provider where to look for the configuration. The value must have the same structure of the configuration of the storage provider.</p>
-<h2 id="cloud">cloud<a class="headerlink" href="#cloud" title="Permanent link">&para;</a></h2>
+<h2 id="cloud">cloud</h2>
 <p>This section defines settings for the storage servers and cloud storage providers.</p>
-<h3 id="compression">compression<a class="headerlink" href="#compression" title="Permanent link">&para;</a></h3>
+<h3 id="compression">compression</h3>
 <p>If defined, when backups are uploaded to a storage provider, folders will be compressed using this configuration.</p>
 <p>Can be used with or without <a href="#cypher">cyphering</a>.</p>
-<h4 id="strategy">strategy<a class="headerlink" href="#strategy" title="Permanent link">&para;</a></h4>
+<h4 id="strategy">strategy</h4>
 <p>The strategy defines which compression algorithm is going to be used. Currently, the algorithms supported are <code>gzip</code> (which requires <code>gzip</code> to be installed) and <code>xz</code> (which requires <code>xz</code> to be installed).</p>
-<p>In general, a lot of Linux distributions includes these commands, as well as in macOS. But it&rsquo;s worth to check their existence before using them.</p>
-<h4 id="level">level<a class="headerlink" href="#level" title="Permanent link">&para;</a></h4>
+<p>In general, a lot of Linux distributions includes these commands, as well as in macOS. But it's worth to check their existence before using them.</p>
+<h4 id="level">level</h4>
 <p>The compression level. Higher values indicates better but slower compressions. Values accepted for <code>gzip</code> are from 1 to 9. Values accepted for <code>xz</code> are from 0 to 9 (by default is 6, 7-9 are not recommended).</p>
-<h4 id="cpus">cpus<a class="headerlink" href="#cpus" title="Permanent link">&para;</a></h4>
+<h4 id="cpus">cpus</h4>
 <p>The number of cpus/threads to use when compressing. By default, will use only one thread to compress, but this can be changed to any number. This value is ignored by some compression algorithms.</p>
 <div class="admonition note">
 <p class="admonition-title">Threads and compression algorithms</p>
 <p>Currently, <code>xz</code> and <code>zst</code> supports <code>cpus</code> setting, the rest will always use 1 thread.</p>
 </div>
-<h3 id="encrypt">encrypt<a class="headerlink" href="#encrypt" title="Permanent link">&para;</a></h3>
+<h3 id="encrypt">encrypt</h3>
 <p>If defined, when backups are uploaded to a storage provider, folders will be encrypted using this configuration.</p>
 <p>Can be used with or without <a href="#compression">compression</a>.</p>
-<h4 id="strategy_1">strategy<a class="headerlink" href="#strategy_1" title="Permanent link">&para;</a></h4>
+<h4 id="strategy_1">strategy</h4>
 <p>Defines which strategy to use to encrypt the data. Currently the supported cypher strategies are:</p>
 <ul>
 <li><code>gpg-passphrase</code> - Uses a passphrase to encrypt and decrypt the data (requires <code>gpg2</code>). The <code>passphrase</code> setting will be used as passphrase.</li>
 <li><code>gpg-keys</code> - Uses the keys associated to the list of emails to encrypt the data (requires <code>gpg2</code>). The <code>keys</code> list will be used as recipients/emails list that will be used to protect the data. The people in the list will be able to decrypt the data and no one else. <strong>Recommended over passphrase</strong>.</li>
 </ul>
-<h4 id="algorithm">algorithm<a class="headerlink" href="#algorithm" title="Permanent link">&para;</a></h4>
+<h4 id="algorithm">algorithm</h4>
 <p>If defined, will use this algorithm to encrypt the data. The supported algorithms and the default algorithm can be found in <code>gpg --version</code> <code>gpg2 --version</code>.</p>
-<h3 id="providers">providers<a class="headerlink" href="#providers" title="Permanent link">&para;</a></h3>
+<h3 id="providers">providers</h3>
 <p>If defined, the last backup will be uploaded to the configured <a href="../storage/">storage providers</a>. Each provider must define the <code>type</code>, the <code>backupsPath</code> and <code>maxBackupsKept</code>, as well as the provider specific configuration. Unknown types will be ignored.</p>
-<h4 id="type">type<a class="headerlink" href="#type" title="Permanent link">&para;</a></h4>
-<p>Defines the type of the storage provider for the entry. The list of <a href="../storage/">storage providers</a> can be found in the &lsquo;Storage providers&rsquo; section.</p>
-<h4 id="backupspath_1">backupsPath<a class="headerlink" href="#backupspath_1" title="Permanent link">&para;</a></h4>
+<h4 id="type">type</h4>
+<p>Defines the type of the storage provider for the entry. The list of <a href="../storage/">storage providers</a> can be found in the 'Storage providers' section.</p>
+<h4 id="backupspath_1">backupsPath</h4>
 <p>Path in the storage provider where to save the backups. Is the same concept as the <a href="#backupspath"><code>backupsPath</code></a> from above.</p>
 <blockquote>
 <p>Some providers need this folder to exist, while others no. If possible, try to ensure that the folder is created before uploading any backup.</p>
 </blockquote>
-<h4 id="maxbackupskept_1">maxBackupsKept<a class="headerlink" href="#maxbackupskept_1" title="Permanent link">&para;</a></h4>
-<p>Defines how many backups will be kept in the storage provider. If set to <code>0</code> or <code>null</code> will not clean anything. There&rsquo;s no default value for this, so a value must be always provided.</p>
-<h2 id="hooks">hooks<a class="headerlink" href="#hooks" title="Permanent link">&para;</a></h2>
+<h4 id="maxbackupskept_1">maxBackupsKept</h4>
+<p>Defines how many backups will be kept in the storage provider. If set to <code>0</code> or <code>null</code> will not clean anything. There's no default value for this, so a value must be always provided.</p>
+<h2 id="hooks">hooks</h2>
 <p>Hooks run a script or program when something is going to happen or just happened. Can be useful to trigger some post-action things, to send messages through Slack or to manipulate the output of a backup.</p>
 <p>Each key defines the hook type, and their values is the script, program or one-line script that will be run in when the hook is triggered. The hooks run on a <code>sh</code> shell, so hooks like <code>echo $@</code> will work out of the box.</p>
 <p>See <a href="../hooks/">hooks</a> section.</p>
-                
-              
-              
-                
-
 
               
             </article>
+            
           </div>
         </div>
+        
       </main>
       
-        
-<footer class="md-footer">
+        <footer class="md-footer">
   
-    <div class="md-footer-nav">
-      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
+    
+    <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      
         
-          <a href="../quick-start/" title="Quick start" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
-            <div class="md-footer-nav__button md-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        <a href="../quick-start/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Quick start" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Quick start
             </div>
-            <div class="md-footer-nav__title">
-              <div class="md-ellipsis">
-                <span class="md-footer-nav__direction">
-                  Previous
-                </span>
-                Quick start
-              </div>
-            </div>
-          </a>
+          </div>
+        </a>
+      
+      
         
-        
-          <a href="../actions/" title="Actions overview" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
-            <div class="md-footer-nav__title">
-              <div class="md-ellipsis">
-                <span class="md-footer-nav__direction">
-                  Next
-                </span>
-                Actions overview
-              </div>
+        <a href="../actions/" class="md-footer__link md-footer__link--next" aria-label="Next: Actions overview" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Actions overview
             </div>
-            <div class="md-footer-nav__button md-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
-            </div>
-          </a>
-        
-      </nav>
-    </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
-      <div class="md-footer-copyright">
-        
-          <div class="md-footer-copyright__highlight">
-            MajorcaDevs 2019
-          </div>
-        
-        Made with
-        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
-          Material for MkDocs
-        </a>
-      </div>
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      MajorcaDevs 2022
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
       
     </div>
   </div>
 </footer>
       
     </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.instant"], "search": "../assets/javascripts/workers/search.b97dbffb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"default": "stable", "provider": "mike"}}</script>
     
-      <script src="../assets/javascripts/vendor.92ffa368.min.js"></script>
-      <script src="../assets/javascripts/bundle.5123e3d4.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
-      
-      <script>
-        app = initialize({
-          base: "..",
-          features: [],
-          search: Object.assign({
-            worker: "../assets/javascripts/worker/search.a68abb33.min.js"
-          }, typeof search !== "undefined" && search)
-        })
-      </script>
+    
+      <script src="../assets/javascripts/bundle.6c7ad80a.min.js"></script>
       
     
   </body>
