@@ -1,3 +1,0 @@
-FROM python:alpine
-
-RUN apk add --no-cache git jq moreutils nodejs npm build-base
