@@ -215,7 +215,7 @@ Can be used with or without [cyphering](#cypher).
 
 #### strategy
 
-The strategy defines which compression algorithm is going to be used. Currently, the algorithms supported are `gzip` (which requires `gzip` to be installed) and `xz` (which requires `xz` to be installed).
+The strategy defines which compression algorithm is going to be used. Currently, the algorithms supported are `gzip` (which requires `gzip` to be installed), `xz` (which requires `xz` to be installed) and the rest of compression algorithms found in [compress actions](./actions/compress.md).
 
 In general, a lot of Linux distributions includes these commands, as well as in macOS. But it's worth to check their existence before using them.
 
