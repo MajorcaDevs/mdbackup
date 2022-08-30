@@ -3,7 +3,7 @@
 [Vault][1] is a production-ready secrets backend, really useful to have credentials stored in a centralized server, but retrievable from any client in a network.
 
 !!! Warning "Dependency"
-    In order to use Vault backend, you must install `requests`: `pip install requests`.
+    In order to use Vault backend, install with: `pip install mdbackup[vault]`.
 
 Currently, it only supports KV backend for reading secrets.
 

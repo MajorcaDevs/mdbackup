@@ -52,8 +52,28 @@ setuptools.setup(
     },
     include_package_data=True,
     install_requires=[
-        'pyyaml',
-        'jsonschema',
+        'pyyaml ~= 6.0.0',
+        'jsonschema ~= 4.14.0',
         *extra_packages,
     ],
+    extras_require={
+        'b2': [
+            'b2sdk ~= 1.7',
+            'python-magic ~= 0.4',
+        ],
+        'gdrive': [
+            'pydrive ~= 1.3',
+            'python-magic ~= 0.4',
+        ],
+        's3': [
+            'boto3 ~= 1.24',
+            'python-magic ~= 0.4',
+        ],
+        'sftp': [
+            'paramiko ~= 2.11',
+        ],
+        'vault': [
+            'requests ~= 2.28',
+        ],
+    },
 )

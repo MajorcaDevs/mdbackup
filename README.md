@@ -8,8 +8,7 @@ hide:
 [![PyPI version](https://img.shields.io/pypi/v/mdbackup) ![PyPI downloads](https://img.shields.io/pypi/dw/mdbackup)](https://pypi.org/project/mdbackup/)
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/MajorcaDevs/mdbackup.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/MajorcaDevs/mdbackup/context:python)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/MajorcaDevs/mdbackup.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/MajorcaDevs/mdbackup/alerts/)
-[![Build Status](https://jenkins.majorcadevs.com/buildStatus/icon?job=mdbackup2%2Fmaster&subject=master%20build)](https://jenkins.majorcadevs.com/job/mdbackup2/job/master/)
-[![Build Status](https://jenkins.majorcadevs.com/buildStatus/icon?job=mdbackup2%2Fdev&subject=dev%20build)](https://jenkins.majorcadevs.com/job/mdbackup2/job/dev/)
+[![Publish version](https://github.com/MajorcaDevs/mdbackup/actions/workflows/publish.yml/badge.svg)](https://github.com/MajorcaDevs/mdbackup/actions/workflows/publish.yml)
 
 Small but customizable utility to create backups and store them in cloud storage providers.
 

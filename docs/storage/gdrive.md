@@ -10,10 +10,7 @@ The `backupsFolder` **must exist** before running the tool.
 
 ## Dependencies
 
-In order to use Google Drive, you must install the following python packages:
-
-- `boto3`
-- `python-magic`
+In order to use Google Drive, you must install mdbackup with `pip install mdbackup[gdrive]`.
 
 ## Configuration schema
 

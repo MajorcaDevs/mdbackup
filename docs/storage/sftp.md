@@ -27,9 +27,7 @@ The `knownHostsPolicy` will set the policy that will be used when the SSH connec
 
 ## Dependencies
 
-In order to use SFTP, you must install the following python packages:
-
-- `paramiko`
+In order to use SFTP, you must install mdbackup with `pip install mdbackup[sftp]`.
 
 ## Configuration schema
 
