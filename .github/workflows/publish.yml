@@ -73,12 +73,12 @@ jobs:
           VERSION=$(echo $VERSION | awk '{ split($0, a, "."); print a[1] "." a[2] }')
           echo "Version family: $VERSION"
           # build docs
-          mike deploy --push --update-aliases $VERSION stable
+          pipenv run mike deploy --push --update-aliases $VERSION stable
       - name: Build and publish docs (dev)
         if: ${{ contains(github.ref, 'beta') || contains(github.ref, 'alpha') || contains(github.ref, 'rc') }}
         run: |
           # build docs
-          mike deploy --push dev
+          pipenv run mike deploy --push dev
       - name: Deploy to GitHub Pages
         uses: crazy-max/ghaction-github-pages@v3
         with:
@@ -94,7 +94,6 @@ jobs:
         arch:
           - amd64
           - arm64v8
-          - arm32v7
         flavour:
           - alpine
           - slim
@@ -184,8 +183,7 @@ jobs:
         run: |
           docker manifest create ${{ env.MANIFEST_NAME }} \
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.parser.outputs.version }}-amd64-${{ matrix.flavour }} \
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.parser.outputs.version }}-arm64v8-${{ matrix.flavour }} \
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.parser.outputs.version }}-arm32v7-${{ matrix.flavour }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.parser.outputs.version }}-arm64v8-${{ matrix.flavour }}
           docker manifest push -p ${{ env.MANIFEST_NAME }}
 
       - name: Publish manifests for latest
@@ -195,6 +193,5 @@ jobs:
         run: |
           docker manifest create ${{ env.MANIFEST_NAME }} \
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.parser.outputs.version }}-amd64-${{ matrix.flavour }} \
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.parser.outputs.version }}-arm64v8-${{ matrix.flavour }} \
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.parser.outputs.version }}-arm32v7-${{ matrix.flavour }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.parser.outputs.version }}-arm64v8-${{ matrix.flavour }}
           docker manifest push -p ${{ env.MANIFEST_NAME }}
