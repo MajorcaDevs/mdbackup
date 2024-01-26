@@ -56,7 +56,6 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
       - name: Build and push Docker image
-        if: ${{ contains(steps.parser.outputs.version, 'beta') || contains(steps.parser.outputs.version, 'alpha') || contains(steps.parser.outputs.version, 'rc') }}
         uses: docker/build-push-action@v3
         with:
           context: .
