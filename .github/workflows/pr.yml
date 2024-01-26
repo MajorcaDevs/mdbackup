@@ -43,3 +43,23 @@ jobs:
           name: code-coverage-report
           path: tests/.coverage-report/**/*.html
           retention-days: 30
+
+  docker:
+    strategy:
+      matrix:
+        flavour:
+          - alpine
+          - slim
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Build and push Docker image
+        if: ${{ contains(steps.parser.outputs.version, 'beta') || contains(steps.parser.outputs.version, 'alpha') || contains(steps.parser.outputs.version, 'rc') }}
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: ./docker/Dockerfile-${{ matrix.flavour }}
+          push: false
+          platforms: linux/amd64
