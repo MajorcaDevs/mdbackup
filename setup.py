@@ -58,7 +58,7 @@ setuptools.setup(
     ],
     extras_require={
         'b2': [
-            'b2sdk ~= 1.7',
+            'b2sdk ~= 1.17',
             'python-magic ~= 0.4',
         ],
         'gdrive': [
@@ -70,10 +70,10 @@ setuptools.setup(
             'python-magic ~= 0.4',
         ],
         'sftp': [
-            'paramiko ~= 2.11',
+            'paramiko ~= 3.4',
         ],
         'vault': [
-            'requests ~= 2.28',
+            'requests ~= 2.31',
         ],
     },
 )
