@@ -17,9 +17,9 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v5
         with:
           python-version: '3.12'
       - name: Install dependencies
@@ -52,7 +52,7 @@ jobs:
     steps:
       - name: Install dependencies
         run: apk add --no-cache git jq moreutils nodejs npm build-base
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Prepare git
         run: |
           # workaround for error in permissions
@@ -97,17 +97,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # Configure buildx and QEMU for cross-arch support
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
 
       # Log in into the registry
       - name: Log into registry ${{ env.REGISTRY }}
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ secrets.DOCKER_HUB_USER }}
@@ -116,7 +116,7 @@ jobs:
       # Extract metadata (tags, labels) for Docker
       - name: Extract Docker metadata
         id: meta
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
@@ -136,7 +136,7 @@ jobs:
       # Build and push Docker image with Buildx
       - name: Build and push Docker image
         if: ${{ contains(steps.parser.outputs.version, 'beta') || contains(steps.parser.outputs.version, 'alpha') || contains(steps.parser.outputs.version, 'rc') }}
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           context: .
           file: ./docker/Dockerfile-${{ matrix.flavour }}
@@ -147,7 +147,7 @@ jobs:
 
       - name: Build and push Docker image
         if: ${{ !contains(steps.parser.outputs.version, 'beta') && !contains(steps.parser.outputs.version, 'alpha') && !contains(steps.parser.outputs.version, 'rc') }}
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           context: .
           file: ./docker/Dockerfile-${{ matrix.flavour }}
