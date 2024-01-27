@@ -17,11 +17,11 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.12'
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
@@ -52,7 +52,7 @@ jobs:
     steps:
       - name: Install dependencies
         run: apk add --no-cache git jq moreutils nodejs npm build-base
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Prepare git
         run: |
           # workaround for error in permissions
@@ -91,26 +91,23 @@ jobs:
   docker:
     strategy:
       matrix:
-        arch:
-          - amd64
-          - arm64v8
         flavour:
           - alpine
           - slim
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # Configure buildx and QEMU for cross-arch support
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
 
       # Log in into the registry
       - name: Log into registry ${{ env.REGISTRY }}
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ secrets.DOCKER_HUB_USER }}
@@ -119,7 +116,7 @@ jobs:
       # Extract metadata (tags, labels) for Docker
       - name: Extract Docker metadata
         id: meta
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
@@ -138,60 +135,25 @@ jobs:
 
       # Build and push Docker image with Buildx
       - name: Build and push Docker image
-        uses: docker/build-push-action@v3
+        if: ${{ contains(steps.parser.outputs.version, 'beta') || contains(steps.parser.outputs.version, 'alpha') || contains(steps.parser.outputs.version, 'rc') }}
+        uses: docker/build-push-action@v5
         with:
           context: .
           file: ./docker/Dockerfile-${{ matrix.flavour }}
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.parser.outputs.version }}-${{ matrix.arch }}-${{ matrix.flavour }}
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.parser.outputs.version }}-${{ matrix.flavour }}
           labels: ${{ steps.meta.outputs.labels }}
-          build-args: "ARCH=${{ matrix.arch }}"
+          platforms: linux/amd64,linux/arm64,linux/arm/v7
 
-  docker-manifest:
-    runs-on: ubuntu-latest
-    needs: docker
-    strategy:
-      matrix:
-        flavour:
-          - alpine
-          - slim
-    steps:
-      # Log in into the registry
-      - name: Log into registry ${{ env.REGISTRY }}
-        uses: docker/login-action@v2
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ secrets.DOCKER_HUB_USER }}
-          password: ${{ secrets.DOCKER_HUB_TOKEN }}
-
-      - name: Parse tag
-        id: parser
-        run: |
-          REF="${{ github.ref }}"
-          if [[ $REF == refs/tags/* ]]; then
-            VERSION=${REF#refs/tags/v}
-            VERSION=${VERSION#refs/tags/}
-          else
-            echo "No idea how to decipher this ref: $REF"
-            exit 1
-          fi
-          echo ::set-output name=version::$VERSION
-
-      - name: Publish manifests for version
-        env:
-          MANIFEST_NAME: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.parser.outputs.version }}-${{ matrix.flavour }}
-        run: |
-          docker manifest create ${{ env.MANIFEST_NAME }} \
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.parser.outputs.version }}-amd64-${{ matrix.flavour }} \
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.parser.outputs.version }}-arm64v8-${{ matrix.flavour }}
-          docker manifest push -p ${{ env.MANIFEST_NAME }}
-
-      - name: Publish manifests for latest
+      - name: Build and push Docker image
         if: ${{ !contains(steps.parser.outputs.version, 'beta') && !contains(steps.parser.outputs.version, 'alpha') && !contains(steps.parser.outputs.version, 'rc') }}
-        env:
-          MANIFEST_NAME: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.flavour }}
-        run: |
-          docker manifest create ${{ env.MANIFEST_NAME }} \
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.parser.outputs.version }}-amd64-${{ matrix.flavour }} \
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.parser.outputs.version }}-arm64v8-${{ matrix.flavour }}
-          docker manifest push -p ${{ env.MANIFEST_NAME }}
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./docker/Dockerfile-${{ matrix.flavour }}
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.parser.outputs.version }}-${{ matrix.flavour }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.flavour }}
+          labels: ${{ steps.meta.outputs.labels }}
+          platforms: linux/amd64,linux/arm64,linux/arm/v7

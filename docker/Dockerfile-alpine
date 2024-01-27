@@ -1,11 +1,19 @@
-ARG ARCH='amd64'
+# syntax=docker/dockerfile:1
 
-FROM ${ARCH}/python:3.8-alpine
+FROM --platform=$BUILDPLATFORM python:3.12-alpine AS deps
+
+WORKDIR /src
+RUN pip install pipenv
+COPY ./Pipfile ./Pipfile.lock .
+RUN pipenv requirements > requirements.txt
+
+
+FROM python:3.12-alpine
 LABEL owner="MajorcaDevs"
 
-COPY ./docker/requirements.txt /mdbackup/requirements.txt
-RUN apk add bash rsync openssh tar xz gnupg gzip musl libffi openssl --no-cache && \
-    apk add --virtual .bdeps gcc make libffi-dev openssl-dev musl-dev --no-cache && \
+RUN apk add bash rsync openssh tar xz gnupg gzip musl libffi openssl --no-cache
+COPY --from=deps /src/requirements.txt /mdbackup/requirements.txt
+RUN apk add --virtual .bdeps gcc make libffi-dev openssl-dev musl-dev --no-cache && \
     pip install -r /mdbackup/requirements.txt && \
     pip install xattr && \
     apk del .bdeps && \
