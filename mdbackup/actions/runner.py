@@ -90,7 +90,7 @@ def _cleanup(things_to_dipose: List[Tuple[OutputDataStream, str]], has_raised: b
         logger.debug(f'Waiting for {action} to dispose')
         if isinstance(thing, subprocess.Popen):
             thing.send_signal(subprocess.signal.SIGTERM) if has_raised else None
-            lines = ''.join(map(lambda l: l.decode('utf-8'), thing.stderr))
+            lines = ''.join(map(lambda line: line.decode('utf-8'), thing.stderr))
             rc = thing.wait()
             if rc != 0:
                 failed.append((action, lines))
