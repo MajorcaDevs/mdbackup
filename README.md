@@ -19,7 +19,7 @@ Download from releases the latest `wheel` package and install it. It is recommen
 **What do yo need?**:
 
   - Any OS with Python support and POSIX-like (e.g.: Linux, macOS, *BSD...)
-  - Python 3.6 or higher
+  - Python 3.9 or higher
 
 First select a folder where all the needed files will be stored. It is important not to move (or rename) this folder after installation.
 
